@@ -4,7 +4,7 @@ const {creepUtils} = require('./utils')
 const upgrader = {}
 
 upgrader.run = creep => {
-  const isEmpty = creep.carry.energy < Math.floor(creep.carryCapacity / 4)
+  const isEmpty = creep.carry.energy < creep.carryCapacity
 
   if (isEmpty) {
     const target = creepUtils.findTarget(creep)

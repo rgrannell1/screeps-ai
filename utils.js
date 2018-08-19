@@ -1,54 +1,58 @@
 
 const constants = require('./constants')
-
 const creepUtils = {}
 
 creepUtils.findTarget = creep => {
-  const sources = creep.room.find(FIND_SOURCES)
-  return sources[0] // -- todo
+  if (creep.memory.sourceId) {
+    return Game.getObjectById(creep.memory.sourceId)
+  } else {
+    const [source] = creep.room.find(FIND_SOURCES)
+    creep.memory.sourceId = source.id
+    return source
+  }
 }
 
 creepUtils.findMinerals = creep => {
-  const minerals = creep.room.find(FIND_MINERALS)
-  return minerals[0] // -- todo
+
 }
 
 creepUtils.moveToTarget = (creep, target) => {
-  const {icon='x'} = creep.memory
+  const {icon} = creep.memory
 
   if (creep.harvest(target) === ERR_NOT_IN_RANGE) {
-    creep.say(`${icon} Moving`)
     creep.moveTo(target, {
       visualisePathStyle: {
         stroke: constants.pathStyles.harvestSource
       }
     })
   } else {
-    creep.say(`${icon} Processing`)
+    creep.say(`${icon} Active`)
   }
 }
 
 creepUtils.moveToSpawn = creep => {
   const target = creepUtils.findTarget(creep)
-  const {icon='x'} = creep.memory
+  const {icon} = creep.memory
 
   if (creep.transfer(Game.spawns['Spawn1'], RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
-    creep.say(`${icon} Moving`)
     creep.moveTo(Game.spawns['Spawn1'], {
-
-    });
+      stroke: constants.pathStyles.harvestSource
+    })
   } else {
     creep.say(`${icon} At spawn`)
   }
 }
 
-
 creepUtils.moveToController = creep => {
-  const {icon='x'} = creep.memory
+  const {icon} = creep.memory
 
   if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
-    creep.say(`${icon} Moving`)
-    creep.moveTo(creep.room.controller)
+    const code = creep.moveTo(creep.room.controller)
+
+    if (code === OK) {
+    } else {
+      creep.say(`${icon} Stuck`)
+    }
   } else {
     creep.say(`${icon} Upgrading`)
   }

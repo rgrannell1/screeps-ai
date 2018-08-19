@@ -53,35 +53,44 @@ const populateWorld = settings => {
 
       if (moreNeeded) {
         const status = spawn.createCreep(body, undefined, {role, icon})
+        if (status !== OK && status !== ERR_NOT_ENOUGH_ENERGY && status !== ERR_BUSY) {
+          console.log(status)
+        }
       }
     }
 
   }
 }
 
-const settings = {
-  harvester: {
-    expected: 2,
-    body: [CARRY, WORK, MOVE, MOVE],
-    icon: '⚡'
-  },
-  upgrader: {
-    expected: 2,
-    body: [CARRY, WORK, MOVE, MOVE],
-    icon: '▲'
-  },
-  miner: {
-    expected: 2,
-    body: [CARRY, WORK, MOVE, MOVE],
-    icon: '⚒'
+const getSettings = () => {
+  const settings = {
+    harvester: {
+      expected: 3,
+      body: [CARRY, WORK, MOVE, MOVE],
+      icon: '⚡'
+    },
+    upgrader: {
+      expected: 6,
+      body: [CARRY, CARRY, WORK, MOVE, MOVE],
+      icon: '▲'
+    },
+    /*
+    miner: {
+      expected: 0,
+      body: [CARRY, WORK, MOVE, MOVE],
+      icon: '⚒'
+    }
+    */
   }
+
+  return settings
 }
 
 const loop = () => {
   evictCreepCache()
 
   tickRoles()
-  populateWorld(settings)
+  populateWorld(getSettings())
 }
 
 module.exports.loop = loop
