@@ -2,19 +2,25 @@
 const constants = {
   roles: {
     harvester: {
-      icon: '⚡',
+      icon: 'H',
       plans: {
-        standard: [CARRY, WORK, MOVE, MOVE]
+        standard: [CARRY, CARRY, WORK, WORK, MOVE]
       }
     },
     upgrader: {
-      icon: '▲',
+      icon: 'U',
       plans: {
         standard: [CARRY, CARRY, WORK, MOVE, MOVE]
       }
     },
     builder: {
-      icon: '👷',
+      icon: 'B',
+      plans: {
+        standard: [CARRY, CARRY, WORK, MOVE, MOVE]
+      }
+    },
+    repairer: {
+      icon: 'R',
       plans: {
         standard: [CARRY, CARRY, WORK, MOVE, MOVE]
       }

@@ -8,9 +8,9 @@ upgrader.run = creep => {
 
   if (notFull) {
     const spawn = Game.spawns['Spawn1']
-    creepUtils.chargeAtSpawn(creep, spawn, 100)
+    creepUtils.chargeAtSpawn(creep, spawn, 200)
   } else {
-    creepUtils.moveToController(creep)
+    creepUtils.repairRoads(creep)
   }
 }
 

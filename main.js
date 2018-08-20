@@ -1,6 +1,7 @@
 
 const constants = require('./constants')
 const {sourceUtils, miscUtils} = require('./utils')
+const roads = require('./roads')
 
 const roles = {
   harvester: require('role.harvester'),
@@ -48,11 +49,14 @@ const censusCreeps = room => {
 
 const spawnCreeps = (room, settings) => {
   const counts = censusCreeps(room)
+  const roleNames = Object.keys(settings).sort((name0, name1) => {
+    return settings[name0].priority - settings[name1].priority
+  })
 
   for (const spawnName of Object.keys(Game.spawns)) {
     const spawn = Game.spawns[spawnName]
 
-    for (const role of Object.keys(settings)) {
+    for (const role of roleNames) {
       const {expected, body, icon} = settings[role]
       const moreNeeded = !counts.hasOwnProperty(role) || counts[role] < expected
 
@@ -67,61 +71,32 @@ const spawnCreeps = (room, settings) => {
   }
 }
 
-const planRoads = roomName => {
-  const room = Game.rooms[roomName]
-  const sources = room.find(FIND_SOURCES)
-  const spawns = Game.spawns
-
-  if (Memory.roadsBuild === true) {
-    return
-  }
-
-  for (const name of Object.keys(spawns)) {
-    const spawn = spawns[name]
-
-    for (const source of sources) {
-      const shared = {
-        room,
-        roomName,
-        target: source.pos
-      }
-      miscUtils.buildRoad(Object.assign({}, shared, {
-        source: spawn.pos
-      }))
-
-      miscUtils.buildRoad(Object.assign({}, shared, {
-        source: room.controller.pos
-      }))
-    }
-  }
-
-  Memory.roadsBuild = true
-}
-
 const getSettings = () => {
   const settings = {
     harvester: {
       expected: 1,
+      priority: 0,
       body: constants.roles.harvester.plans.standard,
       icon: constants.roles.harvester.icon
     },
     upgrader: {
       expected: 1,
+      priority: 1,
       body: constants.roles.upgrader.plans.standard,
       icon: constants.roles.upgrader.icon
     },
     builder: {
-      expected: 1,
+      expected: 2,
+      priority: 3,
       body: constants.roles.builder.plans.standard,
       icon: constants.roles.builder.icon
     },
-    /*
-    miner: {
-      expected: 0,
-      body: [CARRY, WORK, MOVE, MOVE],
-      icon: '⚒'
+    repairer: {
+      expected: 1,
+      priority: 2,
+      body: constants.roles.repairer.plans.standard,
+      icon: constants.roles.repairer.icon
     }
-    */
   }
 
   return settings
@@ -134,7 +109,7 @@ const loop = () => {
   for (const roomName of Object.keys(Game.rooms)) {
     const room = Game.rooms[roomName]
     spawnCreeps(room, getSettings())
-    planRoads(roomName)
+    roads.plan(roomName)
   }
 }
 

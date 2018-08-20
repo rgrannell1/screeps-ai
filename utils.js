@@ -39,6 +39,33 @@ creepUtils.moveToTarget = (creep, target) => {
   }
 }
 
+creepUtils.chargeAtSpawn = (creep, spawn, minimumCharge = 0) => {
+  const {icon} = creep.memory
+
+  if (spawn.energy < minimumCharge) {
+    return
+  }
+
+  if (creep.withdraw(spawn, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+    creep.moveTo(spawn)
+  } else {
+    creep.say(`${icon} Charge`)
+  }
+}
+
+creepUtils.repairRoads = creep => {
+  const roads = creep.room.find(FIND_STRUCTURES, {
+    filter (object) {
+      return object.structureType === STRUCTURE_ROAD && (object.hits < (object.hitsMax / 4))
+    }
+  })
+
+  console.log(roads)
+
+  creep.moveTo(roadToRepair);
+  creep.repair(roadToRepair);
+}
+
 creepUtils.moveToSpawn = creep => {
   const target = creepUtils.findSource(creep)
   const {icon} = creep.memory
