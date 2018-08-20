@@ -1,8 +1,12 @@
 
+const constants = require('./constants')
+const {sourceUtils, miscUtils} = require('./utils')
+
 const roles = {
   harvester: require('role.harvester'),
   upgrader: require('role.upgrader'),
-  miner: require('role.miner')
+  miner: require('role.miner'),
+  builder: require('role.builder'),
 }
 
 const evictCreepCache = () => {
@@ -62,17 +66,58 @@ const populateWorld = settings => {
   }
 }
 
+const planStructures = roomName => {
+  planStructures.roads(roomName)
+}
+
+planStructures.roads = roomName => {
+  const room = Game.rooms[roomName]
+  const sources = room.find(FIND_SOURCES)
+  const spawns = Game.spawns
+
+  if (Memory.roadsBuild === true) {
+    return
+  }
+
+  for (const name of Object.keys(spawns)) {
+    const spawn = spawns[name]
+
+    for (const source of sources) {
+      miscUtils.buildRoad({
+        room,
+        source: spawn.pos,
+        target: source.pos,
+        roomName
+      })
+
+      miscUtils.buildRoad({
+        room,
+        source: room.controller.pos,
+        target: source.pos,
+        roomName
+      })
+    }
+  }
+
+  Memory.roadsBuild = true
+}
+
 const getSettings = () => {
   const settings = {
     harvester: {
       expected: 3,
-      body: [CARRY, WORK, MOVE, MOVE],
-      icon: '⚡'
+      body: constants.roles.harvester.plans.standard,
+      icon: constants.roles.harvester.icon
     },
     upgrader: {
-      expected: 6,
-      body: [CARRY, CARRY, WORK, MOVE, MOVE],
-      icon: '▲'
+      expected: 3,
+      body: constants.roles.upgrader.plans.standard,
+      icon: constants.roles.upgrader.icon
+    },
+    builder: {
+      expected: 1,
+      body: constants.roles.builder.plans.standard,
+      icon: constants.roles.builder.icon
     },
     /*
     miner: {
@@ -91,6 +136,7 @@ const loop = () => {
 
   tickRoles()
   populateWorld(getSettings())
+  planStructures('W16N33')
 }
 
 module.exports.loop = loop

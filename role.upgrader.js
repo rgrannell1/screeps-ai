@@ -7,7 +7,7 @@ upgrader.run = creep => {
   const isEmpty = creep.carry.energy < creep.carryCapacity
 
   if (isEmpty) {
-    const target = creepUtils.findTarget(creep)
+    const target = creepUtils.findSource(creep)
     creepUtils.moveToTarget(creep, target)
   } else {
     creepUtils.moveToController(creep)
