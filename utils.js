@@ -26,18 +26,14 @@ creepUtils.findNearestConstructionSite = creep => {
     return current.distance < min.distance ? current : min
   })
 
-  return site
+  return site.site
 }
 
 creepUtils.moveToTarget = (creep, target) => {
   const {icon} = creep.memory
 
   if (creep.harvest(target) === ERR_NOT_IN_RANGE) {
-    creep.moveTo(target, {
-      visualisePathStyle: {
-        stroke: constants.pathStyles.harvestSource
-      }
-    })
+    creep.moveTo(target)
   } else {
     creep.say(`${icon} Active`)
   }
@@ -48,9 +44,7 @@ creepUtils.moveToSpawn = creep => {
   const {icon} = creep.memory
 
   if (creep.transfer(Game.spawns['Spawn1'], RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
-    creep.moveTo(Game.spawns['Spawn1'], {
-      stroke: constants.pathStyles.harvestSource
-    })
+    creep.moveTo(Game.spawns['Spawn1'])
   } else {
     creep.say(`${icon} At spawn`)
   }
@@ -77,19 +71,18 @@ creepUtils.moveToClosestSite = creep => {
   const site = creepUtils.findNearestConstructionSite(creep)
 
   if (site) {
-    if(creep.build(site) == ERR_NOT_IN_RANGE) {
+    const buildCode = creep.build(site)
+    if (buildCode === ERR_NOT_IN_RANGE) {
       creep.moveTo(site)
-    } else {
+    } else if (buildCode === OK) {
       creep.say(`${icon} Build!`)
+    } else {
+      creep.say(`${icon} No ${buildCode}`)
     }
   }
 }
 
 const sourceUtils = {}
-
-sourceUtils.countOpenings = source => {
-
-}
 
 const miscUtils = {}
 
@@ -103,6 +96,10 @@ miscUtils.buildRoad = ({room, source, target, roomName}) => {
     const pos = new RoomPosition(x, y, roomName)
     pos.createConstructionSite(STRUCTURE_ROAD)
   }
+}
+
+miscUtils.pickCreepName = icon => {
+
 }
 
 module.exports = {

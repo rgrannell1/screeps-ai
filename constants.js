@@ -1,8 +1,5 @@
 
 const constants = {
-  pathStyles: {
-    harvestSource: '#FF69B4'
-  },
   roles: {
     harvester: {
       icon: '⚡',
@@ -17,7 +14,7 @@ const constants = {
       }
     },
     builder: {
-      icon: '🔨',
+      icon: '👷',
       plans: {
         standard: [CARRY, CARRY, WORK, MOVE, MOVE]
       }

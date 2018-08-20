@@ -17,7 +17,7 @@ const evictCreepCache = () => {
   }
 }
 
-const tickRoles = () => {
+const applyRoles = () => {
   for (const name of Object.keys(Game.creeps)) {
     const creep = Game.creeps[name]
     const {role} = creep.memory
@@ -28,8 +28,8 @@ const tickRoles = () => {
   }
 }
 
-const censusCreeps = spawn => {
-  const creeps = spawn.room.find(FIND_CREEPS)
+const censusCreeps = room => {
+  const creeps = room.find(FIND_CREEPS)
   const table = {}
 
   for (const name of Object.keys(creeps)) {
@@ -46,31 +46,28 @@ const censusCreeps = spawn => {
   return table
 }
 
-const populateWorld = settings => {
+const spawnCreeps = (room, settings) => {
+  const counts = censusCreeps(room)
+
   for (const spawnName of Object.keys(Game.spawns)) {
     const spawn = Game.spawns[spawnName]
-    const counts = censusCreeps(spawn)
 
     for (const role of Object.keys(settings)) {
       const {expected, body, icon} = settings[role]
       const moreNeeded = !counts.hasOwnProperty(role) || counts[role] < expected
 
       if (moreNeeded) {
-        const status = spawn.createCreep(body, undefined, {role, icon})
+        const creepName = miscUtils.pickCreepName(icon)
+        const status = spawn.createCreep(body, creepName, {role, icon})
         if (status !== OK && status !== ERR_NOT_ENOUGH_ENERGY && status !== ERR_BUSY) {
           console.log(status)
         }
       }
     }
-
   }
 }
 
-const planStructures = roomName => {
-  planStructures.roads(roomName)
-}
-
-planStructures.roads = roomName => {
+const planRoads = roomName => {
   const room = Game.rooms[roomName]
   const sources = room.find(FIND_SOURCES)
   const spawns = Game.spawns
@@ -83,19 +80,18 @@ planStructures.roads = roomName => {
     const spawn = spawns[name]
 
     for (const source of sources) {
-      miscUtils.buildRoad({
+      const shared = {
         room,
-        source: spawn.pos,
-        target: source.pos,
-        roomName
-      })
+        roomName,
+        target: source.pos
+      }
+      miscUtils.buildRoad(Object.assign({}, shared, {
+        source: spawn.pos
+      }))
 
-      miscUtils.buildRoad({
-        room,
-        source: room.controller.pos,
-        target: source.pos,
-        roomName
-      })
+      miscUtils.buildRoad(Object.assign({}, shared, {
+        source: room.controller.pos
+      }))
     }
   }
 
@@ -105,12 +101,12 @@ planStructures.roads = roomName => {
 const getSettings = () => {
   const settings = {
     harvester: {
-      expected: 3,
+      expected: 1,
       body: constants.roles.harvester.plans.standard,
       icon: constants.roles.harvester.icon
     },
     upgrader: {
-      expected: 3,
+      expected: 1,
       body: constants.roles.upgrader.plans.standard,
       icon: constants.roles.upgrader.icon
     },
@@ -133,10 +129,13 @@ const getSettings = () => {
 
 const loop = () => {
   evictCreepCache()
+  applyRoles()
 
-  tickRoles()
-  populateWorld(getSettings())
-  planStructures('W16N33')
+  for (const roomName of Object.keys(Game.rooms)) {
+    const room = Game.rooms[roomName]
+    spawnCreeps(room, getSettings())
+    planRoads(roomName)
+  }
 }
 
 module.exports.loop = loop
