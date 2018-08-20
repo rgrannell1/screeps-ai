@@ -109,6 +109,12 @@ creepUtils.moveToClosestSite = creep => {
   }
 }
 
+creepUtils.creepExists = role => {
+  return Object.keys(Game.creeps).some(creepName => {
+    return Game.creeps[creepName].memory.role === role
+  })
+}
+
 const sourceUtils = {}
 
 const miscUtils = {}
@@ -127,6 +133,12 @@ miscUtils.buildRoad = ({room, source, target, roomName}) => {
 
 miscUtils.pickCreepName = icon => {
 
+}
+
+miscUtils.getCreepCost = parts => {
+  return parts.reduce((sum, part) => {
+    return sum + constants.costs[part]
+  }, 0)
 }
 
 module.exports = {
