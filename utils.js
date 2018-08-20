@@ -101,9 +101,7 @@ creepUtils.moveToClosestSite = creep => {
     const buildCode = creep.build(site)
     if (buildCode === ERR_NOT_IN_RANGE) {
       creep.moveTo(site)
-    } else if (buildCode === OK) {
-      creep.say(`${icon} Build!`)
-    } else {
+    } else if (buildCode !== 0) {
       creep.say(`${icon} No ${buildCode}`)
     }
   }
@@ -118,22 +116,6 @@ creepUtils.creepExists = role => {
 const sourceUtils = {}
 
 const miscUtils = {}
-
-miscUtils.buildRoad = ({room, source, target, roomName}) => {
-  const roadPath = room.findPath(source, target, {
-    ignoreCreeps: true,
-    ignoreRoads: true
-  })
-
-  for (const {x, y} of roadPath) {
-    const pos = new RoomPosition(x, y, roomName)
-    pos.createConstructionSite(STRUCTURE_ROAD)
-  }
-}
-
-miscUtils.pickCreepName = icon => {
-
-}
 
 miscUtils.getCreepCost = parts => {
   return parts.reduce((sum, part) => {

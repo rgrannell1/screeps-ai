@@ -1,16 +1,19 @@
 
 const {creepUtils} = require('./utils')
+const roads = require('./roads')
 
 const upgrader = {}
 
 upgrader.run = creep => {
   const notFull = creep.carry.energy < creep.carryCapacity
 
-  if (notFull) {
+  const hasEssentialCreeps = creepUtils.creepExists('harvester') && creepUtils.creepExists('upgrader')
+
+  if (notFull && hasEssentialCreeps) {
     const spawn = Game.spawns['Spawn1']
     creepUtils.chargeAtSpawn(creep, spawn, 200)
   } else {
-    creepUtils.repairRoads(creep)
+    roads.repair(creep)
   }
 }
 

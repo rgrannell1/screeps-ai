@@ -1,6 +1,7 @@
 
 const constants = require('./constants')
-const {sourceUtils, miscUtils} = require('./utils')
+const misc = require('./misc')
+const {sourceUtils} = require('./utils')
 
 const censusCreeps = room => {
   const creeps = room.find(FIND_CREEPS)
@@ -26,7 +27,7 @@ const shouldCreateCreep = (priority, settings, census) => {
   })
 
   const allPresent = requiredRoles.every(role => {
-    return !!census[role]
+    return census[role] === settings[role].expected
   })
 
   return allPresent
@@ -48,7 +49,7 @@ const spawn = (room, settings) => {
       const moreNeeded = !counts.hasOwnProperty(role) || counts[role] < expected
 
       if (moreNeeded && shouldCreateCreep(priority, settings, counts)) {
-        const creepName = miscUtils.pickCreepName(icon)
+        const creepName = misc.pickCreepName(icon)
         const status = spawn.createCreep(body, creepName, {role, icon, priority})
         if (status !== OK && status !== ERR_NOT_ENOUGH_ENERGY && status !== ERR_BUSY) {
           console.log(status)

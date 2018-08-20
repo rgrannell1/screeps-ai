@@ -1,6 +1,6 @@
 
 const constants = require('./constants')
-const {sourceUtils, miscUtils} = require('./utils')
+const {sourceUtils} = require('./utils')
 const roads = require('./roads')
 const spawner = require('./spawner')
 
@@ -33,13 +33,13 @@ const applyRoles = () => {
 const getSettings = () => {
   const settings = {
     harvester: {
-      expected: 1,
+      expected: 4,
       priority: 0,
       body: constants.roles.harvester.plans.standard,
       icon: constants.roles.harvester.icon
     },
     upgrader: {
-      expected: 1,
+      expected: 2,
       priority: 1,
       body: constants.roles.upgrader.plans.standard,
       icon: constants.roles.upgrader.icon

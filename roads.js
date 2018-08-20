@@ -1,7 +1,6 @@
 
 const roads = {}
 
-// -- todo add caching to reduce cpu hit
 roads.build = ({room, source, target, roomName}) => {
   const roadPath = room.findPath(source, target, {
     ignoreCreeps: true,
@@ -32,6 +31,18 @@ roads.plan = roomName => {
       roads.build({...sharedOpts, source: spawn.pos})
       roads.build({...sharedOpts, source: room.controller.pos})
     }
+  }
+}
+
+roads.repair = creep => {
+  const roads = creep.room.find(FIND_STRUCTURES, {
+    filter (object) {
+      return object.structureType === STRUCTURE_ROAD && (object.hits < (object.hitsMax / 4))
+    }
+  })
+
+  if (creep.repair(roadToRepair) === ERR_NOT_IN_RANGE) {
+    creep.moveTo(roadToRepair);
   }
 }
 
