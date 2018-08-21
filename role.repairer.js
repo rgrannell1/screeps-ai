@@ -11,7 +11,7 @@ upgrader.run = creep => {
 
   if (notFull && hasEssentialCreeps) {
     const spawn = Game.spawns['Spawn1']
-    creepUtils.chargeAtSpawn(creep, spawn, 200)
+    creepUtils.chargeAtSpawn(creep, spawn, 150)
   } else {
     roads.repair(creep)
   }

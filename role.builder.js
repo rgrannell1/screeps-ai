@@ -11,7 +11,7 @@ builder.run = creep => {
   const hasEssentialCreeps = creepUtils.creepExists('harvester') && creepUtils.creepExists('upgrader')
 
   if (isEmpty && hasEssentialCreeps) {
-    creepUtils.chargeAtSpawn(creep, spawn, 250)
+    creepUtils.chargeAtSpawn(creep, spawn, 150)
   } else {
     creepUtils.moveToClosestSite(creep)
   }

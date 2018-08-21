@@ -88,8 +88,6 @@ creepUtils.moveToController = creep => {
   const code = creep.upgradeController(creep.room.controller)
   if (code !== OK) {
     console.log(`not upgrading; code ${code}`)
-  } else {
-    creep.say(`${icon} Upgrading`)
   }
 }
 

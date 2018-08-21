@@ -24,25 +24,25 @@ roads.plan = roomName => {
     for (const source of sources) {
       const sharedOpts = {
         room,
-        roomName,
-        target: source.pos
+        roomName
       }
 
-      roads.build({...sharedOpts, source: spawn.pos})
-      roads.build({...sharedOpts, source: room.controller.pos})
+      roads.build({...sharedOpts, source: spawn.pos, target: source.pos})
+      roads.build({...sharedOpts, source: room.controller.pos, target: source.pos})
+      roads.build({...sharedOpts, source: room.controller.pos, target: spawn.pos})
     }
   }
 }
 
 roads.repair = creep => {
-  const roads = creep.room.find(FIND_STRUCTURES, {
+  const [road] = creep.room.find(FIND_STRUCTURES, {
     filter (object) {
-      return object.structureType === STRUCTURE_ROAD && (object.hits < (object.hitsMax / 4))
+      return object.structureType === STRUCTURE_ROAD && (object.hits < (object.hitsMax / 2))
     }
   })
 
-  if (creep.repair(roadToRepair) === ERR_NOT_IN_RANGE) {
-    creep.moveTo(roadToRepair);
+  if (creep.repair(road) === ERR_NOT_IN_RANGE) {
+    creep.moveTo(road);
   }
 }
 
