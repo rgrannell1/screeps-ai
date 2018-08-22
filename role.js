@@ -15,7 +15,6 @@ function Role (states, {initalState}) {
       throw new Error(`state ${state} not supported.`)
     }
     const current = ctx.states[state]
-
     const onState = current.do
 
     if (typeof onState !== 'function') {
@@ -32,15 +31,17 @@ function Role (states, {initalState}) {
           throw new Error('non-string state returned')
         }
 
-        console.log(    `${creep.name} ${state} -> ${newState}`)
-        creep.memory.state = newState
-        creep.memory.stateTicks = 0
-        return
+        if (state !== newState) {
+          console.log(    `${creep.name} ${state} -> ${newState}`)
+          creep.memory.state = newState
+          creep.memory.stateTicks = 0
+          return
+        }
       }
     }
 
     creep.memory.stateTicks++
-    if (creep.memory.stateTicks > 20) {
+    if (creep.memory.stateTicks > 100) {
       console.log(`${creep.name} still in state ${state} after ${creep.memory.stateTicks} ticks`)
     }
   }

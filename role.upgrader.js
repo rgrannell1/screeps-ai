@@ -22,7 +22,20 @@ actions.SEEKING_SOURCE = creep => {
 }
 
 actions.HARVEST = creep => {
-  creep.harvest(Game.getObjectById(creep.memory.sourceId))
+  const harvestCode = creep.harvest(Game.getObjectById(creep.memory.sourceId))
+
+  misc.switch(harvestCode, {
+    [ERR_INVALID_TARGET]: () => {
+      creep.say("Bad Tgt")
+    },
+    [ERR_NOT_IN_RANGE]: () => {
+      creep.say("Stuck!")
+      creep.memory.state = 'SEEKING_SOURCE'
+    },
+    [ERR_NO_BODYPART]: () => {
+      creep.say("No Body")
+    }
+  })
 }
 
 actions.SEEKING_CONTROLLER = creep => {
@@ -40,9 +53,6 @@ actions.SEEKING_CONTROLLER = creep => {
     },
     [ERR_NO_BODYPART]: () => {
       creep.say("No Body")
-    },
-    default: code => {
-      console.log(code)
     }
   })
 }
@@ -50,6 +60,7 @@ actions.SEEKING_CONTROLLER = creep => {
 actions.UPGRADING = creep => {
   const upgradeCode = creep.upgradeController(Game.getObjectById(creep.memory.controllerId))
   misc.switch(upgradeCode, {
+    [OK]: () => {},
     [ERR_INVALID_TARGET]: () => {
       creep.say("Bad Tgt")
     },
@@ -87,10 +98,11 @@ senses.shouldSeekController = creep => {
 }
 
 senses.atSource = creep => {
-  const source = creep.moveTo(Game.getObjectById(creep.memory.sourceId))
-  return misc.switch(source, {
-    [ERR_NOT_IN_RANGE]: () => 'SEEKING_SOURCE',
-    [OK]: () => 'HARVEST'
+  const source = Game.getObjectById(creep.memory.sourceId)
+  creep.moveTo(source)
+  return misc.switch(creep.harvest(source), {
+    [OK]: () => 'HARVEST',
+    [ERR_NOT_IN_RANGE]: () => 'SEEKING_SOURCE'
   })
 }
 
@@ -102,9 +114,11 @@ senses.isDepleted = creep => {
 
 senses.atController = creep => {
   const controller = Game.getObjectById(creep.memory.controllerId)
-  const source = creep.moveTo()
-  return misc.switch(source, {
-    [OK]: () => 'UPGRADING'
+  creep.moveTo(controller)
+
+  return misc.switch(creep.upgradeController(controller), {
+    [OK]: () => 'UPGRADING',
+    [ERR_NOT_IN_RANGE]: () => 'SEEKING_CONTROLLER'
   })
 }
 

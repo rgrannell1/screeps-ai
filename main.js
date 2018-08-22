@@ -4,6 +4,7 @@ const {sourceUtils} = require('./utils')
 const roads = require('./roads')
 const spawner = require('./spawner')
 const telemetry = require('./telemetry')
+const misc = require('./misc')
 
 const roles = {
   harvester: require('role.harvester'),
@@ -34,6 +35,20 @@ const applyRoles = () => {
   }
 }
 
+const identifyCreeps = () => {
+  for (const name of Object.keys(Game.creeps)) {
+    const creep = Game.creeps[name]
+    const {role, state} = creep.memory
+
+    misc.switch(`${Game.time % 10}`, {
+      0: () => creep.say(role),
+      1: () => {
+        if (state) creep.say(state)
+      },
+    })
+  }
+}
+
 const loop = () => {
   evictCreepCache()
   applyRoles()
@@ -47,6 +62,8 @@ const loop = () => {
     }
     roads.plan(roomName)
   }
+
+  identifyCreeps()
 }
 
 module.exports.loop = loop
