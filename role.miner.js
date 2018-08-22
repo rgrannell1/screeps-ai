@@ -10,7 +10,7 @@ miner.run = creep => {
     const target = creepUtils.findMinerals(creep)
     creepUtils.moveToTarget(creep, target)
   } else {
-    creepUtils.moveToSpawn(creep)
+    creepUtils.transferEnergyToSpawn(creep)
   }
 }
 

@@ -6,11 +6,14 @@ const harvester = {}
 harvester.run = creep => {
   const notFull = creep.carry.energy < creep.carryCapacity
 
+    creepUtils.transferEnergyToSpawn(creep)
+
+
   if (notFull) {
     const target = creepUtils.findSource(creep)
     creepUtils.moveToTarget(creep, target)
   } else {
-    creepUtils.moveToSpawn(creep)
+    creepUtils.transferEnergyToSpawn(creep)
   }
 }
 

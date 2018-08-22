@@ -34,82 +34,17 @@ const applyRoles = () => {
   }
 }
 
-const getSettings = room => {
-  const settings = {}
-
-  Object.keys(getSettings).forEach(role => {
-    settings[role] = getSettings[role](room)
-  })
-
-  return settings
-}
-
-getSettings.harvester = () => {
-  const settings = {}
-
-  Object.assign(settings, {
-    expected: 5,
-    priority: 0,
-    body: constants.roles.harvester.plans.standard,
-    icon: constants.roles.harvester.icon
-  })
-
-  return settings
-}
-getSettings.upgrader = () => {
-  const settings = {}
-
-  Object.assign(settings, {
-    expected: 5,
-    priority: 1,
-    body: constants.roles.upgrader.plans.standard,
-    icon: constants.roles.upgrader.icon
-  })
-
-  return settings
-}
-
-getSettings.builder = room => {
-  const settings = {}
-
-  const SITE_TO_BUILDER_RATIO = 5
-  const siteCount = room.find(FIND_CONSTRUCTION_SITES).length
-  const expected = Math.ceil(siteCount / SITE_TO_BUILDER_RATIO)
-
-  Object.assign(settings, {
-    priority: 3,
-    expected,
-    body: constants.roles.builder.plans.standard,
-    icon: constants.roles.builder.icon
-  })
-
-  return settings
-}
-
-getSettings.repairer = room => {
-  const settings = {}
-
-  const STRUCTURE_TO_REPAIRER_RATIO = 50
-  const structureCount = room.find(FIND_STRUCTURES).length
-  const expected = Math.ceil(structureCount / STRUCTURE_TO_REPAIRER_RATIO)
-
-  Object.assign(settings, {
-    expected: expected,
-    priority: 2,
-    body: constants.roles.repairer.plans.standard,
-    icon: constants.roles.repairer.icon
-  })
-
-  return settings
-}
-
 const loop = () => {
   evictCreepCache()
   applyRoles()
 
   for (const roomName of Object.keys(Game.rooms)) {
     const room = Game.rooms[roomName]
-    spawner.spawn(room, getSettings(room))
+
+    for (const spawnName of Object.keys(Game.spawns)) {
+      const spawn = Game.spawns[spawnName]
+      spawner.spawn(room, spawn)
+    }
     roads.plan(roomName)
   }
 }

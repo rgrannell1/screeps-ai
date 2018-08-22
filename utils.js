@@ -35,21 +35,18 @@ creepUtils.moveToTarget = (creep, target) => {
   if (creep.harvest(target) === ERR_NOT_IN_RANGE) {
     creep.moveTo(target)
   } else {
-    creep.say(`${icon} Active`)
+
   }
 }
 
-creepUtils.chargeAtSpawn = (creep, spawn, minimumCharge = 0) => {
-  const {icon} = creep.memory
-
+creepUtils.chargeAtSpawn = (creep, spawn) => {
+  const minimumCharge = 0
   if (spawn.energy < minimumCharge) {
     return
   }
 
   if (creep.withdraw(spawn, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
     creep.moveTo(spawn)
-  } else {
-    creep.say(`${icon} Charge`)
   }
 }
 
@@ -66,28 +63,25 @@ creepUtils.repairRoads = creep => {
   creep.repair(roadToRepair);
 }
 
+creepUtils.transferEnergyToSpawn = creep => {
+  const {icon} = creep.memory
+
+  const spawn = Game.spawns['Spawn1']
+
+  if (creep.transfer(spawn, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
+    const moveStatus = creep.moveTo(spawn)
+  } else {
+
+  }
+}
+
 creepUtils.moveToSpawn = creep => {
-  const target = creepUtils.findSource(creep)
   const {icon} = creep.memory
 
   if (creep.transfer(Game.spawns['Spawn1'], RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
     creep.moveTo(Game.spawns['Spawn1'])
   } else {
     creep.say(`${icon} At spawn`)
-  }
-}
-
-creepUtils.moveToController = creep => {
-  const {icon} = creep.memory
-
-  if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
-    creep.moveTo(creep.room.controller)
-    return
-  }
-
-  const code = creep.upgradeController(creep.room.controller)
-  if (code !== OK) {
-    console.log(`not upgrading; code ${code}`)
   }
 }
 

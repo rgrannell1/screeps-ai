@@ -17,4 +17,13 @@ misc.getCreepCost = parts => {
   return parts.reduce((sum, part) => sum + constants.costs[part], 0)
 }
 
+misc.switch = (value, opts) => {
+  if (opts.hasOwnProperty(value)) {
+    return opts[value](value)
+  }
+  if (opts.default) {
+    return opts.default(value)
+  }
+}
+
 module.exports = misc

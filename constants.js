@@ -18,7 +18,7 @@ constants.roles = {
   harvester: {
     icon: 'H',
     plans: {
-      standard: [CARRY, WORK, WORK, MOVE]
+      standard: [CARRY, WORK, MOVE]
     }
   },
   upgrader: {
