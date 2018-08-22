@@ -45,6 +45,9 @@ const identifyCreeps = () => {
       1: () => {
         if (state) creep.say(state)
       },
+      3: () => {
+        creep.say(creep.name)
+      },
     })
   }
 }
