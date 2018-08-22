@@ -20,11 +20,13 @@ methods.run = (ctx, creep) => {
   }
 
   const response = onState(creep)
+  current.until.forEach((trans, ith) => {
+    if (typeof trans !== 'function') {
+      throw new Error(`missing #${ith} transition function for state "${state}"`)      
+    }
+  })
 
   for (const transition of current.until) {
-    if (!transition) {
-      throw new Error(`missing transition for state "${state}"`)
-    }
     const newState = transition(creep, response)
 
     if (newState) {
@@ -33,6 +35,9 @@ methods.run = (ctx, creep) => {
       }
 
       if (state !== newState) {
+
+        methods.transition(ctx, state, newState, creep)
+
         console.log(`${creep.name} ${state} -> ${newState}`)
         creep.memory.state = newState
         creep.memory.stateTicks = 0

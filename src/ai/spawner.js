@@ -77,6 +77,19 @@ setSpawnQuotas.repairer = room => {
   return settings
 }
 
+setSpawnQuotas.scribe = room => {
+  const settings = {}
+
+  Object.assign(settings, {
+    expected: 1,
+    priority: 2,
+    body: constants.roles.scribe.plans.standard,
+    icon: constants.roles.scribe.icon
+  })
+
+  return settings
+}
+
 const censusCreeps = room => {
   const creeps = room.find(FIND_CREEPS)
   const table = {}

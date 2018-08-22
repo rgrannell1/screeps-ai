@@ -162,7 +162,6 @@ actions.SEEKING_SPAWN = creep => {
   })
 }
 
-
 actions.UPGRADING = creep => {
   const upgradeCode = creep.upgradeController(Game.getObjectById(creep.memory.controllerId))
   misc.switch(upgradeCode, {
@@ -181,6 +180,31 @@ actions.UPGRADING = creep => {
       console.log(code)
     }
   })
+}
+
+actions.SIGN_CONTROLLER = creep => {
+  const signCode = creep.signController(Game.getObjectById(creep.memory.controllerId))
+  misc.switch(signCode, {
+    [OK]: () => {},
+    [ERR_INVALID_TARGET]: () => {
+      creep.say('Bad Tgt')
+    },
+    [ERR_NO_BODYPART]: () => {
+      creep.say('No Body')
+    },
+    [ERR_NOT_IN_RANGE]: () => {
+      creep.say('Stuck!')
+      creep.memory.state = 'SEEKING_CONTROLLER'
+    },
+    default: code => {
+      console.log(code)
+    }
+  })
+}
+
+actions.DYING = creep => {
+  creep.say("Bye!")
+  creep.suicide()
 }
 
 module.exports = actions
