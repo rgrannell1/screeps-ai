@@ -10,7 +10,7 @@ methods.run = (ctx, creep) => {
 
   if (!ctx.states.hasOwnProperty(state)) {
     creep.memory.state = ctx.initalState
-    throw new Error(`state ${state} not supported; reverting to initialState`)
+    throw new Error(`state ${state} not supported! reverting to initialState`)
   }
   const current = ctx.states[state]
   const onState = current.do
@@ -33,7 +33,7 @@ methods.run = (ctx, creep) => {
       }
 
       if (state !== newState) {
-        console.log(`${creep.name} ${state} -> ${newState}`)
+        console.log(`${state} -> ${newState}`)
         creep.memory.state = newState
         creep.memory.stateTicks = 0
         return
@@ -43,14 +43,14 @@ methods.run = (ctx, creep) => {
 
   creep.memory.stateTicks++
   if (creep.memory.stateTicks > 100) {
-    console.log(`${creep.name} still in state ${state} after ${creep.memory.stateTicks} ticks`)
+    console.log(`still in state ${state} after ${creep.memory.stateTicks} ticks`)
   }
 }
 
-function Role (states, {initalState}) {
+function StateMachine (states, {initialState}) {
   const ctx = {states, initalState}
   ctx.run = methods.run.bind(null, ctx)
   return ctx
 }
 
-module.exports = Role
+module.exports = StateMachine

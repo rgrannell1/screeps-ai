@@ -5,12 +5,13 @@ const roads = require('./roads')
 const spawner = require('./spawner')
 const telemetry = require('./telemetry')
 const misc = require('./misc')
+const planner = require('./plans/planner')
 
 const roles = {
   harvester: require('./roles/harvester'),
   upgrader: require('./roles/upgrader'),
   miner: require('./roles/miner'),
-  builder: require('./roles/builder2'),
+  builder: require('./roles/builder'),
   repairer: require('./roles/repairer')
 }
 
@@ -47,7 +48,7 @@ const identifyCreeps = () => {
       },
       3: () => {
         creep.say(creep.name)
-      },
+      }
     })
   }
 }
@@ -63,7 +64,7 @@ const loop = () => {
       const spawn = Game.spawns[spawnName]
       spawner.spawn(room, spawn)
     }
-    roads.plan(roomName)
+    planner.run(roomName)
   }
 
   identifyCreeps()

@@ -59,8 +59,8 @@ creepUtils.repairRoads = creep => {
 
   console.log(roads)
 
-  creep.moveTo(roadToRepair);
-  creep.repair(roadToRepair);
+  creep.moveTo(roadToRepair)
+  creep.repair(roadToRepair)
 }
 
 creepUtils.transferEnergyToSpawn = creep => {

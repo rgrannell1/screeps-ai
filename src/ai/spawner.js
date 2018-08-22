@@ -46,7 +46,9 @@ setSpawnQuotas.builder = room => {
 
   const SITE_TO_BUILDER_RATIO = 5
   const siteCount = room.find(FIND_CONSTRUCTION_SITES).length
-  const expected = Math.ceil(siteCount / SITE_TO_BUILDER_RATIO)
+  const expected = Math.max(
+    1,
+    Math.ceil(siteCount / SITE_TO_BUILDER_RATIO))
 
   Object.assign(settings, {
     priority: 3,
@@ -176,7 +178,9 @@ const spawner = (room, spawn) => {
 
 spawner.displayProgress = spawn => {
   if (Game.time % 5 === 0) {
-    console.log(`[ ${spawn.energy} / ${spawn.memory.energyLock} towards ${spawn.memory.queued.role} ]`)
+    if (spawn.memory.energyLock) {
+      console.log(`[ ${spawn.energy} / ${spawn.memory.energyLock} towards ${spawn.memory.queued.role} ]`)    
+    }
   }
 }
 

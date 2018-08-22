@@ -2,12 +2,10 @@
 const constants = require('./constants')
 const misc = {}
 
-const parts = ['ba', 'be', 'bi', 'bo', 'bu', 'by', 'da', 'de', 'di', 'do', 'du', 'dy', 'fa', 'fe', 'fi', 'fo', 'fu', 'fy', 'ga', 'ge', 'gi', 'go', 'gu', 'gy', 'ha', 'he', 'hi', 'ho', 'hu', 'hy', 'ja', 'je', 'ji', 'jo', 'ju', 'jy', 'ka', 'ke', 'ki', 'ko', 'ku', 'ky', 'la', 'le', 'li', 'lo', 'lu', 'ly', 'ma', 'me', 'mi', 'mo', 'mu', 'my', 'na', 'ne', 'ni', 'no', 'nu', 'ny', 'pa', 'pe', 'pi', 'po', 'pu', 'py', 'ra', 're', 'ri', 'ro', 'ru', 'ry', 'sa', 'se', 'si', 'so', 'su', 'sy', 'ta', 'te', 'ti', 'to', 'tu', 'ty', 'va', 've', 'vi', 'vo', 'vu', 'vy', 'bra', 'bre', 'bri', 'bro', 'bru', 'bry', 'dra', 'dre', 'dri', 'dro', 'dru', 'dry', 'fra', 'fre', 'fri', 'fro', 'fru', 'fry', 'gra', 'gre', 'gri', 'gro', 'gru', 'gry', 'pra', 'pre', 'pri', 'pro', 'pru', 'pry', 'sta', 'ste', 'sti', 'sto', 'stu', 'sty', 'tra', 'tre']
-
 misc.pickCreepName = () => {
   let name = ''
   for (let ith = 0; ith < 4; ++ith) {
-    name += parts[Math.floor(Math.random() * parts.length)]
+    name += constants.koremutake[Math.floor(Math.random() * constants.koremutake.length)]
   }
 
   return name
@@ -24,6 +22,32 @@ misc.switch = (value, opts) => {
   if (opts.default) {
     return opts.default(value)
   }
+}
+
+misc.nearbyTiles = (pos, {dist, roomName}) => {
+  const tiles = []
+
+  for (const x of [pos.x - dist, pos.x + dist]) {
+    if (x < 0) continue
+    for (const y of [pos.y - dist, pos.y + dist]) {
+      if (y < 0) continue
+
+      tiles.push(new RoomPosition(x, y, roomName))
+    }
+  }
+
+  return tiles
+}
+
+misc.nearbyEmptyTiles = (pos, {dist, roomName}) => {
+  const room = Game.rooms[roomName]
+
+  return misc.nearbyTiles(pos, {dist, roomName}).filter(tile => {
+    const occupiers = room.lookAt(tile)
+    return !occupiers.some(entry => {
+      entry.terrain === 'wall'
+    })
+  })
 }
 
 module.exports = misc

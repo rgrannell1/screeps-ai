@@ -26,14 +26,14 @@ actions.HARVEST = creep => {
 
   misc.switch(harvestCode, {
     [ERR_INVALID_TARGET]: () => {
-      creep.say("Bad Tgt")
+      creep.say('Bad Tgt')
     },
     [ERR_NOT_IN_RANGE]: () => {
-      creep.say("Stuck!")
+      creep.say('Stuck!')
       creep.memory.state = 'SEEKING_SOURCE'
     },
     [ERR_NO_BODYPART]: () => {
-      creep.say("No Body")
+      creep.say('No Body')
     }
   })
 }
@@ -49,10 +49,10 @@ actions.SEEKING_CONTROLLER = creep => {
   // -- todo arrived?
   misc.switch(moveCode, {
     [ERR_INVALID_TARGET]: () => {
-      creep.say("Bad Tgt")
+      creep.say('Bad Tgt')
     },
     [ERR_NO_BODYPART]: () => {
-      creep.say("No Body")
+      creep.say('No Body')
     }
   })
 }
@@ -62,13 +62,13 @@ actions.UPGRADING = creep => {
   misc.switch(upgradeCode, {
     [OK]: () => {},
     [ERR_INVALID_TARGET]: () => {
-      creep.say("Bad Tgt")
+      creep.say('Bad Tgt')
     },
     [ERR_NO_BODYPART]: () => {
-      creep.say("No Body")
+      creep.say('No Body')
     },
     [ERR_NOT_IN_RANGE]: () => {
-      creep.say("Stuck!")
+      creep.say('Stuck!')
       creep.memory.state = 'SEEKING_CONTROLLER'
     },
     default: code => {

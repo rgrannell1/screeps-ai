@@ -6,7 +6,10 @@
   "author": "rgrannell1 <r.grannell2@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "@rgrannell/index": "8.2.0",
     "@rgrannell/pulp": "8.2.0",
+    "chai": "4.1.2",
+    "eslint-plugin-screeps": "1.4.0",
     "rollup": "0.64.1",
     "standard": "11.0.1"
   },
