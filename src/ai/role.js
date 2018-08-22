@@ -12,7 +12,8 @@ function Role (states, {initalState}) {
     const state = creep.memory.state
 
     if (!ctx.states.hasOwnProperty(state)) {
-      throw new Error(`state ${state} not supported.`)
+      creep.memory.state = initalState
+      throw new Error(`state ${state} not supported; reverting to initialState`)
     }
     const current = ctx.states[state]
     const onState = current.do
@@ -24,6 +25,9 @@ function Role (states, {initalState}) {
     const response = onState(creep)
 
     for (const transition of current.until) {
+      if (!transition) {
+        throw new Error(`missing transition for state "${state}"`)
+      }
       const newState = transition(creep, response)
 
       if (newState) {

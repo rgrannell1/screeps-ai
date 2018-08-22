@@ -10,7 +10,7 @@ const roles = {
   harvester: require('role.harvester'),
   upgrader: require('role.upgrader'),
   miner: require('role.miner'),
-  builder: require('role.builder'),
+  builder: require('role.builder2'),
   repairer: require('role.repairer')
 }
 
