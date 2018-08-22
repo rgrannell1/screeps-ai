@@ -1,6 +1,6 @@
 
-const Role = require('role')
-const misc = require('./misc')
+const Role = require('./role')
+const misc = require('../misc')
 
 /*
   ==================== Actions ====================

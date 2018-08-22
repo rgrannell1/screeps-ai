@@ -1,6 +1,6 @@
 
-const {creepUtils} = require('./utils')
-const roads = require('./roads')
+const {creepUtils} = require('../utils')
+const roads = require('../roads')
 
 const upgrader = {}
 

@@ -1,5 +1,5 @@
 
-const {creepUtils} = require('./utils')
+const {creepUtils} = require('../utils')
 
 const harvester = {}
 

@@ -7,11 +7,11 @@ const telemetry = require('./telemetry')
 const misc = require('./misc')
 
 const roles = {
-  harvester: require('role.harvester'),
-  upgrader: require('role.upgrader'),
-  miner: require('role.miner'),
-  builder: require('role.builder2'),
-  repairer: require('role.repairer')
+  harvester: require('./roles/harvester'),
+  upgrader: require('./roles/upgrader'),
+  miner: require('./roles/miner'),
+  builder: require('./roles/builder2'),
+  repairer: require('./roles/repairer')
 }
 
 const evictCreepCache = () => {

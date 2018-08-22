@@ -1,7 +1,8 @@
 
-const constants = require('./constants')
-const {creepUtils} = require('./utils')
+const constants = require('../constants')
+const {creepUtils} = require('../utils')
 
+const xxxxxx = 1
 const builder = {}
 
 builder.run = creep => {
