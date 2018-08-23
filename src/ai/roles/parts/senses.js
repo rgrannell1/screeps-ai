@@ -18,7 +18,26 @@ senses.atController = creep => {
 
   return misc.switch(creep.upgradeController(controller), {
     [OK]: () => 'UPGRADING',
-    [ERR_NOT_IN_RANGE]: () => 'SEEKING_CONTROLLER'
+    [ERR_NOT_IN_RANGE]: () => 'SEEKING_CONTROLLER',
+    [ERR_NO_BODYPART]: () => {
+
+    }
+  })
+}
+
+senses.canSignController = creep => {
+  const controller = Game.getObjectById(creep.memory.controllerId)
+  creep.moveTo(controller)
+
+  return misc.switch(creep.signController(controller, constants.sign), {
+    [OK]: () => 'SIGNING',
+    [ERR_NOT_IN_RANGE]: () => 'SEEKING_CONTROLLER',
+    [ERR_NO_BODYPART]: () => {
+
+    },
+    default (val) {
+      console.log(`sign-code ${val}`)
+    }
   })
 }
 
@@ -68,7 +87,13 @@ senses.isDepleted = creep => {
 
 senses.shouldSeekController = creep => {
   if (creep.carry.energy === creep.carryCapacity) {
-    return 'SEEKING_SOURCE'
+    return 'SEEKING_CONTROLLER'
+  }
+}
+
+senses.shouldSeekSpawn = creep => {
+  if (creep.carry.energy === creep.carryCapacity) {
+    return 'SEEKING_SPAWN'
   }
 }
 
@@ -101,7 +126,6 @@ senses.atSource = creep => {
 
 senses.isSigned = creep => {
   const controller = Game.getObjectById(creep.memory.controllerId)
-
   if (controller && controller.sign && controller.sign.text === constants.sign) {
     return 'DYING'
   }

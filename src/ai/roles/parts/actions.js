@@ -1,6 +1,6 @@
 
-const Role = require('../role')
 const misc = require('../../misc')
+const constants = require('../../constants')
 
 const actions = {}
 
@@ -182,8 +182,9 @@ actions.UPGRADING = creep => {
   })
 }
 
-actions.SIGN_CONTROLLER = creep => {
-  const signCode = creep.signController(Game.getObjectById(creep.memory.controllerId))
+actions.SIGNING = creep => {
+  const sign = constants.sign
+  const signCode = creep.signController(Game.getObjectById(creep.memory.controllerId), sign)
   misc.switch(signCode, {
     [OK]: () => {},
     [ERR_INVALID_TARGET]: () => {

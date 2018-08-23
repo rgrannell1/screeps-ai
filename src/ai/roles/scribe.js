@@ -4,16 +4,12 @@ const misc = require('../misc')
 const actions = require('./parts/actions')
 const senses = require('./parts/senses')
 
-/*
-  ==================== States ====================
-*/
-
 const states = {
   SEEKING_CONTROLLER: {
     code: 'SEEK_CTRL',
     do: actions.SEEKING_CONTROLLER,
     until: [
-      senses.atController
+      senses.canSignController
     ]
   },
   SIGNING: {
@@ -24,9 +20,9 @@ const states = {
     ]
   },
   DYING: {
-    code: 'DYING',    
-    do.actions.DYING,
-    until: []    
+    code: 'DYING',
+    do: actions.DYING,
+    until: []
   }
 }
 

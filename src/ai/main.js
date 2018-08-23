@@ -12,7 +12,8 @@ const roles = {
   upgrader: require('./roles/upgrader'),
   miner: require('./roles/miner'),
   builder: require('./roles/builder'),
-  repairer: require('./roles/repairer')
+  repairer: require('./roles/repairer'),
+  scribe: require('./roles/scribe')
 }
 
 const evictCreepCache = () => {

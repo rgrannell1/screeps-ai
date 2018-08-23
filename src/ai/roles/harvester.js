@@ -13,14 +13,14 @@ const states = {
   SEEKING_SOURCE: {
     do: actions.SEEKING_SOURCE,
     until: [
-      senses.shouldSeekController,
+      senses.shouldSeekSpawn,
       senses.atSource
     ]
   },
   HARVEST: {
     do: actions.HARVEST,
     until: [
-      senses.shouldSeekController,
+      senses.shouldSeekSpawn,
       senses.atSource,
       senses.isDepletedSource
     ]

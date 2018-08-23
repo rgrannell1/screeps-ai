@@ -45,7 +45,7 @@ misc.nearbyEmptyTiles = (pos, {dist, roomName}) => {
   return misc.nearbyTiles(pos, {dist, roomName}).filter(tile => {
     const occupiers = room.lookAt(tile)
     return !occupiers.some(entry => {
-      entry.terrain === 'wall'
+      return entry.terrain === 'wall'
     })
   })
 }

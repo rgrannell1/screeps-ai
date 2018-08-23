@@ -1,6 +1,12 @@
 
 const methods = {}
 
+methods.transition = (ctx, state, newState, creep) => {
+  console.log(`${creep.name} ${state} -> ${newState}`)
+  creep.memory.state = newState
+  creep.memory.stateTicks = 0
+}
+
 methods.run = (ctx, creep) => {
   if (!creep.memory.hasOwnProperty('state')) {
     creep.memory.state = ctx.initalState
@@ -35,12 +41,7 @@ methods.run = (ctx, creep) => {
       }
 
       if (state !== newState) {
-
         methods.transition(ctx, state, newState, creep)
-
-        console.log(`${creep.name} ${state} -> ${newState}`)
-        creep.memory.state = newState
-        creep.memory.stateTicks = 0
         return
       }
     }
