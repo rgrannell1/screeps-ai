@@ -78,4 +78,16 @@ terrain.findSources = roomName => {
   return room.find(FIND_SOURCES)
 }
 
+terrain.findSpawns = roomName => {
+  return Object.values(Game.spawns)
+}
+
+terrain.findRoads = roomName => {
+  const room = Game.rooms[roomName]
+
+  return room.find(FIND_STRUCTURES, {
+    filter: object => object.structureType === STRUCTURE_ROAD
+  })
+}
+
 module.exports = terrain

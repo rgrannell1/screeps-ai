@@ -13,14 +13,12 @@ const states = {
     ]
   },
   SIGNING: {
-    code: 'SIGNING',
     do: actions.SIGNING,
     until: [
       senses.isSigned
     ]
   },
   DYING: {
-    code: 'DYING',
     do: actions.DYING,
     until: []
   }

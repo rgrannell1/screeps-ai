@@ -4,13 +4,10 @@ const misc = require('../misc')
 const actions = require('./parts/actions')
 const senses = require('./parts/senses')
 
-/*
-  ==================== States ====================
-*/
-
 const states = {
   SEEKING_CHARGE: {
     do: actions.SEEKING_CHARGE,
+    code: 'SEEK_CHG',
     until: [
       senses.shouldSeekCharge,
       senses.atCharge
@@ -25,6 +22,7 @@ const states = {
   },
   SEEKING_SITE: {
     do: actions.SEEKING_SITE,
+    code: 'SEEK_SITE',
     until: [
       senses.atSite
     ]

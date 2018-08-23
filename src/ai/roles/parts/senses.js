@@ -3,6 +3,17 @@ const misc = require('../../misc')
 const constants = require('../../constants')
 const senses = {}
 
+senses.atDamage = creep => {
+  const site = Game.getObjectById(creep.memory.damageId)
+
+  creep.moveTo(site)
+  return misc.switch(creep.repair(site), {
+    [OK]: () => 'CHARGE',
+    [ERR_NOT_IN_RANGE]: () => 'SEEKING_CHARGE'
+  })
+
+}
+
 senses.atCharge = creep => {
   const source = Game.getObjectById(creep.memory.sourceId)
   creep.moveTo(source)
@@ -87,6 +98,12 @@ senses.isDepletedCharge = creep => {
   if (creep.carry.energy === 0) {
     return 'SEEKING_CHARGE'
   }
+}
+
+senses.shouldSeekDamage = creep => {
+  if (creep.carry.energy === creep.carryCapacity) {
+    return 'SEEKING_DAMAGE'
+  }  
 }
 
 senses.shouldSeekController = creep => {

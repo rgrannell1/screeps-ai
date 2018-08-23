@@ -11,6 +11,7 @@ const senses = require('./parts/senses')
 const states = {
   SEEKING_SOURCE: {
     do: actions.SEEKING_SOURCE,
+    code: 'SEEK_SRC',            
     until: [
       senses.shouldSeekController,
       senses.atSource
@@ -25,6 +26,7 @@ const states = {
     ]
   },
   SEEKING_CONTROLLER: {
+    code: 'SEEK_CTRL',        
     do: actions.SEEKING_CONTROLLER,
     until: [
       senses.atController

@@ -45,10 +45,17 @@ setSpawnQuotas.builder = room => {
   const settings = {}
 
   const SITE_TO_BUILDER_RATIO = 5
-  const siteCount = room.find(FIND_CONSTRUCTION_SITES).length
+  const ENERGY_TO_BUILDER_RATIO = 1000
+
+  const sites = room.find(FIND_CONSTRUCTION_SITES)
+  const siteCount = sites.length
+  const totalRequiredEnergy = sites
+    .reduce((sum, site) => sum + (site.progressTotal - site.progress), 0) || 0
+
   const expected = Math.max(
     1,
-    Math.ceil(siteCount / SITE_TO_BUILDER_RATIO))
+    Math.ceil(siteCount / SITE_TO_BUILDER_RATIO),
+    Math.ceil(totalRequiredEnergy / ENERGY_TO_BUILDER_RATIO))
 
   Object.assign(settings, {
     priority: 3,

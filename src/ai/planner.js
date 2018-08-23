@@ -11,6 +11,7 @@ planner.run = roomName => {
 
   if (level > 1) {
     plans.sourceContainers(roomName)
+    plans.extensions(roomName)
   }
 }
 

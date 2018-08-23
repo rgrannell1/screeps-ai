@@ -221,4 +221,38 @@ actions.DYING = creep => {
   creep.suicide()
 }
 
+actions.SEEKING_DAMAGE = creep => {
+  delete creep.memory.spawnId
+  damageId = creep.memory.hasOwnProperty('damageId')
+    ? creep.memory.damageId
+    : null
+
+  if (!damageId) {
+    const isRepairable = new Set([STRUCTURE_EXTENSION, STRUCTURE_ROAD])
+    const [damage] = creep.room.find(FIND_STRUCTURES, {
+      filter (object) {
+        const shouldFix = isRepairable.has(object.structureType)
+        const hasReasonableDamage = (object.hitsMax - object.hits - 250)
+        const isHalfDead = (object.hits < (object.hitsMax / 2))
+
+        return shouldFix && (hasReasonableDamage || isHalfDead)
+      }
+    })
+
+    damageId = damage.id
+  }
+
+  creep.memory.damageId = damageId
+  const moveCode = creep.moveTo(Game.getObjectById(damageId))
+  misc.switch(moveCode, {
+    [ERR_INVALID_TARGET]: () => {
+      creep.say('Bad Tgt')
+    },
+    [ERR_NO_BODYPART]: () => {
+      creep.say('No Body')
+    }
+  })
+
+}
+
 module.exports = actions

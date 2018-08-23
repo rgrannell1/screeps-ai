@@ -37,12 +37,12 @@ const applyRoles = () => {
 const identifyCreeps = () => {
   for (const name of Object.keys(Game.creeps)) {
     const creep = Game.creeps[name]
-    const {role, state} = creep.memory
+    const {role, stateCode, state} = creep.memory
 
     misc.switch(`${Game.time % 10}`, {
       0: () => creep.say(role),
       1: () => {
-        if (state) creep.say(state)
+        if (state) creep.say(stateCode || state)
       },
       3: () => {
         creep.say(creep.name)

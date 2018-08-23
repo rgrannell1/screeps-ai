@@ -2,3 +2,4 @@ dist
 dist/*
 node_modules/*
 *.sublime-workspace
+yarn-error.log
