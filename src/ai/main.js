@@ -1,11 +1,8 @@
 
-const constants = require('./constants')
-const {sourceUtils} = require('./utils')
-const roads = require('./roads')
 const spawner = require('./spawner')
 const telemetry = require('./telemetry')
 const misc = require('./misc')
-const planner = require('./plans/planner')
+const planner = require('./planner')
 
 const roles = {
   harvester: require('./roles/harvester'),

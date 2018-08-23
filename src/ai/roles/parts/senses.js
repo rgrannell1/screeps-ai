@@ -7,7 +7,7 @@ senses.atCharge = creep => {
   const source = Game.getObjectById(creep.memory.sourceId)
   creep.moveTo(source)
   return misc.switch(creep.harvest(source), {
-    [OK]: () => 'SEEKING_SITE',
+    [OK]: () => 'CHARGE',
     [ERR_NOT_IN_RANGE]: () => 'SEEKING_CHARGE'
   })
 }
@@ -47,6 +47,7 @@ senses.atSite = creep => {
 
   return misc.switch(creep.build(site), {
     [OK]: () => 'BUILDING',
+    [ERR_INVALID_TARGET]: () => 'BUILDING',    
     [ERR_NOT_IN_RANGE]: () => 'SEEKING_SITE'
   })
 }
@@ -54,7 +55,7 @@ senses.atSite = creep => {
 senses.atSource = creep => {
   const source = Game.getObjectById(creep.memory.sourceId)
   creep.moveTo(source)
-  return misc.switch(creep.CHARGE(source), {
+  return misc.switch(creep.harvest(source), {
     [OK]: () => 'CHARGE',
     [ERR_NOT_IN_RANGE]: () => 'SEEKING_CHARGE'
   })
@@ -67,6 +68,9 @@ senses.atSpawn = creep => {
   return misc.switch(creep.transfer(spawn, RESOURCE_ENERGY), {
     [OK]: () => 'CHARGE_SPAWN',
     [ERR_NOT_IN_RANGE]: () => 'SEEKING_SPAWN',
+    [ERR_FULL] () {
+      // -- TODO
+    },
     default (code) {
       creep.say(`charge ${code}`)
     }
@@ -79,7 +83,7 @@ senses.isDepletedSource = creep => {
   }
 }
 
-senses.isDepleted = creep => {
+senses.isDepletedCharge = creep => {
   if (creep.carry.energy === 0) {
     return 'SEEKING_CHARGE'
   }
@@ -94,6 +98,12 @@ senses.shouldSeekController = creep => {
 senses.shouldSeekSpawn = creep => {
   if (creep.carry.energy === creep.carryCapacity) {
     return 'SEEKING_SPAWN'
+  }
+}
+
+senses.shouldSeekSite = creep => {
+  if (creep.carry.energy === creep.carryCapacity) {
+    return 'SEEKING_SITE'
   }
 }
 

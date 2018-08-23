@@ -9,9 +9,16 @@
     "@rgrannell/index": "8.2.0",
     "@rgrannell/pulp": "8.2.0",
     "chai": "4.1.2",
-    "eslint-plugin-screeps": "1.4.0"
+    "eslint-config-screeps": "1.1.1",
+    "eslint-config-standard": "11.0.0",
+    "eslint-plugin-import": "2.14.0",
+    "eslint-plugin-node": "7.0.1",
+    "eslint-plugin-promise": "4.0.0",
+    "eslint-plugin-screeps": "1.4.0",
+    "eslint-plugin-standard": "3.1.0"
   },
   "devDependencies": {
+    "eslint": "5.4.0",
     "webpack": "4.17.1",
     "webpack-cli": "3.1.0"
   }

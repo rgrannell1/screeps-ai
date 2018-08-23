@@ -1,5 +1,6 @@
 
 const plans = require('./plans')
+const terrain = require('./terrain')
 
 const planner = {}
 
@@ -11,7 +12,6 @@ planner.run = roomName => {
   if (level > 1) {
     plans.sourceContainers(roomName)
   }
-
 }
 
 module.exports = planner

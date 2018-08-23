@@ -2,7 +2,7 @@
 const methods = {}
 
 methods.transition = (ctx, state, newState, creep) => {
-  console.log(`${creep.name} ${state} -> ${newState}`)
+  console.log(`${creep.name} (${creep.memory.role}) ${state} -> ${newState}`)
   creep.memory.state = newState
   creep.memory.stateTicks = 0
 }

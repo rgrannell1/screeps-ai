@@ -5,7 +5,14 @@ const constants = require('../../constants')
 const actions = {}
 
 actions.BUILDING = creep => {
-  const buildCode = creep.upgradeController(Game.getObjectById(creep.memory.siteId))
+  const site = Game.getObjectById(creep.memory.siteId)
+  if (!site) {
+    console.log(`site missing (${creep.memory.siteId})`)
+    creep.say('Stuck!')
+    creep.memory.state = 'SEEKING_SITE'
+  }
+
+  const buildCode = creep.build(site)
   misc.switch(buildCode, {
     [OK]: () => {},
     [ERR_INVALID_TARGET]: () => {
@@ -25,7 +32,7 @@ actions.BUILDING = creep => {
 }
 
 actions.CHARGE = creep => {
-  const chargeCode = creep.charge(Game.getObjectById(creep.memory.sourceId))
+  const chargeCode = creep.harvest(Game.getObjectById(creep.memory.sourceId))
 
   misc.switch(chargeCode, {
     [ERR_INVALID_TARGET]: () => {
@@ -111,17 +118,23 @@ actions.SEEKING_CONTROLLER = creep => {
 }
 
 actions.SEEKING_SITE = creep => {
-  delete creep.memory.sideId
-  const siteId = creep.memory.hasOwnProperty('sideId')
-    ? creep.memory.sideId
-    : creep.room.find(FIND_CONSTRUCTION_SITES)
+  delete creep.memory.sourceId
+
+  let siteId = creep.memory.hasOwnProperty('siteId')
+    ? creep.memory.siteId
+    : null
+  if (!siteId) {
+    const [site] = creep.room.find(FIND_CONSTRUCTION_SITES)
+    siteId = site.id
+  }
 
   creep.memory.siteId = siteId
-  const moveCode = creep.moveTo(Game.getObjectById(siteId))
-  // -- todo arrived?
+  const site = Game.getObjectById(siteId)
+  const moveCode = creep.moveTo(site)
+
   misc.switch(moveCode, {
     [ERR_INVALID_TARGET]: () => {
-      creep.say('Bad Tgt')
+      creep.say('Bad Move')
     },
     [ERR_NO_BODYPART]: () => {
       creep.say('No Body')

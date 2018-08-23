@@ -79,9 +79,10 @@ setSpawnQuotas.repairer = room => {
 
 setSpawnQuotas.scribe = room => {
   const settings = {}
+  const signNotSet = room.controller.sign.text !== constants.sign
 
   Object.assign(settings, {
-    expected: 1,
+    expected: signNotSet ? 1 : 0,
     priority: 2,
     body: constants.roles.scribe.plans.standard,
     icon: constants.roles.scribe.icon
