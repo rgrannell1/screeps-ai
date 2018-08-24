@@ -32,6 +32,20 @@ const states = {
       senses.atController
     ]
   },
+  SEEKING_CONTAINER: {
+    code: 'SEEK_CNT',
+    do: actions.SEEKING_CONTAINER,
+    until: [
+      senses.atContainer
+    ]
+  },
+  DRAIN_CONTAINER: {
+    code: 'DRN_CNT',
+    do: actions.DRAIN_CONTAINER,
+    until: [
+      senses.shouldSeek.controller
+    ]
+  },
   UPGRADING: {
     do: actions.UPGRADING,
     until: [

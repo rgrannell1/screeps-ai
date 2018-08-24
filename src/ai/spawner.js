@@ -191,7 +191,7 @@ const spawner = (room, spawn) => {
     const shouldCreateCreep = expectedCount > requiredCount
 
     if (shouldCreateCreep) {
-      createCreep(spawn, {...data, role, name: misc.pickCreepName()})
+      createCreep(spawn, {...data, role, name: misc.pickCreepName(role)})
       break
     }
   }

@@ -107,6 +107,23 @@ actions.HARVEST = creep => {
   })
 }
 
+actions.DRAIN_CONTAINER = creep => {
+  const drainCode = creep.withdraw(Game.getObjectById(containerId), RESOURCE_ENERGY)
+
+  misc.switch(drainCode, {
+    [ERR_INVALID_TARGET]: () => {
+      creep.say('Bad Tgt')
+    },
+    [ERR_NOT_IN_RANGE]: () => {
+      creep.say('Stuck!')
+      creep.memory.state = 'SEEKING_CONTAINER'
+    },
+    [ERR_NO_BODYPART]: () => {
+      creep.say('No Body')
+    }
+  })
+}
+
 actions.SEEKING_CHARGE = creep => {
   delete creep.memory.siteId
   delete creep.memory.siteId

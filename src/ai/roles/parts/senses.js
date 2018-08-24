@@ -110,7 +110,8 @@ const onDepleted = state => creep => {
 
 senses.isDepleted = {
   needsSource: onDepleted('SEEKING_SOURCE'),
-  needsCharge: onDepleted('SEEKING_CHARGE')
+  needsCharge: onDepleted('SEEKING_CHARGE'),
+  needsContainer: onDepleted('SEEKING_CONTAINER')
 }
 
 senses.shouldSeek = {}
