@@ -44,7 +44,7 @@ setSpawnQuotas.upgrader = () => {
 setSpawnQuotas.builder = room => {
   const settings = {}
 
-  const SITE_TO_BUILDER_RATIO = 5
+  const SITE_TO_BUILDER_RATIO = 2
   const ENERGY_TO_BUILDER_RATIO = 1000
 
   const sites = room.find(FIND_CONSTRUCTION_SITES)
@@ -200,7 +200,7 @@ const spawner = (room, spawn) => {
 spawner.displayProgress = spawn => {
   if (Game.time % 5 === 0) {
     if (spawn.memory.energyLock) {
-      console.log(`[ ${spawn.energy} / ${spawn.memory.energyLock} towards ${spawn.memory.queued.role} ]`)    
+      console.log(`[ ${spawn.energy} / ${spawn.memory.energyLock} towards ${spawn.memory.queued.role} ]`)
     }
   }
 }

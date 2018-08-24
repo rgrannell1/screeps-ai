@@ -1,6 +1,5 @@
 
 const roads = require('../roads')
-const misc = require('../misc')
 
 const ringRoads = roomName => {
   const room = Game.rooms[roomName]

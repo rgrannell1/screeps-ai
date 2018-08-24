@@ -1,5 +1,6 @@
 
 const misc = require('../../misc')
+const terrain = require('../../terrain')
 const constants = require('../../constants')
 
 const actions = {}
@@ -51,6 +52,26 @@ actions.CHARGE = creep => {
 actions.CHARGE_SPAWN = creep => {
   const upgradeCode = creep.transfer(Game.getObjectById(creep.memory.spawnId), RESOURCE_ENERGY)
   misc.switch(upgradeCode, {
+    [OK]: () => {},
+    [ERR_INVALID_TARGET]: () => {
+      creep.say('Bad Tgt')
+    },
+    [ERR_NO_BODYPART]: () => {
+      creep.say('No Body')
+    },
+    [ERR_NOT_IN_RANGE]: () => {
+      creep.say('Stuck!')
+      creep.memory.state = 'SEEKING_SPAWN'
+    },
+    default: code => {
+      console.log(code)
+    }
+  })
+}
+
+actions.CHARGE_CONTAINER = creep => {
+  const chargeCode = creep.transfer(Game.getObjectById(creep.memory.containerId), RESOURCE_ENERGY)
+  misc.switch(chargeCode, {
     [OK]: () => {},
     [ERR_INVALID_TARGET]: () => {
       creep.say('Bad Tgt')
@@ -175,6 +196,35 @@ actions.SEEKING_SPAWN = creep => {
   })
 }
 
+actions.SEEKING_CONTAINER = creep => {
+  let containerId = creep.memory.hasOwnProperty('containerId')
+    ? creep.memory.containerId
+    : null
+
+  if (!containerId) {
+    const container = terrain.findClosestContainer(creep.pos)
+
+    if (!container) {
+      console.log('no containers found!')
+      return
+    } else {
+      containerId = container.id
+    }
+  }
+
+  creep.memory.containerId = containerId
+  const moveCode = creep.moveTo(Game.getObjectById(containerId))
+
+  misc.switch(moveCode, {
+    [ERR_INVALID_TARGET]: () => {
+      creep.say('Bad Tgt')
+    },
+    [ERR_NO_BODYPART]: () => {
+      creep.say('No Body')
+    }
+  })
+}
+
 actions.UPGRADING = creep => {
   const upgradeCode = creep.upgradeController(Game.getObjectById(creep.memory.controllerId))
   misc.switch(upgradeCode, {
@@ -217,29 +267,21 @@ actions.SIGNING = creep => {
 }
 
 actions.DYING = creep => {
-  creep.say("Bye!")
+  creep.say('Bye!')
   creep.suicide()
 }
 
 actions.SEEKING_DAMAGE = creep => {
   delete creep.memory.spawnId
-  damageId = creep.memory.hasOwnProperty('damageId')
+  let damageId = creep.memory.hasOwnProperty('damageId')
     ? creep.memory.damageId
     : null
 
   if (!damageId) {
     const isRepairable = new Set([STRUCTURE_EXTENSION, STRUCTURE_ROAD])
-    const [damage] = creep.room.find(FIND_STRUCTURES, {
-      filter (object) {
-        const shouldFix = isRepairable.has(object.structureType)
-        const hasReasonableDamage = (object.hitsMax - object.hits - 250)
-        const isHalfDead = (object.hits < (object.hitsMax / 2))
+    const [damaged] = terrain.findDamagedStructure(creep.room.name)
 
-        return shouldFix && (hasReasonableDamage || isHalfDead)
-      }
-    })
-
-    damageId = damage.id
+    damageId = damaged.id
   }
 
   creep.memory.damageId = damageId
@@ -253,6 +295,26 @@ actions.SEEKING_DAMAGE = creep => {
     }
   })
 
+}
+
+actions.REPAIR = creep => {
+  const repairId = creep.repair(Game.getObjectById(creep.memory.damageId))
+  misc.switch(repairId, {
+    [OK]: () => {},
+    [ERR_INVALID_TARGET]: () => {
+      creep.say('Bad Tgt')
+    },
+    [ERR_NO_BODYPART]: () => {
+      creep.say('No Body')
+    },
+    [ERR_NOT_IN_RANGE]: () => {
+      creep.say('Stuck!')
+      creep.memory.state = 'SEEKING_DAMAGE'
+    },
+    default: code => {
+      console.log(code)
+    }
+  })
 }
 
 module.exports = actions

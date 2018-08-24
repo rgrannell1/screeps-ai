@@ -1,6 +1,5 @@
 
 const Role = require('./role')
-const misc = require('../misc')
 const actions = require('./parts/actions')
 const senses = require('./parts/senses')
 
@@ -9,28 +8,29 @@ const states = {
     do: actions.SEEKING_CHARGE,
     code: 'SEEK_CHG',
     until: [
-      senses.shouldSeekCharge,
+      senses.shouldSeek.charge,
       senses.atCharge
     ]
   },
   CHARGE: {
     do: actions.CHARGE,
     until: [
-      senses.shouldSeekSite,
-      senses.isDepleted
+      senses.shouldSeek.site,
+      senses.isDepleted.needsCharge
     ]
   },
   SEEKING_SITE: {
     do: actions.SEEKING_SITE,
     code: 'SEEK_SITE',
     until: [
-      senses.atSite
+      senses.atSite,
+      senses.noSitesLeft
     ]
   },
   BUILDING: {
     do: actions.BUILDING,
     until: [
-      senses.isDepletedCharge
+      senses.isDepleted.needsCharge
     ]
   }
 }

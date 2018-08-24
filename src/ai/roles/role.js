@@ -8,32 +8,39 @@ methods.transition = (ctx, state, newState, creep) => {
   creep.memory.stateTicks = 0
 }
 
+methods.validate = (ctx, creep) => {
+  const state = creep.memory.state
+  const role = creep.memory.role
+
+  if (!ctx.states.hasOwnProperty(state)) {
+    creep.memory.state = ctx.initalState
+    throw new Error(`state ${state} for role ${role} not supported; reverting to initial-state`)
+  }
+
+  const current = ctx.states[state]
+
+  if (typeof current.do !== 'function') {
+    throw new Error(`invalid configuration for state "${state}"`)
+  }
+
+  current.until.forEach((trans, ith) => {
+    if (typeof trans !== 'function') {
+      throw new Error(`${role} missing #${ith} transition function for state "${state}"`)
+    }
+  })
+}
+
 methods.run = (ctx, creep) => {
   if (!creep.memory.hasOwnProperty('state')) {
     creep.memory.state = ctx.initalState
     creep.memory.stateTicks = 0
   }
-  const state = creep.memory.state
+  methods.validate(ctx, creep)
 
-  if (!ctx.states.hasOwnProperty(state)) {
-    creep.memory.state = ctx.initalState
-    throw new Error(`state ${state} not supported; reverting to initialState`)
-  }
-  const current = ctx.states[state]
-  const onState = current.do
+  const {state, role} = creep.memory
+  const response = ctx.states[state].do(creep)
 
-  if (typeof onState !== 'function') {
-    throw new Error(`invalid configuration for state "${state}"`)
-  }
-
-  const response = onState(creep)
-  current.until.forEach((trans, ith) => {
-    if (typeof trans !== 'function') {
-      throw new Error(`missing #${ith} transition function for state "${state}"`)      
-    }
-  })
-
-  for (const transition of current.until) {
+  for (const transition of ctx.states[state].until) {
     const newState = transition(creep, response)
 
     if (newState) {

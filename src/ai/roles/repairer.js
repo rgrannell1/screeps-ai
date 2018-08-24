@@ -7,21 +7,27 @@ const senses = require('./parts/senses')
 const states = {
   SEEKING_CHARGE: {
     do: actions.SEEKING_CHARGE,
-    code: 'SEEK_CHG',        
+    code: 'SEEK_CHG',
     until: [
-      senses.shouldSeekCharge,
+      senses.shouldSeek.charge,
       senses.atCharge
     ]
   },
   CHARGE: {
     do: actions.CHARGE,
     until: [
-      senses.shouldSeekDamage,
-      senses.isDepletedCharge
+      senses.shouldSeek.damage,
+      senses.isDepleted.needsCharge
+    ]
+  },
+  REPAIR: {
+    do: actions.REPAIR,
+    until: [
+      senses.isDepleted.needsCharge
     ]
   },
   SEEKING_DAMAGE: {
-    code: 'SEEK_DMG',        
+    code: 'SEEK_DMG',
     do: actions.SEEKING_DAMAGE,
     until: [
       senses.atDamage

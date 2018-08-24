@@ -11,22 +11,22 @@ const senses = require('./parts/senses')
 const states = {
   SEEKING_SOURCE: {
     do: actions.SEEKING_SOURCE,
-    code: 'SEEK_SRC',            
+    code: 'SEEK_SRC',
     until: [
-      senses.shouldSeekController,
+      senses.shouldSeek.controller,
       senses.atSource
     ]
   },
   HARVEST: {
     do: actions.HARVEST,
     until: [
-      senses.shouldSeekController,
+      senses.shouldSeek.controller,
       senses.atSource,
-      senses.isDepletedSource
+      senses.isDepleted.needsSource
     ]
   },
   SEEKING_CONTROLLER: {
-    code: 'SEEK_CTRL',        
+    code: 'SEEK_CTRL',
     do: actions.SEEKING_CONTROLLER,
     until: [
       senses.atController
@@ -35,7 +35,7 @@ const states = {
   UPGRADING: {
     do: actions.UPGRADING,
     until: [
-      senses.isDepletedSource
+      senses.isDepleted.needsSource
     ]
   }
 }

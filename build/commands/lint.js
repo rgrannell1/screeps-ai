@@ -9,7 +9,7 @@ const command = {
 
 command.cli = `
 Usage:
-  script lint 
+  script lint [--fix]
 Description:
   lint
 `

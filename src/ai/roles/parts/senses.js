@@ -1,5 +1,6 @@
 
 const misc = require('../../misc')
+const terrain = require('../../terrain')
 const constants = require('../../constants')
 const senses = {}
 
@@ -11,7 +12,6 @@ senses.atDamage = creep => {
     [OK]: () => 'CHARGE',
     [ERR_NOT_IN_RANGE]: () => 'SEEKING_CHARGE'
   })
-
 }
 
 senses.atCharge = creep => {
@@ -33,6 +33,16 @@ senses.atController = creep => {
     [ERR_NO_BODYPART]: () => {
 
     }
+  })
+}
+
+senses.atContainer = creep => {
+  const container = Game.getObjectById(creep.memory.containerId)
+  creep.moveTo(container)
+
+  return misc.switch(creep.transfer(container, RESOURCE_ENERGY), {
+    [OK]: () => 'CHARGE_CONTAINER',
+    [ERR_NOT_IN_RANGE]: () => 'SEEKING_CONTAINER'
   })
 }
 
@@ -58,9 +68,13 @@ senses.atSite = creep => {
 
   return misc.switch(creep.build(site), {
     [OK]: () => 'BUILDING',
-    [ERR_INVALID_TARGET]: () => 'BUILDING',    
+    [ERR_INVALID_TARGET]: () => 'BUILDING',
     [ERR_NOT_IN_RANGE]: () => 'SEEKING_SITE'
   })
+}
+
+senses.noSitesLeft = creep => {
+
 }
 
 senses.atSource = creep => {
@@ -88,57 +102,61 @@ senses.atSpawn = creep => {
   })
 }
 
-senses.isDepletedSource = creep => {
+const onDepleted = state => creep => {
   if (creep.carry.energy === 0) {
-    return 'SEEKING_SOURCE'
+    return state
   }
 }
 
-senses.isDepletedCharge = creep => {
-  if (creep.carry.energy === 0) {
-    return 'SEEKING_CHARGE'
-  }
+senses.isDepleted = {
+  needsSource: onDepleted('SEEKING_SOURCE'),
+  needsCharge: onDepleted('SEEKING_CHARGE')
 }
 
-senses.shouldSeekDamage = creep => {
+senses.shouldSeek = {}
+
+senses.shouldSeek.damage = creep => {
   if (creep.carry.energy === creep.carryCapacity) {
     return 'SEEKING_DAMAGE'
-  }  
+  }
 }
 
-senses.shouldSeekController = creep => {
+senses.shouldSeek.controller = creep => {
   if (creep.carry.energy === creep.carryCapacity) {
     return 'SEEKING_CONTROLLER'
   }
 }
 
-senses.shouldSeekSpawn = creep => {
+senses.shouldSeek.spawn = creep => {
   if (creep.carry.energy === creep.carryCapacity) {
     return 'SEEKING_SPAWN'
   }
 }
 
-senses.shouldSeekSite = creep => {
+senses.shouldSeek.site = creep => {
   if (creep.carry.energy === creep.carryCapacity) {
     return 'SEEKING_SITE'
   }
 }
 
-senses.isDepleted = creep => {
-  if (creep.carry.energy === 0) {
-    return 'SEEKING_SOURCE'
-  }
-}
-
-senses.shouldSeekCharge = creep => {
+senses.shouldSeek.charge = creep => {
   if (creep.carry.energy !== creep.carryCapacity) {
     return 'SEEKING_CHARGE'
   }
 }
 
-senses.shouldSeekSource = creep => {
+senses.shouldSeek.source = creep => {
   if (creep.carry.energy !== creep.carryCapacity) {
     return 'SEEKING_SOURCE'
+  }
+}
+
+senses.shouldSeek.container = creep => {
+  const isFull = creep.carry.energy !== creep.carryCapacity
+  const container = terrain.findClosestContainer(creep.pos)
+
+  if (isFull && container) {
+    return 'SEEKING_CONTAINER'
   }
 }
 

@@ -1,5 +1,4 @@
 
-const roads = require('../roads')
 const misc = require('../misc')
 const terrain = require('../terrain')
 
@@ -13,13 +12,13 @@ const sourceContainers = roomName => {
 
     const candidatePositions = terrain
       .getBorder(source.pos, 2)
-        .filter(tile => terrain.isPlain)
+      .filter(tile => terrain.isPlain)
 
     const [chosen] = candidatePositions
     const pos = new RoomPosition(chosen.x, chosen.y, roomName)
     const createCode = pos.createConstructionSite(STRUCTURE_CONTAINER)
 
-    const created = misc.switch(createCode, {
+    misc.switch(createCode, {
       [OK] () {
         if (!Memory.sources) {
           Memory.sources = {}
@@ -35,7 +34,6 @@ const sourceContainers = roomName => {
       }
     })
   }
-
 }
 
 module.exports = sourceContainers

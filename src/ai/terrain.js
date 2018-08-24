@@ -1,23 +1,6 @@
 
 const terrain = {}
 
-terrain.getRing = (centre, roomName) => {
-  const room = Game.rooms[roomName]
-
-  const tiles = []
-
-  for (const x of [pos.x - dist, pos.x + dist]) {
-    if (x < 0) continue
-    for (const y of [pos.y - dist, pos.y + dist]) {
-      if (y < 0) continue
-
-      tiles.push(new RoomPosition(x, y, roomName))
-    }
-  }
-
-  return tiles  
-}
-
 terrain.getBlock = (centre, dist) => {
   const bounds = {
     x: {
@@ -27,19 +10,19 @@ terrain.getBlock = (centre, dist) => {
     y: {
       lower: Math.max(0, centre.y - dist),
       upper: centre.y + dist
-    }    
+    }
   }
 
   const terrain = Game.rooms[centre.roomName].lookForAtArea(
-    LOOK_TERRAIN, 
-    bounds.y.lower, 
-    bounds.x.lower, 
-    bounds.y.upper, 
+    LOOK_TERRAIN,
+    bounds.y.lower,
+    bounds.x.lower,
+    bounds.y.upper,
     bounds.x.upper,
     true
   )
 
-  return terrain  
+  return terrain
 }
 
 terrain.getBorder = (centre, dist) => {
@@ -51,7 +34,7 @@ terrain.getBorder = (centre, dist) => {
     y: {
       lower: Math.max(0, centre.y - dist),
       upper: centre.y + dist
-    }    
+    }
   }
 
   const tiles = terrain.getBlock(centre, dist)
@@ -66,7 +49,7 @@ terrain.getBorder = (centre, dist) => {
 }
 
 terrain.isPlain = pos => {
-  return room.lookAt(pos).some(entry => entry.terrain === 'plain')  
+  return room.lookAt(pos).some(entry => entry.terrain === 'plain')
 }
 
 terrain.isWall = pos => {
@@ -78,6 +61,10 @@ terrain.findSources = roomName => {
   return room.find(FIND_SOURCES)
 }
 
+terrain.findClosestSource = pos => {
+  return pos.findClosestByRange(FIND_SOURCES)
+}
+
 terrain.findSpawns = roomName => {
   return Object.values(Game.spawns)
 }
@@ -87,6 +74,30 @@ terrain.findRoads = roomName => {
 
   return room.find(FIND_STRUCTURES, {
     filter: object => object.structureType === STRUCTURE_ROAD
+  })
+}
+
+terrain.findClosestContainer = pos => {
+  return pos.findClosestByRange(FIND_STRUCTURES, {
+    filter (item) {
+      return item.structure === STRUCTURE_CONTAINER
+    }
+  })
+}
+
+terrain.findDamagedStructure = roomName => {
+  const room = Game.rooms[roomName]
+
+  const REASONABLE_DAMAGE = 250
+  const isRepairable = new Set([STRUCTURE_EXTENSION, STRUCTURE_ROAD])
+  return room.find(FIND_STRUCTURES, {
+    filter (object) {
+      const shouldFix = isRepairable.has(object.structureType)
+      const hasReasonableDamage = (object.hitsMax - object.hits) > REASONABLE_DAMAGE
+      const isHalfDead = (object.hits < (object.hitsMax / 2))
+
+      return shouldFix && (hasReasonableDamage || isHalfDead)
+    }
   })
 }
 
