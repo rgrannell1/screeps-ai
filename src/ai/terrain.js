@@ -80,7 +80,7 @@ terrain.findRoads = roomName => {
 terrain.findClosestContainer = pos => {
   return pos.findClosestByRange(FIND_STRUCTURES, {
     filter (item) {
-      return item.structure === STRUCTURE_CONTAINER
+      return item.structureType === STRUCTURE_CONTAINER
     }
   })
 }
@@ -99,6 +99,20 @@ terrain.findDamagedStructure = roomName => {
       return shouldFix && (hasReasonableDamage || isHalfDead)
     }
   })
+}
+
+terrain.exists = {};
+
+terrain.exists.container = roomName => {
+  const room = Game.rooms[roomName]
+
+  const container = room.find(FIND_STRUCTURES, {
+    filter (item) {
+      return item.structureType === STRUCTURE_CONTAINER
+    }
+  })
+
+  return container != null
 }
 
 module.exports = terrain

@@ -9,7 +9,7 @@ senses.atDamage = creep => {
 
   creep.moveTo(site)
   return misc.switch(creep.repair(site), {
-    [OK]: () => 'CHARGE',
+    [OK]: () => 'REPAIR',
     [ERR_NOT_IN_RANGE]: () => 'SEEKING_CHARGE'
   })
 }
@@ -152,10 +152,9 @@ senses.shouldSeek.source = creep => {
 }
 
 senses.shouldSeek.container = creep => {
-  const isFull = creep.carry.energy !== creep.carryCapacity
-  const container = terrain.findClosestContainer(creep.pos)
+  const isFull = creep.carry.energy === creep.carryCapacity
 
-  if (isFull && container) {
+  if (isFull && terrain.exists.container(creep.room.name)) {
     return 'SEEKING_CONTAINER'
   }
 }

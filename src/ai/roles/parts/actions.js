@@ -8,8 +8,9 @@ const actions = {}
 actions.BUILDING = creep => {
   const site = Game.getObjectById(creep.memory.siteId)
   if (!site) {
-    console.log(`site missing (${creep.memory.siteId})`)
+    console.log(`site missing (id ${creep.memory.siteId})`)
     creep.say('Stuck!')
+    delete creep.memory.siteId
     creep.memory.state = 'SEEKING_SITE'
   }
 
@@ -108,6 +109,7 @@ actions.HARVEST = creep => {
 
 actions.SEEKING_CHARGE = creep => {
   delete creep.memory.siteId
+  delete creep.memory.siteId
 
   if (!creep.memory.sourceId) {
     var source = creep.pos.findClosestByRange(FIND_SOURCES)
@@ -115,6 +117,13 @@ actions.SEEKING_CHARGE = creep => {
 
   if (source && source.id) {
     creep.memory.sourceId = source.id
+    creep.moveTo(Game.getObjectById(creep.memory.sourceId))
+  }
+}
+
+actions.SEEKING_CHARGE = creep => {
+  if (creep.memory.sourceId) {
+    console.log('moving to sourceid')
     creep.moveTo(Game.getObjectById(creep.memory.sourceId))
   }
 }

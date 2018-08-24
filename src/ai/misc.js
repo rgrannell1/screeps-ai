@@ -2,13 +2,18 @@
 const constants = require('./constants')
 const misc = {}
 
-misc.pickCreepName = () => {
-  let name = ''
-  for (let ith = 0; ith < 4; ++ith) {
-    name += constants.koremutake[Math.floor(Math.random() * constants.koremutake.length)]
+misc.pickCreepName = role => {
+  if (!Memory.roles) {
+    Memory.roles = {}
   }
 
-  return name
+  if (Memory.roles.hasOwnProperty(role) && Memory.roles[role].hasOwnProperty('count')) {
+    Memory.roles[role].count++
+  } else {
+    Memory.roles[role] = {count: 0}
+  }
+
+  return `${role}-${Memory.roles[role].count}`
 }
 
 misc.getCreepCost = parts => {
