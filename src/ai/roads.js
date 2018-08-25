@@ -1,14 +1,14 @@
 
 const roads = {}
 
-roads.build = ({room, source, target, roomName}) => {
+roads.build = ({room, source, target}) => {
   const roadPath = room.findPath(source, target, {
     ignoreCreeps: true,
     ignoreRoads: true
   })
 
   for (const {x, y} of roadPath) {
-    const pos = new RoomPosition(x, y, roomName)
+    const pos = new RoomPosition(x, y, room.name)
     pos.createConstructionSite(STRUCTURE_ROAD)
   }
 }

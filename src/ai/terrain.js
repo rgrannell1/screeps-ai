@@ -61,6 +61,11 @@ terrain.findSources = roomName => {
   return room.find(FIND_SOURCES)
 }
 
+terrain.findMinerals = roomName => {
+  const room = Game.rooms[roomName]
+  return room.find(FIND_MINERALS)
+}
+
 terrain.findClosestSource = pos => {
   return pos.findClosestByRange(FIND_SOURCES)
 }
@@ -74,6 +79,19 @@ terrain.findRoads = roomName => {
 
   return room.find(FIND_STRUCTURES, {
     filter: object => object.structureType === STRUCTURE_ROAD
+  })
+}
+
+terrain.findController = roomName => {
+  return Game.rooms[roomName].controller
+}
+
+terrain.findContainers = roomName => {
+  const room = Game.rooms[roomName]
+  return room.find(FIND_STRUCTURES, {
+    filter (item) {
+      return item.structureType === STRUCTURE_CONTAINER
+    }
   })
 }
 

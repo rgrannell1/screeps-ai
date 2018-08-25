@@ -3,11 +3,14 @@ const misc = require('../misc')
 const terrain = require('../terrain')
 
 const sourceContainers = roomName => {
-  for (const source of terrain.findSources(roomName)) {
+  const sources = terrain.findSources(roomName)
+  for (const source of sources) {
 
     if (Memory.sources && Memory.sources[source.id]) {
-      // --validate present.
-      return
+      const containerCount = terrain.findContainers(roomName).length
+      if (containerCount === sources.length) {
+        return
+      }
     }
 
     const candidatePositions = terrain
@@ -30,7 +33,7 @@ const sourceContainers = roomName => {
         }
       },
       default (val) {
-        console.log(`create source error ${val}`)
+        console.log(`create container error ${val}`)
       }
     })
   }

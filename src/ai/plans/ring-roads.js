@@ -10,14 +10,9 @@ const ringRoads = roomName => {
     const spawn = spawns[name]
 
     for (const source of sources) {
-      const sharedOpts = {
-        room,
-        roomName
-      }
-
-      roads.build({...sharedOpts, source: spawn.pos, target: source.pos})
-      roads.build({...sharedOpts, source: room.controller.pos, target: source.pos})
-      roads.build({...sharedOpts, source: room.controller.pos, target: spawn.pos})
+      roads.build({room, source: spawn.pos, target: source.pos})
+      roads.build({room, source: room.controller.pos, target: source.pos})
+      roads.build({room, source: room.controller.pos, target: spawn.pos})
     }
   }
 }
