@@ -13,7 +13,9 @@ misc.pickCreepName = role => {
     Memory.roles[role] = {count: 0}
   }
 
-  return `${role}-${Memory.roles[role].count}`
+  const icon = constants.roles[role].icon
+
+  return `${icon}-${Memory.roles[role].count}`
 }
 
 misc.getCreepCost = parts => {

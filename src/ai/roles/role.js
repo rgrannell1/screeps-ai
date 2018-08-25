@@ -19,14 +19,17 @@ methods.validate = (ctx, creep) => {
 
   const current = ctx.states[state]
 
-  if (typeof current.do !== 'function') {
+  if (!current || typeof current.do !== 'function') {
     throw new Error(`invalid configuration for state "${state}"`)
   }
 
   current.until.forEach((trans, ith) => {
-    if (typeof trans !== 'function') {
-      throw new Error(`${role} missing #${ith} transition function for state "${state}"`)
+    if (typeof trans.run !== 'function') {
+      throw new Error(`${role} missing #${ith} state-change for state "${state}"`)
     }
+
+    // validate state-set
+
   })
 }
 
@@ -41,7 +44,7 @@ methods.run = (ctx, creep) => {
   const response = ctx.states[state].do(creep)
 
   for (const transition of ctx.states[state].until) {
-    const newState = transition(creep, response)
+    const newState = transition.run(creep, transition.states)
 
     if (newState) {
       if (`${newState}` !== newState) {

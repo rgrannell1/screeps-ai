@@ -4,10 +4,6 @@ const misc = require('../misc')
 const actions = require('./parts/actions')
 const senses = require('./parts/senses')
 
-/*
-  ==================== States ====================
-*/
-
 const states = {
   SEEKING_SOURCE: {
     do: actions.SEEKING_SOURCE,
@@ -22,6 +18,7 @@ const states = {
     until: [
       senses.shouldSeek.controller,
       senses.atSource,
+      senses.isDepleted.needsContainer,
       senses.isDepleted.needsSource
     ]
   },
@@ -43,12 +40,15 @@ const states = {
     code: 'DRN_CNT',
     do: actions.DRAIN_CONTAINER,
     until: [
-      senses.shouldSeek.controller
+      senses.shouldSeek.controller,
+      senses.isDepleted.needsContainer,
+      senses.isDepleted.needsSource
     ]
   },
   UPGRADING: {
     do: actions.UPGRADING,
     until: [
+      senses.isDepleted.needsContainer,
       senses.isDepleted.needsSource
     ]
   }

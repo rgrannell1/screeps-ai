@@ -112,7 +112,7 @@ terrain.exists.container = roomName => {
     }
   })
 
-  return container != null
+  return container.length > 0
 }
 
 module.exports = terrain

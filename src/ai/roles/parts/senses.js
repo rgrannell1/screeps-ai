@@ -4,55 +4,81 @@ const terrain = require('../../terrain')
 const constants = require('../../constants')
 const senses = {}
 
-senses.atDamage = creep => {
-  const site = Game.getObjectById(creep.memory.damageId)
+const states = {
+  BUILDING: 'BUILDING',
+  SEEKING_SITE: 'SEEKING_SITE',
+  CHARGE: 'CHARGE',
+  SEEKING_CHARGE: 'SEEKING_CHARGE',
+  CHARGE_CONTAINER: 'CHARGE_CONTAINER',
+  SEEKING_CONTAINER: 'SEEKING_CONTAINER',
+  CHARGE_SPAWN: 'CHARGE_SPAWN',
+  SEEKING_SPAWN: 'SEEKING_SPAWN',
+  DYING: 'DYING',
+  HARVEST: 'HARVEST',
+  SEEKING_SOURCE: 'SEEKING_SOURCE',
+  REPAIR: 'REPAIR',
+  SEEKING_CONTROLLER: 'SEEKING_CONTROLLER',
+  SEEKING_DAMAGE: 'SEEKING_DAMAGE',
+  SIGNING: 'SIGNING',
+  UPGRADING: 'UPGRADING',
+}
+
+
+const StateChange = (run, states) => {
+  return {run, states}
+}
+
+const getObj = Game.getObjectById
+
+senses.atDamage = StateChange((creep, states2) => {
+  const site = getObj(creep.memory.damageId)
 
   creep.moveTo(site)
   return misc.switch(creep.repair(site), {
-    [OK]: () => 'REPAIR',
-    [ERR_NOT_IN_RANGE]: () => 'SEEKING_CHARGE'
+    [OK]: () => states.REPAIR,
+    [ERR_NOT_IN_RANGE]: () => states.SEEKING_CHARGE
   })
-}
+}, [states.REPAIR, states.SEEKING_CHARGE])
 
-senses.atCharge = creep => {
-  const source = Game.getObjectById(creep.memory.sourceId)
+senses.atCharge = StateChange((creep, states2) => {
+  const source = getObj(creep.memory.sourceId)
   creep.moveTo(source)
   return misc.switch(creep.harvest(source), {
-    [OK]: () => 'CHARGE',
-    [ERR_NOT_IN_RANGE]: () => 'SEEKING_CHARGE'
+    [OK]: () => states.CHARGE,
+    [ERR_NOT_IN_RANGE]: () => states.SEEKING_CHARGE
   })
-}
+}, [states.CHARGE, states.SEEKING_CHARGE])
 
-senses.atController = creep => {
-  const controller = Game.getObjectById(creep.memory.controllerId)
+senses.atController = StateChange((creep, states2) => {
+  const controller = getObj(creep.memory.controllerId)
   creep.moveTo(controller)
 
   return misc.switch(creep.upgradeController(controller), {
-    [OK]: () => 'UPGRADING',
-    [ERR_NOT_IN_RANGE]: () => 'SEEKING_CONTROLLER',
+    [OK]: () => states.UPGRADING,
+    [ERR_NOT_IN_RANGE]: () => states.SEEKING_CONTROLLER,
     [ERR_NO_BODYPART]: () => {
 
     }
   })
-}
+}, [states.UPGRADING, states.SEEKING_CONTROLLER])
 
-senses.atContainer = creep => {
-  const container = Game.getObjectById(creep.memory.containerId)
+senses.atContainer = StateChange((creep, states2) => {
+  const container = getObj(creep.memory.containerId)
   creep.moveTo(container)
 
   return misc.switch(creep.transfer(container, RESOURCE_ENERGY), {
-    [OK]: () => 'CHARGE_CONTAINER',
-    [ERR_NOT_IN_RANGE]: () => 'SEEKING_CONTAINER'
+    [OK]: () => states.CHARGE_CONTAINER,
+    [ERR_NOT_IN_RANGE]: () => states.SEEKING_CONTAINER
   })
-}
+}, [states.CHARGE_CONTAINER, states.SEEKING_CONTAINER])
 
-senses.canSignController = creep => {
-  const controller = Game.getObjectById(creep.memory.controllerId)
+senses.canSignController = StateChange((creep, states2) => {
+  const controller = getObj(creep.memory.controllerId)
   creep.moveTo(controller)
 
   return misc.switch(creep.signController(controller, constants.sign), {
-    [OK]: () => 'SIGNING',
-    [ERR_NOT_IN_RANGE]: () => 'SEEKING_CONTROLLER',
+    [OK]: () => states.SIGNING,
+    [ERR_NOT_IN_RANGE]: () => states.SEEKING_CONTROLLER,
     [ERR_NO_BODYPART]: () => {
 
     },
@@ -60,39 +86,39 @@ senses.canSignController = creep => {
       console.log(`sign-code ${val}`)
     }
   })
-}
+}, [states.SIGNING, states.SEEKING_CONTROLLER])
 
-senses.atSite = creep => {
-  const site = Game.getObjectById(creep.memory.siteId)
+senses.atSite = StateChange((creep, states2) => {
+  const site = getObj(creep.memory.siteId)
   creep.moveTo(site)
 
   return misc.switch(creep.build(site), {
-    [OK]: () => 'BUILDING',
-    [ERR_INVALID_TARGET]: () => 'BUILDING',
-    [ERR_NOT_IN_RANGE]: () => 'SEEKING_SITE'
+    [OK]: () => states.BUILDING,
+    [ERR_INVALID_TARGET]: () => states.BUILDING,
+    [ERR_NOT_IN_RANGE]: () => states.SEEKING_SITE
   })
-}
+}, [states.BUILDING, states.SEEKING_SITE])
 
-senses.noSitesLeft = creep => {
+senses.noSitesLeft = StateChange((creep, states2) => {
 
-}
+}, [])
 
-senses.atSource = creep => {
-  const source = Game.getObjectById(creep.memory.sourceId)
+senses.atSource = StateChange((creep, states2) => {
+  const source = getObj(creep.memory.sourceId)
   creep.moveTo(source)
   return misc.switch(creep.harvest(source), {
-    [OK]: () => 'CHARGE',
-    [ERR_NOT_IN_RANGE]: () => 'SEEKING_CHARGE'
+    [OK]: () => states.CHARGE,
+    [ERR_NOT_IN_RANGE]: () => states.SEEKING_CHARGE
   })
-}
+}, [states.CHARGE, states.SEEKING_CHARGE])
 
-senses.atSpawn = creep => {
-  const spawn = Game.getObjectById(creep.memory.spawnId)
+senses.atSpawn = StateChange((creep, states2) => {
+  const spawn = getObj(creep.memory.spawnId)
   creep.moveTo(spawn)
 
   return misc.switch(creep.transfer(spawn, RESOURCE_ENERGY), {
-    [OK]: () => 'CHARGE_SPAWN',
-    [ERR_NOT_IN_RANGE]: () => 'SEEKING_SPAWN',
+    [OK]: () => states.CHARGE_SPAWN,
+    [ERR_NOT_IN_RANGE]: () => states.SEEKING_SPAWN,
     [ERR_FULL] () {
       // -- TODO
     },
@@ -100,80 +126,81 @@ senses.atSpawn = creep => {
       creep.say(`charge ${code}`)
     }
   })
-}
+}, [states.CHARGE_SPAWN, states.SEEKING_SPAWN])
 
-const onDepleted = state => creep => {
+const onDepleted = state => StateChange((creep, states2) => {
   if (creep.carry.energy === 0) {
     return state
   }
-}
+}, )
 
 senses.isDepleted = {
-  needsSource: onDepleted('SEEKING_SOURCE'),
-  needsCharge: onDepleted('SEEKING_CHARGE'),
-  needsContainer: onDepleted('SEEKING_CONTAINER')
+  needsSource: onDepleted(states.SEEKING_SOURCE),
+  needsCharge: onDepleted(states.SEEKING_CHARGE),
+  needsContainer: onDepleted(states.SEEKING_CONTAINER)
 }
 
 senses.shouldSeek = {}
 
-senses.shouldSeek.damage = creep => {
+senses.shouldSeek.damage = StateChange((creep, states2) => {
   if (creep.carry.energy === creep.carryCapacity) {
-    return 'SEEKING_DAMAGE'
+    return states.SEEKING_DAMAGE
   }
-}
+}, [states.SEEKING_DAMAGE])
 
-senses.shouldSeek.controller = creep => {
+senses.shouldSeek.controller = StateChange((creep, states2) => {
   if (creep.carry.energy === creep.carryCapacity) {
-    return 'SEEKING_CONTROLLER'
+    return states.SEEKING_CONTROLLER
   }
-}
+}, [states.SEEKING_CONTROLLER])
 
-senses.shouldSeek.spawn = creep => {
+senses.shouldSeek.spawn = StateChange((creep, states2) => {
   if (creep.carry.energy === creep.carryCapacity) {
-    return 'SEEKING_SPAWN'
+    return states.SEEKING_SPAWN
   }
-}
+}, [states.SEEKING_SPAWN])
 
-senses.shouldSeek.site = creep => {
+senses.shouldSeek.site = StateChange((creep, states2) => {
   if (creep.carry.energy === creep.carryCapacity) {
-    return 'SEEKING_SITE'
+    return states.SEEKING_SITE
   }
-}
+}, [states.SEEKING_SITE])
 
-senses.shouldSeek.charge = creep => {
+senses.shouldSeek.charge = StateChange((creep, states2) => {
   if (creep.carry.energy !== creep.carryCapacity) {
-    return 'SEEKING_CHARGE'
+    return states.SEEKING_CHARGE
   }
-}
+}, [states.SEEKING_CHARGE])
 
-senses.shouldSeek.source = creep => {
+senses.shouldSeek.source = StateChange((creep, states2) => {
   if (creep.carry.energy !== creep.carryCapacity) {
-    return 'SEEKING_SOURCE'
+    return states.SEEKING_SOURCE
   }
-}
+}, [states.SEEKING_SOURCE])
 
-senses.shouldSeek.container = creep => {
+senses.shouldSeek.container = StateChange((creep, states2) => {
   const isFull = creep.carry.energy === creep.carryCapacity
+  const hasContainer = terrain.exists.container(creep.room.name)
 
   if (isFull && terrain.exists.container(creep.room.name)) {
-    return 'SEEKING_CONTAINER'
+    return states.SEEKING_CONTAINER
   }
-}
+}, [states.SEEKING_CONTAINER])
 
-senses.atSource = creep => {
-  const source = Game.getObjectById(creep.memory.sourceId)
+senses.atSource = StateChange((creep, states2) => {
+  const source = getObj(creep.memory.sourceId)
   creep.moveTo(source)
   return misc.switch(creep.harvest(source), {
-    [OK]: () => 'HARVEST',
-    [ERR_NOT_IN_RANGE]: () => 'SEEKING_SOURCE'
+    [OK]: () => states.HARVEST,
+    [ERR_NOT_IN_RANGE]: () => states.SEEKING_SOURCE
   })
-}
+}, [states.HARVEST, states.SEEKING_SOURCE])
 
-senses.isSigned = creep => {
-  const controller = Game.getObjectById(creep.memory.controllerId)
+senses.isSigned = StateChange((creep, states2) => {
+  const controller = getObj(creep.memory.controllerId)
   if (controller && controller.sign && controller.sign.text === constants.sign) {
-    return 'DYING'
+    return states.DYING
   }
-}
+}, [states.DYING])
 
 module.exports = senses

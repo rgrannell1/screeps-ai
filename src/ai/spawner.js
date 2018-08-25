@@ -28,6 +28,7 @@ setSpawnQuotas.harvester = () => {
 
   return settings
 }
+
 setSpawnQuotas.upgrader = () => {
   const settings = {}
 
@@ -36,6 +37,20 @@ setSpawnQuotas.upgrader = () => {
     priority: 1,
     body: constants.roles.upgrader.plans.standard,
     icon: constants.roles.upgrader.icon
+  })
+
+  return settings
+}
+
+setSpawnQuotas.transferer = () => {
+  // -- todo. make contingent on container existing.
+  const settings = {}
+
+  Object.assign(settings, {
+    expected: 2,
+    priority: 1,
+    body: constants.roles.transferer.plans.standard,
+    icon: constants.roles.transferer.icon
   })
 
   return settings
