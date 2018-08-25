@@ -18,7 +18,7 @@ actions.BUILDING = creep => {
   misc.switch(buildCode, {
     [OK]: () => {},
     [ERR_INVALID_TARGET]: () => {
-      creep.say('Bad Tgt')
+      creep.say('Bad build')
     },
     [ERR_NO_BODYPART]: () => {
       creep.say('No Body')
@@ -34,11 +34,16 @@ actions.BUILDING = creep => {
 }
 
 actions.CHARGE = creep => {
-  const chargeCode = creep.harvest(Game.getObjectById(creep.memory.sourceId))
+  const source = Game.getObjectById(creep.memory.sourceId)
+  if (!source) {
+    console.log('no source found for .CHARGE')
+  }
+
+  const chargeCode = creep.harvest(source)
 
   misc.switch(chargeCode, {
     [ERR_INVALID_TARGET]: () => {
-      creep.say('Bad Tgt')
+      creep.say('Bad chg')
     },
     [ERR_NOT_IN_RANGE]: () => {
       creep.say('Stuck!')
@@ -55,7 +60,7 @@ actions.CHARGE_SPAWN = creep => {
   misc.switch(upgradeCode, {
     [OK]: () => {},
     [ERR_INVALID_TARGET]: () => {
-      creep.say('Bad Tgt')
+      creep.say('Bad spwn')
     },
     [ERR_NO_BODYPART]: () => {
       creep.say('No Body')
@@ -75,7 +80,7 @@ actions.CHARGE_CONTAINER = creep => {
   misc.switch(chargeCode, {
     [OK]: () => {},
     [ERR_INVALID_TARGET]: () => {
-      creep.say('Bad Tgt')
+      creep.say('Bad cnt')
     },
     [ERR_NO_BODYPART]: () => {
       creep.say('No Body')
@@ -95,7 +100,7 @@ actions.HARVEST = creep => {
 
   misc.switch(harvestCode, {
     [ERR_INVALID_TARGET]: () => {
-      creep.say('Bad Tgt')
+      creep.say('Bad src')
     },
     [ERR_NOT_IN_RANGE]: () => {
       creep.say('Stuck!')
@@ -112,7 +117,7 @@ actions.DRAIN_CONTAINER = creep => {
 
   misc.switch(drainCode, {
     [ERR_INVALID_TARGET]: () => {
-      creep.say('Bad Tgt')
+      creep.say('Bad cnt')
     },
     [ERR_NOT_IN_RANGE]: () => {
       creep.say('Stuck!')
@@ -140,7 +145,6 @@ actions.SEEKING_CHARGE = creep => {
 
 actions.SEEKING_CHARGE = creep => {
   if (creep.memory.sourceId) {
-    console.log('moving to sourceid')
     creep.moveTo(Game.getObjectById(creep.memory.sourceId))
   }
 }
@@ -156,7 +160,7 @@ actions.SEEKING_CONTROLLER = creep => {
   // -- todo arrived?
   misc.switch(moveCode, {
     [ERR_INVALID_TARGET]: () => {
-      creep.say('Bad Tgt')
+      creep.say('Bad crtl')
     },
     [ERR_NO_BODYPART]: () => {
       creep.say('No Body')
@@ -181,7 +185,7 @@ actions.SEEKING_SITE = creep => {
 
   misc.switch(moveCode, {
     [ERR_INVALID_TARGET]: () => {
-      creep.say('Bad Move')
+      creep.say('Bad site')
     },
     [ERR_NO_BODYPART]: () => {
       creep.say('No Body')
@@ -214,7 +218,7 @@ actions.SEEKING_SPAWN = creep => {
   const moveCode = creep.moveTo(Game.getObjectById(spawnId))
   misc.switch(moveCode, {
     [ERR_INVALID_TARGET]: () => {
-      creep.say('Bad Tgt')
+      creep.say('Bad spwn')
     },
     [ERR_NO_BODYPART]: () => {
       creep.say('No Body')

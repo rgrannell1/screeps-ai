@@ -1,6 +1,7 @@
 
 const constants = require('./constants')
 const misc = require('./misc')
+const terrain = require('./terrain')
 const {sourceUtils} = require('./utils')
 
 const setSpawnQuotas = room => {
@@ -42,13 +43,17 @@ setSpawnQuotas.upgrader = () => {
   return settings
 }
 
-setSpawnQuotas.transferer = () => {
+setSpawnQuotas.transferer = room => {
   // -- todo. make contingent on container existing.
   const settings = {}
 
+  const expected = terrain.exists.container(room.name)
+    ? 2
+    : 0
+
   Object.assign(settings, {
     expected: 2,
-    priority: 1,
+    priority: expected,
     body: constants.roles.transferer.plans.standard,
     icon: constants.roles.transferer.icon
   })

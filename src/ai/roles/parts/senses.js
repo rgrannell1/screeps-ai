@@ -41,7 +41,13 @@ senses.atDamage = StateChange((creep, states2) => {
 }, [states.REPAIR, states.SEEKING_CHARGE])
 
 senses.atCharge = StateChange((creep, states2) => {
-  const source = getObj(creep.memory.sourceId)
+  const loaded = getObj(creep.memory.sourceId)
+  const source = loaded
+    ? loaded
+    : terrain.findClosestSource(creep.pos)
+
+  creep.memory.sourceId = source.id
+
   creep.moveTo(source)
   return misc.switch(creep.harvest(source), {
     [OK]: () => states.CHARGE,
@@ -64,13 +70,18 @@ senses.atController = StateChange((creep, states2) => {
 
 senses.atContainer = StateChange((creep, states2) => {
   const container = getObj(creep.memory.containerId)
+
+  if (!container) {
+    return states.SEEKING_SOURCE
+  }
+
   creep.moveTo(container)
 
   return misc.switch(creep.transfer(container, RESOURCE_ENERGY), {
     [OK]: () => states.CHARGE_CONTAINER,
     [ERR_NOT_IN_RANGE]: () => states.SEEKING_CONTAINER
   })
-}, [states.CHARGE_CONTAINER, states.SEEKING_CONTAINER])
+}, [states.SEEKING_SOURCE, states.CHARGE_CONTAINER, states.SEEKING_CONTAINER])
 
 senses.canSignController = StateChange((creep, states2) => {
   const controller = getObj(creep.memory.controllerId)
