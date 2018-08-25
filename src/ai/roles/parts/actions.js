@@ -76,7 +76,13 @@ actions.CHARGE_SPAWN = creep => {
 }
 
 actions.CHARGE_CONTAINER = creep => {
-  const chargeCode = creep.transfer(Game.getObjectById(creep.memory.containerId), RESOURCE_ENERGY)
+  const container = Game.getObjectById(creep.memory.containerId)
+
+  if (container.store.energy === CONTAINER_CAPACITY) {
+    console.log('container full! Need to seek altenative source!')
+  }
+
+  const chargeCode = creep.transfer(container, RESOURCE_ENERGY)
   misc.switch(chargeCode, {
     [OK]: () => {},
     [ERR_INVALID_TARGET]: () => {

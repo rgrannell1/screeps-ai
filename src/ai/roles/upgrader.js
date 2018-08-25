@@ -33,6 +33,7 @@ const states = {
     code: 'SEEK_CNT',
     do: actions.SEEKING_CONTAINER,
     until: [
+      senses.targetIsFull.container,
       senses.atContainer
     ]
   },

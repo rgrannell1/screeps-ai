@@ -23,7 +23,6 @@ const states = {
   UPGRADING: 'UPGRADING',
 }
 
-
 const StateChange = (run, states) => {
   return {run, states}
 }
@@ -75,11 +74,19 @@ senses.atContainer = StateChange((creep, states2) => {
     return states.SEEKING_SOURCE
   }
 
+  if (container.store.energy < CONTAINER_CAPACITY) {
+    return states.SEEKING_SOURCE
+  }
+
   creep.moveTo(container)
 
   return misc.switch(creep.transfer(container, RESOURCE_ENERGY), {
     [OK]: () => states.CHARGE_CONTAINER,
-    [ERR_NOT_IN_RANGE]: () => states.SEEKING_CONTAINER
+    [ERR_NOT_IN_RANGE]: () => states.SEEKING_CONTAINER,
+    [ERR_FULL]: () => states.CHARGE_CONTAINER,
+    default (val) {
+      console.log(`at container code ${val}`)
+    }
   })
 }, [states.SEEKING_SOURCE, states.CHARGE_CONTAINER, states.SEEKING_CONTAINER])
 
@@ -193,7 +200,7 @@ senses.shouldSeek.container = StateChange((creep, states2) => {
   const isFull = creep.carry.energy === creep.carryCapacity
   const hasContainer = terrain.exists.container(creep.room.name)
 
-  if (isFull && terrain.exists.container(creep.room.name)) {
+  if (isFull && hasContainer) {
     return states.SEEKING_CONTAINER
   }
 }, [states.SEEKING_CONTAINER])
@@ -213,5 +220,14 @@ senses.isSigned = StateChange((creep, states2) => {
     return states.DYING
   }
 }, [states.DYING])
+
+senses.targetIsFull = {}
+
+senses.targetIsFull.container = StateChange((creep, states2) => {
+  const container = getObj(creep.memory.containerId)
+  if (container && container.store.energy === CONTAINER_CAPACITY) {
+    return states.SEEKING_SOURCE
+  }
+}, [states.SEEKING_SOURCE])
 
 module.exports = senses

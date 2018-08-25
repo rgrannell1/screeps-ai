@@ -3,6 +3,8 @@ const spawner = require('./spawner')
 const telemetry = require('./telemetry')
 const misc = require('./misc')
 const planner = require('./planner')
+const structures = require('./structures')
+const terrain = require('./terrain')
 
 const roles = {
   harvester: require('./roles/harvester'),
@@ -40,14 +42,20 @@ const identifyCreeps = () => {
     const {role, stateCode, state} = creep.memory
 
     misc.switch(`${Game.time % 10}`, {
-      0: () => creep.say(role),
-      1: () => {
+      0: () => {
         if (state) creep.say(stateCode || state)
       },
-      3: () => {
+      1: () => {
         creep.say(creep.name)
       }
     })
+  }
+}
+
+const quantifyResources = roomName => {
+  for (const source of terrain.findSources(roomName)) {
+    const quality = terrain.getSourceQuality(source)
+    console.log(quality + 'q')
   }
 }
 
@@ -62,6 +70,9 @@ const loop = () => {
       const spawn = Game.spawns[spawnName]
       spawner.spawn(room, spawn)
     }
+
+    quantifyResources(roomName)
+    structures.placePlans()
     planner.run(roomName)
   }
 

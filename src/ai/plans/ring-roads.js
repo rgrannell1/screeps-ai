@@ -1,5 +1,6 @@
 
 const roads = require('../roads')
+const structures = require('../structures')
 
 const ringRoads = roomName => {
   const room = Game.rooms[roomName]
@@ -10,9 +11,9 @@ const ringRoads = roomName => {
     const spawn = spawns[name]
 
     for (const source of sources) {
-      roads.build({room, source: spawn.pos, target: source.pos})
-      roads.build({room, source: room.controller.pos, target: source.pos})
-      roads.build({room, source: room.controller.pos, target: spawn.pos})
+      structures.highway.place({room, source: spawn.pos, target: source.pos})
+      structures.highway.place({room, source: room.controller.pos, target: source.pos})
+      structures.highway.place({room, source: room.controller.pos, target: spawn.pos})
     }
   }
 }

@@ -46,6 +46,7 @@ const states = {
     code: 'CHARGE_CONTAINER',
     do: actions.CHARGE_CONTAINER,
     until: [
+      senses.targetIsFull.container,
       senses.isDepleted.needsSource
     ]
   }

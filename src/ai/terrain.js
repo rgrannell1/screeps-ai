@@ -49,16 +49,26 @@ terrain.getBorder = (centre, dist) => {
 }
 
 terrain.isPlain = pos => {
-  return room.lookAt(pos).some(entry => entry.terrain === 'plain')
+  return Game.rooms[pos.roomName].lookAt(pos).some(entry => entry.terrain === 'plain')
 }
 
 terrain.isWall = pos => {
-  return room.lookAt(pos).some(entry => entry.terrain === 'wall')
+  return Game.rooms[pos.roomName].lookAt(pos).some(entry => entry.terrain === 'wall')
 }
 
 terrain.findSources = roomName => {
   const room = Game.rooms[roomName]
   return room.find(FIND_SOURCES)
+}
+
+
+terrain.getSourceQuality = source => {
+  const surrounding = terrain.getBorder(source.pos, 1)
+
+  return
+  return surrounding.filter(tile => {
+    return !terrain.isWall(tile)
+  }).length
 }
 
 terrain.findMinerals = roomName => {
@@ -98,7 +108,11 @@ terrain.findContainers = roomName => {
 terrain.findClosestContainer = pos => {
   return pos.findClosestByRange(FIND_STRUCTURES, {
     filter (item) {
-      return item.structureType === STRUCTURE_CONTAINER
+      const isContainer = item.structureType === STRUCTURE_CONTAINER
+
+      if (isContainer) {
+        return item.store.energy < CONTAINER_CAPACITY
+      }
     }
   })
 }
