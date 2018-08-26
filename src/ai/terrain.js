@@ -72,10 +72,6 @@ terrain.getExitTiles = roomName => {
 
   for (let x = 0; x <= bounds.x.upper; x++) {
     for (let y = 0; y <= bounds.y.upper; y++) {
-      if (x !== bounds.x.lower && x !== bounds.x.upper) {
-        continue
-      }
-
       let isValid = {
         x: x === bounds.x.lower || x === bounds.x.upper,
         y: y === bounds.y.lower || y === bounds.y.upper,
