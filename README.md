@@ -5,6 +5,13 @@ Just another Screeps AI
 
 [![js-standard-style](https://cdn.rawgit.com/standard/standard/master/badge.svg)](http://standardjs.com)
 
+## Usage
+
+```bash
+yarn # or npm install
+node pulpfile.js build --watch
+```
+
 ## License
 
 Copyright (c) 2018 Ryan Grannell
