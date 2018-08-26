@@ -1,6 +1,12 @@
 
 const constants = {}
 
+constants.labels = {
+  exitRoads: 'exit_roads',
+  miningRoads: 'mining_roads',
+  ringRoads: 'ring_roads'
+}
+
 constants.sign = 'No intelligent life detected.'
 
 constants.costs = {

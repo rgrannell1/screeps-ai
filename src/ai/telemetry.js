@@ -19,4 +19,12 @@ telemetry.recordCreepPosition = creep => {
   record[x][y]++
 }
 
+telemetry.emit = (label, data) => {
+
+}
+
+telemetry.on = label => {
+
+}
+
 module.exports = telemetry

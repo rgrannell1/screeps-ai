@@ -1,4 +1,6 @@
 
+const telemetry = require('../telemetry')
+
 const methods = {}
 
 methods.transition = (ctx, state, newState, creep) => {
@@ -63,6 +65,12 @@ methods.run = (ctx, creep) => {
 
   creep.memory.stateTicks++
   if (creep.memory.stateTicks > 100) {
+    telemetry.emit('tick_warning', {
+      name: creep.name,
+      role: creep.memory.role,
+      ticks: creep.memory.stateTicks
+    })
+
     console.log(`${creep.name} still in state ${state} after ${creep.memory.stateTicks} ticks`)
   }
 }

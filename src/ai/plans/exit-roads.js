@@ -1,11 +1,12 @@
 
+const constants = require('../constants')
 const terrain = require('../terrain')
 const structures = require('../structures')
 
 const exitRoads = roomName => {
   const room = Game.rooms[roomName]
 
-  if (structures.planExists('exit_roads')) {
+  if (structures.planExists(constants.labels.exitRoads)) {
     return
   }
 
@@ -19,9 +20,9 @@ const exitRoads = roomName => {
     exits.find(exit => exit.x === 49),
     exits.find(exit => exit.y === 0),
     exits.find(exit => exit.y === 49)
-  ].filter(exit => exit != null)
+  ].filter(exit => typeof exit !== 'undefined')
 
-  const metadata = {label: 'exit_roads'}
+  const metadata = {label: constants.labels.exitRoads}
   const controller = terrain.findController(roomName)
   for (target of targets) {
     structures.highway.place({room, source: controller.pos, target: target}, metadata)
