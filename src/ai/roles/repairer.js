@@ -23,13 +23,15 @@ const states = {
   REPAIR: {
     do: actions.REPAIR,
     until: [
-      senses.isDepleted.needsCharge
+      senses.repairComplete,
+      senses.isDepleted.needsCharge,
     ]
   },
   SEEKING_DAMAGE: {
     code: 'SEEK_DMG',
     do: actions.SEEKING_DAMAGE,
     until: [
+      senses.isDepleted.needsCharge,
       senses.atDamage
     ]
   }

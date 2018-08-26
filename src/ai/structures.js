@@ -24,8 +24,12 @@ structures.placePlans = () => {
   }
 
   Memory.plans.forEach(plan => {
-    const pos = new RoomPosition(plan.pos.x, plan.pos.y, plan.pos.roomName)
-    pos.createConstructionSite(plan.plan.structure)
+    try {
+      const pos = new RoomPosition(plan.pos.x, plan.pos.y, plan.pos.roomName)
+      pos.createConstructionSite(plan.plan.structure)
+    } catch (err) {
+      throw new Error(`invalid plan ${JSON.stringify(plan)}: ${err.message}`)
+    }
   })
 }
 
@@ -69,6 +73,12 @@ structures.planExists = label => {
     ? Memory.plans
     : []
   return plans.some(({plan}) => plan.label === label)
+}
+
+structures.is = {}
+
+structures.is.damaged = site => {
+  return site.hits < site.hitsMax
 }
 
 module.exports = structures

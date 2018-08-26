@@ -20,7 +20,15 @@ telemetry.recordCreepPosition = creep => {
 }
 
 telemetry.emit = (label, data) => {
+  if (!Memory.events) {
+    Memory.events = []
+  }
 
+  if (Memory.events.length > 1000) {
+    console.log('Too many events in queue!')
+  } else {
+    Memory.events.push({label, data})
+  }
 }
 
 telemetry.on = label => {

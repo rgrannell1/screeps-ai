@@ -10,7 +10,6 @@ const extensions = roomName => {
     const block = terrain.getBlock(road.pos, 1)
   }
 
-
   return
 
   const sources = terrain.findSources(roomName)

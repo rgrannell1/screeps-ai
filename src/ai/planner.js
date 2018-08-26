@@ -20,6 +20,10 @@ planner.run = roomName => {
   if (level >= 4) {
     plans.miningRoads(roomName)
   }
+
+  if (Game.time % 20) {
+    plans.frequentRoads(roomName)
+  }
 }
 
 module.exports = planner

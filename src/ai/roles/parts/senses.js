@@ -23,6 +23,7 @@ const states = {
   UPGRADING: 'UPGRADING',
 }
 
+
 const StateChange = (run, states) => {
   return {run, states}
 }
@@ -38,6 +39,17 @@ senses.atDamage = StateChange((creep, states2) => {
     [ERR_NOT_IN_RANGE]: () => states.SEEKING_CHARGE
   })
 }, [states.REPAIR, states.SEEKING_CHARGE])
+
+senses.repairComplete = StateChange((creep, states2) => {
+  const site = getObj(creep.memory.damageId)
+
+  return misc.switch(-100, {
+    [OK]: () => states.SEEKING_CHARGE,
+    [ERR_NOT_IN_RANGE]: () => states.SEEKING_CHARGE
+  })
+
+
+}, [states.SEEKING_CHARGE])
 
 senses.atCharge = StateChange((creep, states2) => {
   const loaded = getObj(creep.memory.sourceId)
@@ -70,11 +82,7 @@ senses.atController = StateChange((creep, states2) => {
 senses.atContainerFromSpawn = StateChange((creep, states2) => {
   const container = getObj(creep.memory.containerId)
 
-  if (!container) {
-    return states.SEEKING_CONTAINER
-  }
-
-  if (container.store.energy < CONTAINER_CAPACITY) {
+  if (!container || container.store.energy < CONTAINER_CAPACITY) {
     return states.SEEKING_CONTAINER
   }
 

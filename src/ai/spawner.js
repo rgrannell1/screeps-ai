@@ -1,6 +1,7 @@
 
 const constants = require('./constants')
 const misc = require('./misc')
+const creeps = require('./creeps')
 const terrain = require('./terrain')
 
 const setSpawnQuotas = room => {
@@ -64,7 +65,7 @@ setSpawnQuotas.builder = room => {
   const settings = {}
 
   const SITE_TO_BUILDER_RATIO = 2
-  const ENERGY_TO_BUILDER_RATIO = 1000
+  const ENERGY_TO_BUILDER_RATIO = 750
 
   const sites = room.find(FIND_CONSTRUCTION_SITES)
   const siteCount = sites.length
@@ -201,8 +202,6 @@ const spawner = (room, spawn) => {
   const expected = setSpawnQuotas(room)
   const actual = censusCreeps(room)
 
-  spawner.displayProgress(spawn)
-
   for (const {role, data} of expected.sort(sortByPriority)) {
     const expectedCount = data.expected
     const requiredCount = actual[role] || 0
@@ -210,16 +209,19 @@ const spawner = (room, spawn) => {
     const shouldCreateCreep = expectedCount > requiredCount
 
     if (shouldCreateCreep) {
-      createCreep(spawn, {...data, role, name: misc.pickCreepName(role)})
+      createCreep(spawn, {...data, role, name: creeps.pickCreepName(role)})
       break
     }
   }
+
+  spawner.displayProgress(spawn)
+
 }
 
-spawner.displayProgress = spawn => {
+spawner.displayProgress = (spawn, expected) => {
   if (Game.time % 5 === 0) {
     if (spawn.memory.energyLock) {
-      console.log(`[ ${spawn.energy} / ${spawn.memory.energyLock} towards ${spawn.memory.queued.role} ]`)
+      console.log(`[ ${spawn.energy} / ${spawn.memory.energyLock} towards ${spawn.memory.queued.role}]`)
     }
   }
 }

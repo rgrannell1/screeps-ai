@@ -1,7 +1,9 @@
 
 const misc = require('../../misc')
 const terrain = require('../../terrain')
+const structures = require('../../structures')
 const constants = require('../../constants')
+const blessed = require('../../blessed')
 
 const actions = {}
 
@@ -318,44 +320,62 @@ actions.SEEKING_DAMAGE = creep => {
     ? creep.memory.damageId
     : null
 
-  if (!damageId) {
-    const isRepairable = new Set([STRUCTURE_EXTENSION, STRUCTURE_ROAD])
-    const [damaged] = terrain.findDamagedStructure(creep.room.name)
+  if (damageId && structures.is.damaged(Game.getObjectById(damageId))) {
+    damageId = null
+  }
 
+  if (!damageId) {
+    const [damaged] = terrain.findDamagedStructure(creep.room.name)
     damageId = damaged.id
   }
 
   creep.memory.damageId = damageId
   const moveCode = creep.moveTo(Game.getObjectById(damageId))
   misc.switch(moveCode, {
+    [OK]: () => {
+
+    },
     [ERR_INVALID_TARGET]: () => {
       creep.say('Bad Tgt')
     },
     [ERR_NO_BODYPART]: () => {
       creep.say('No Body')
+    },
+    default (val) {
+      blessed.log.red(`seek-damage-status ${val}`)
     }
   })
 
 }
 
 actions.REPAIR = creep => {
-  const repairId = creep.repair(Game.getObjectById(creep.memory.damageId))
-  misc.switch(repairId, {
-    [OK]: () => {},
-    [ERR_INVALID_TARGET]: () => {
-      creep.say('Bad Tgt')
-    },
-    [ERR_NO_BODYPART]: () => {
-      creep.say('No Body')
-    },
-    [ERR_NOT_IN_RANGE]: () => {
-      creep.say('Stuck!')
-      creep.memory.state = 'SEEKING_DAMAGE'
-    },
-    default: code => {
-      console.log(code)
-    }
-  })
+  const site = Game.getObjectById(creep.memory.damageId)
+
+  if (site.hits === site.hitsMax) {
+    // -- bodge
+    creep.memory.state = 'SEEKING_DAMAGE'
+    console.log(`${site.id} has no damage. forcibly deleting`)
+    delete creep.memory.damageId
+  } else {
+    const siteCode = creep.repair(site)
+
+    misc.switch(siteCode, {
+      [OK]: () => {},
+      [ERR_INVALID_TARGET]: () => {
+        creep.say('Bad Tgt')
+      },
+      [ERR_NO_BODYPART]: () => {
+        creep.say('No Body')
+      },
+      [ERR_NOT_IN_RANGE]: () => {
+        creep.say('Stuck!')
+        creep.memory.state = 'SEEKING_DAMAGE'
+      },
+      default: code => {
+        console.log(code)
+      }
+    })
+  }
 }
 
 module.exports = actions

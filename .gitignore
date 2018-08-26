@@ -1,5 +1,9 @@
 dist
 dist/*
 node_modules/*
+monitoring/node_modules/*
 *.sublime-workspace
 yarn-error.log
+.screeps.yaml
+.screeps-multimeter.history
+screeps-multimeter.json

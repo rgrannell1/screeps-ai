@@ -7,7 +7,8 @@ const plans = {
   sourceContainers: require('./source-containers'),
   extensions: require('./extensions'),
   miningRoads: require('./mining-roads'),
-  exitRoads: require('./exit-roads')
+  exitRoads: require('./exit-roads'),
+  frequentRoads: require('./frequent-roads')
 }
 
 module.exports = plans

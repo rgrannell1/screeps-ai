@@ -46,15 +46,4 @@ misc.nearbyTiles = (pos, {dist, roomName}) => {
   return tiles
 }
 
-misc.nearbyEmptyTiles = (pos, {dist, roomName}) => {
-  const room = Game.rooms[roomName]
-
-  return misc.nearbyTiles(pos, {dist, roomName}).filter(tile => {
-    const occupiers = room.lookAt(tile)
-    return !occupiers.some(entry => {
-      return entry.terrain === 'wall'
-    })
-  })
-}
-
 module.exports = misc
