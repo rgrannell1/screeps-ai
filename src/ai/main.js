@@ -9,7 +9,6 @@ const terrain = require('./terrain')
 const roles = {
   harvester: require('./roles/harvester'),
   upgrader: require('./roles/upgrader'),
-  miner: require('./roles/miner'),
   builder: require('./roles/builder'),
   repairer: require('./roles/repairer'),
   scribe: require('./roles/scribe'),

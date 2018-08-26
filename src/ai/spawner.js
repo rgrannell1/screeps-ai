@@ -2,7 +2,6 @@
 const constants = require('./constants')
 const misc = require('./misc')
 const terrain = require('./terrain')
-const {sourceUtils} = require('./utils')
 
 const setSpawnQuotas = room => {
   const settings = []
