@@ -7,10 +7,6 @@ Just another Screeps AI
 
 ![Example](readme/example.png)
 
-## Usage
-
-
-
 ## Roles
 
 - **builder**: Seeks charge & builds nearby construction-sites.
@@ -19,6 +15,10 @@ Just another Screeps AI
 - **scribe**: Updates the room's sign, before self-annihilating.
 - **transferer**: Transfers charge from a container to a spawn.
 - **upgrader**: Either receives charge from a container or harvests a source, then upgrades the controller.
+
+## Plans
+
+## Usage
 
 ```bash
 yarn # or npm install

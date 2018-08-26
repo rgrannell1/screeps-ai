@@ -1,21 +1,24 @@
 
-const blessed = {}
+const format = {}
 
-blessed.red = txt => `{red-fg}${txt}{/red-fg}`
-blessed.blue = txt => `{blue-fg}${txt}{/blue-fg}`
-blessed.green = txt => `{green-fg}${txt}{/green-fg}`
+format.red = txt => `{red-fg}${txt}{/red-fg}`
+format.blue = txt => `{blue-fg}${txt}{/blue-fg}`
+format.green = txt => `{green-fg}${txt}{/green-fg}`
 
-blessed.right = txt => `{right}${txt}{/right}`
-blessed.left = txt => `{left}${txt}{/left}`
+format.right = txt => `{|}${txt}{/}`
+format.left = txt => `{left}${txt}{/left}`
+format.center = txt => `{center}${txt}{/center}`
 
-blessed.bold = txt => `{bold}${txt}{/bold}`
+format.bold = txt => `{bold}${txt}{/bold}`
 
-const exported = {log: {}}
+const exported = {
+  log: {}
+}
 
-Object.keys(blessed).forEach(method => {
+Object.keys(format).forEach(method => {
   exported.log[method] = (...args) => {
-    console.log(blessed[method](args))
+    console.log(format[method](args))
   }
 })
 
-module.exports = exported
+module.exports = {...exported, ...format}

@@ -8,7 +8,8 @@ const plans = {
   extensions: require('./extensions'),
   miningRoads: require('./mining-roads'),
   exitRoads: require('./exit-roads'),
-  frequentRoads: require('./frequent-roads')
+  frequentRoads: require('./frequent-roads'),
+  spawnExtensions: require('./spawn-extensions')
 }
 
 module.exports = plans

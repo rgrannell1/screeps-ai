@@ -3,6 +3,7 @@ const constants = require('./constants')
 const misc = require('./misc')
 const creeps = require('./creeps')
 const terrain = require('./terrain')
+const blessed = require('./blessed')
 
 const setSpawnQuotas = room => {
   const settings = []
@@ -221,7 +222,7 @@ const spawner = (room, spawn) => {
 spawner.displayProgress = (spawn, expected) => {
   if (Game.time % 5 === 0) {
     if (spawn.memory.energyLock) {
-      console.log(`[ ${spawn.energy} / ${spawn.memory.energyLock} towards ${spawn.memory.queued.role}]`)
+      blessed.log.blue(blessed.right(`[ ${spawn.energy} / ${spawn.memory.energyLock} towards ${spawn.memory.queued.role}]`))
     }
   }
 }

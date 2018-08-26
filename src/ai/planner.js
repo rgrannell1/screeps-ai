@@ -24,6 +24,8 @@ planner.run = roomName => {
   if (Game.time % 20) {
     plans.frequentRoads(roomName)
   }
+
+  //plans.spawnExtensions(roomName)
 }
 
 module.exports = planner

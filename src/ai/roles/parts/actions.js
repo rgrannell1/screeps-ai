@@ -320,7 +320,9 @@ actions.SEEKING_DAMAGE = creep => {
     ? creep.memory.damageId
     : null
 
-  if (damageId && structures.is.damaged(Game.getObjectById(damageId))) {
+  const site = Game.getObjectById(damageId)
+
+  if (!site || structures.is.damaged(site)) {
     damageId = null
   }
 

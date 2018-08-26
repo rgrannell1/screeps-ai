@@ -39,6 +39,19 @@ terrain.getBlock = (centre, dist) => {
   return terrain
 }
 
+terrain.getMap = roomName => {
+  const tiles = Game.rooms[roomName].lookForAtArea(
+    LOOK_TERRAIN,
+    0,
+    49,
+    0,
+    49,
+    true
+  )
+
+  return tiles
+}
+
 terrain.getBorder = (centre, dist) => {
   const bounds = {
     x: {
