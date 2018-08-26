@@ -7,8 +7,7 @@ const ringRoads = roomName => {
   const sources = room.find(FIND_SOURCES)
   const spawns = Game.spawns
 
-  const planExists = Memory.plans.some(({plan}) => plan.label === 'ring_roads')
-  if (planExists) {
+  if (structures.planExists('ring_roads')) {
     return
   }
 

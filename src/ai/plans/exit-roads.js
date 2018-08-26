@@ -6,8 +6,7 @@ const structures = require('../structures')
 const exitRoads = roomName => {
   const room = Game.rooms[roomName]
 
-  const planExists = Memory.plans.some(({plan}) => plan.label === 'exit_roads')
-  if (planExists) {
+  if (structures.planExists('exit_roads')) {
     return
   }
 

@@ -64,4 +64,11 @@ structures.highway.place = ({room, source, target}, metadata) => {
   }
 }
 
+structures.planExists = label => {
+  const plans = Memory.plans
+    ? Memory.plans
+    : []
+  return plans.some(({plan}) => plan.label === label)
+}
+
 module.exports = structures

@@ -11,7 +11,7 @@ terrain.is.plain = pos => {
   return lookAtPos(pos).some(({terrain}) => terrain === 'plain')
 }
 
-terrain.isWall = pos => {
+terrain.is.wall = pos => {
   return Game.rooms[pos.roomName].lookAt(pos).some(entry => entry.terrain === 'wall')
 }
 
