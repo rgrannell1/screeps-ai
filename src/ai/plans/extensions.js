@@ -1,5 +1,4 @@
 
-const roads = require('../roads')
 const misc = require('../misc')
 const terrain = require('../terrain')
 
@@ -16,7 +15,6 @@ const extensions = roomName => {
 
   const sources = terrain.findSources(roomName)
   const spawns = terrain.findSpawns(roomName)
-
 
   const distantRoads = sourceRoads.filter(road => {
     const isDistant = {

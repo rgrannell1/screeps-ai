@@ -1,5 +1,4 @@
 
-const roads = require('../roads')
 const structures = require('../structures')
 
 const ringRoads = roomName => {

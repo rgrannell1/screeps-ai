@@ -159,7 +159,7 @@ terrain.findDamagedStructure = roomName => {
     filter (object) {
       const shouldFix = isRepairable.has(object.structureType)
       const hasReasonableDamage = (object.hitsMax - object.hits) > REASONABLE_DAMAGE
-      const isHalfDead = (object.hits < (object.hitsMax / 2))
+      const isHalfDead = (object.hits < (7 * (object.hitsMax / 8)))
 
       return shouldFix && (hasReasonableDamage || isHalfDead)
     }
