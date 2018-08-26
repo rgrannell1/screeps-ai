@@ -1,4 +1,5 @@
 
+const constants = require('../constants')
 const telemetry = require('../telemetry')
 
 const methods = {}
@@ -65,7 +66,7 @@ methods.run = (ctx, creep) => {
 
   creep.memory.stateTicks++
   if (creep.memory.stateTicks > 100) {
-    telemetry.emit('tick_warning', {
+    telemetry.emit(constants.events.tickWarning, {
       name: creep.name,
       role: creep.memory.role,
       ticks: creep.memory.stateTicks

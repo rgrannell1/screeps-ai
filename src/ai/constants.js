@@ -23,7 +23,6 @@ constants.costs = {
 constants.roles = {
   harvester: {
     icon: 'H',
-
     plans: {
       standard: [CARRY, CARRY, WORK, MOVE]
     }
@@ -58,6 +57,14 @@ constants.roles = {
       standard: [WORK, MOVE, MOVE]
     }
   }
+}
+
+constants.events = {
+  tickWarning: 'tick_warning'
+}
+
+constants.limits = {
+  events: 1e3
 }
 
 module.exports = constants

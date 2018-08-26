@@ -354,7 +354,7 @@ actions.REPAIR = creep => {
   if (site.hits === site.hitsMax) {
     // -- bodge
     creep.memory.state = 'SEEKING_DAMAGE'
-    console.log(`${site.id} has no damage. forcibly deleting`)
+    console.log(blessed.log.red(`${site.id} has no damage. forcibly deleting`))
     delete creep.memory.damageId
   } else {
     const siteCode = creep.repair(site)

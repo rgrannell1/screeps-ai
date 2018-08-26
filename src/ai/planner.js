@@ -7,17 +7,17 @@ const planner = {}
 planner.run = roomName => {
   plans.ringRoads(roomName)
 
-  const level = Game.rooms[roomName].controller.level
-  if (level >= 1) {
+  const roomLevel = Game.rooms[roomName].controller.level
+  if (roomLevel >= 1) {
     plans.sourceContainers(roomName)
     plans.extensions(roomName)
   }
 
-  if (level >= 3) {
+  if (roomLevel >= 3) {
     plans.exitRoads(roomName)
   }
 
-  if (level >= 4) {
+  if (roomLevel >= 4) {
     plans.miningRoads(roomName)
   }
 

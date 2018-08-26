@@ -5,6 +5,7 @@ const misc = require('./misc')
 const planner = require('./planner')
 const structures = require('./structures')
 const terrain = require('./terrain')
+const constants = require('./constants')
 
 const roles = {
   harvester: require('./roles/harvester'),
@@ -58,6 +59,10 @@ const quantifyResources = roomName => {
   }
 }
 
+telemetry.on(constants.events.tickWarning, data => {
+  // -- todo
+})
+
 const loop = () => {
   evictCreepCache()
   applyRoles()
@@ -75,6 +80,7 @@ const loop = () => {
   }
 
   identifyCreeps()
+  telemetry.fire()
 }
 
 module.exports.loop = loop
