@@ -9,11 +9,11 @@ const ringRoads = roomName => {
 
   for (const name of Object.keys(spawns)) {
     const spawn = spawns[name]
-
+    const metadata = {label: 'ring-roads'}
     for (const source of sources) {
-      structures.highway.place({room, source: spawn.pos, target: source.pos})
-      structures.highway.place({room, source: room.controller.pos, target: source.pos})
-      structures.highway.place({room, source: room.controller.pos, target: spawn.pos})
+      structures.highway.place({room, source: spawn.pos, target: source.pos}, metadata)
+      structures.highway.place({room, source: room.controller.pos, target: source.pos}, metadata)
+      structures.highway.place({room, source: room.controller.pos, target: spawn.pos}, metadata)
     }
   }
 }

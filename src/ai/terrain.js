@@ -1,6 +1,20 @@
 
 const terrain = {}
 
+const lookAtPos = pos => {
+  return Game.rooms[pos.roomName].lookAt(pos)
+}
+
+terrain.is = {}
+
+terrain.is.plain = pos => {
+  return lookAtPos(pos).some(({terrain}) => terrain === 'plain')
+}
+
+terrain.isWall = pos => {
+  return Game.rooms[pos.roomName].lookAt(pos).some(entry => entry.terrain === 'wall')
+}
+
 terrain.getBlock = (centre, dist) => {
   const bounds = {
     x: {
@@ -48,12 +62,35 @@ terrain.getBorder = (centre, dist) => {
   })
 }
 
-terrain.isPlain = pos => {
-  return Game.rooms[pos.roomName].lookAt(pos).some(entry => entry.terrain === 'plain')
-}
+terrain.getExitTiles = roomName => {
+  const bounds = {
+    x: {lower: 0, upper: 49},
+    y: {lower: 0, upper: 49}
+  }
 
-terrain.isWall = pos => {
-  return Game.rooms[pos.roomName].lookAt(pos).some(entry => entry.terrain === 'wall')
+  const tiles = []
+
+  for (let x = 0; x <= bounds.x.upper; x++) {
+    for (let y = 0; y <= bounds.y.upper; y++) {
+      if (x !== bounds.x.lower && x !== bounds.x.upper) {
+        continue
+      }
+
+      let isValid = {
+        x: x === bounds.x.lower || x === bounds.x.upper,
+        y: y === bounds.y.lower || y === bounds.y.upper,
+      }
+
+
+      if (isValid.x || isValid.y) {
+        tiles.push(new RoomPosition(x, y, roomName))
+      }
+    }
+  }
+
+  return tiles.filter(tile => {
+    return terrain.is.plain(tile)
+  })
 }
 
 terrain.findSources = roomName => {
@@ -67,7 +104,7 @@ terrain.getSourceQuality = source => {
 
   return
   return surrounding.filter(tile => {
-    return !terrain.isWall(tile)
+    return !terrain.is.wall(tile)
   }).length
 }
 

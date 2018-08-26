@@ -67,6 +67,48 @@ senses.atController = StateChange((creep, states2) => {
   })
 }, [states.UPGRADING, states.SEEKING_CONTROLLER])
 
+senses.atContainerFromSpawn = StateChange((creep, states2) => {
+  const container = getObj(creep.memory.containerId)
+
+  if (!container) {
+    return states.SEEKING_CONTAINER
+  }
+
+  if (container.store.energy < CONTAINER_CAPACITY) {
+    return states.SEEKING_CONTAINER
+  }
+
+  creep.moveTo(container)
+
+  return misc.switch(creep.withdraw(container, RESOURCE_ENERGY), {
+    [OK]: () => states.DRAIN_CONTAINER,
+    [ERR_NOT_IN_RANGE]: () => states.SEEKING_CONTAINER,
+    [ERR_FULL]: () => states.DRAIN_CONTAINER,
+    default (val) {
+      console.log(`at container code ${val}`)
+    }
+  })
+}, [states.SEEKING_CONTAINER, states.DRAIN_CONTAINER])
+
+senses.containerSeekerNeedsSpawn = StateChange((creep, states2) => {
+  const container = getObj(creep.memory.containerId)
+
+  if (!container || container.store.energy < CONTAINER_CAPACITY) {
+    return states.SEEKING_SPAWN
+  }
+
+  creep.moveTo(container)
+
+  return misc.switch(creep.transfer(container, RESOURCE_ENERGY), {
+    [OK]: () => states.CHARGE_CONTAINER,
+    [ERR_NOT_IN_RANGE]: () => states.SEEKING_CONTAINER,
+    [ERR_FULL]: () => states.CHARGE_CONTAINER,
+    default (val) {
+      console.log(`at container code ${val}`)
+    }
+  })
+}, [states.SEEKING_SPAWN, states.CHARGE_CONTAINER, states.SEEKING_CONTAINER])
+
 senses.atContainer = StateChange((creep, states2) => {
   const container = getObj(creep.memory.containerId)
 
@@ -140,11 +182,29 @@ senses.atSpawn = StateChange((creep, states2) => {
     [ERR_FULL] () {
       // -- TODO
     },
+    [ERR_NOT_ENOUGH_RESOURCES]: () => 'aaaaaaaaaaa',
     default (code) {
       creep.say(`charge ${code}`)
     }
   })
 }, [states.CHARGE_SPAWN, states.SEEKING_SPAWN])
+
+senses.atSpawnFromContainer = StateChange((creep, states2) => {
+  const spawn = getObj(creep.memory.spawnId)
+  creep.moveTo(spawn)
+
+  return misc.switch(creep.transfer(spawn, RESOURCE_ENERGY), {
+    [OK]: () => states.CHARGE_SPAWN,
+    [ERR_NOT_IN_RANGE]: () => states.SEEKING_SPAWN,
+    [ERR_FULL] () {
+      // -- TODO
+    },
+    [ERR_NOT_ENOUGH_RESOURCES]: () => states.SEEKING_CONTAINER,
+    default (code) {
+      creep.say(`charge ${code}`)
+    }
+  })
+}, [states.CHARGE_SPAWN, states.SEEKING_SPAWN, states.SEEKING_CONTAINER])
 
 const onDepleted = state => StateChange((creep, states2) => {
   if (creep.carry.energy === 0) {

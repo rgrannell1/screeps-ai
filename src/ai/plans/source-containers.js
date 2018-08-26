@@ -16,7 +16,7 @@ const sourceContainers = roomName => {
 
     const candidatePositions = terrain
       .getBorder(source.pos, 2)
-      .filter(tile => terrain.isPlain)
+      .filter(tile => terrain.is.plain)
 
     const [chosen] = candidatePositions
     const pos = new RoomPosition(chosen.x, chosen.y, roomName)

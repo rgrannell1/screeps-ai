@@ -12,7 +12,8 @@ const roles = {
   miner: require('./roles/miner'),
   builder: require('./roles/builder'),
   repairer: require('./roles/repairer'),
-  scribe: require('./roles/scribe')
+  scribe: require('./roles/scribe'),
+  transferer: require('./roles/transferer')
 }
 
 const evictCreepCache = () => {
@@ -55,7 +56,6 @@ const identifyCreeps = () => {
 const quantifyResources = roomName => {
   for (const source of terrain.findSources(roomName)) {
     const quality = terrain.getSourceQuality(source)
-    console.log(quality + 'q')
   }
 }
 
@@ -71,9 +71,8 @@ const loop = () => {
       spawner.spawn(room, spawn)
     }
 
-    quantifyResources(roomName)
-    structures.placePlans()
     planner.run(roomName)
+    structures.placePlans()
   }
 
   identifyCreeps()

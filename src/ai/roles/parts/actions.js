@@ -8,8 +8,6 @@ const actions = {}
 actions.BUILDING = creep => {
   const site = Game.getObjectById(creep.memory.siteId)
   if (!site) {
-    console.log(`site missing (id ${creep.memory.siteId})`)
-    creep.say('Stuck!')
     delete creep.memory.siteId
     creep.memory.state = 'SEEKING_SITE'
   }
@@ -182,7 +180,14 @@ actions.SEEKING_SITE = creep => {
     : null
   if (!siteId) {
     const [site] = creep.room.find(FIND_CONSTRUCTION_SITES)
-    siteId = site.id
+    if (site) {
+      siteId = site.id
+    }
+  }
+
+  if (!siteId) {
+    delete creep.memory.siteId
+    return
   }
 
   creep.memory.siteId = siteId

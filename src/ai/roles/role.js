@@ -4,7 +4,7 @@ const methods = {}
 methods.transition = (ctx, state, newState, creep) => {
   console.log(`${creep.name} (${creep.memory.role}) ${state} -> ${newState}`)
   creep.memory.state = newState
-  creep.memory.stateCode = ctx.states[newState].code
+  creep.memory.stateCode = ctx.states[newState] ? ctx.states[newState].code : null
   creep.memory.stateTicks = 0
 }
 
@@ -24,8 +24,11 @@ methods.validate = (ctx, creep) => {
   }
 
   current.until.forEach((trans, ith) => {
-    if (typeof trans.run !== 'function') {
+    if (!trans) {
       throw new Error(`${role} missing #${ith} state-change for state "${state}"`)
+    }
+    if (typeof trans.run !== 'function') {
+      throw new Error(`${role} missing #${ith} state-change for  functionstate "${state}"`)
     }
 
     // validate state-set

@@ -47,7 +47,12 @@ structures.container.place = (pos, metadata) => {
 
 structures.highway = {}
 
-structures.highway.place = ({room, source, target}) => {
+structures.highway.place = ({room, source, target}, metadata) => {
+  if (!source) throw new Error('source missing')
+  if (!target) throw new Error('target missing')
+  if (!metadata) throw new Error('metadata missing')
+  if (!metadata.label) throw new Error('metadata.label missing')
+
   const roadPath = room.findPath(source, target, {
     ignoreCreeps: true,
     ignoreRoads: true
@@ -55,7 +60,7 @@ structures.highway.place = ({room, source, target}) => {
 
   for (const {x, y} of roadPath) {
     const pos = new RoomPosition(x, y, room.name)
-    addPlan(pos, {structure: STRUCTURE_ROAD})
+    addPlan(pos, {...metadata, structure: STRUCTURE_ROAD})
   }
 }
 

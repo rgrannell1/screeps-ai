@@ -9,7 +9,7 @@ const states = {
     code: 'SEEK_CNT',
     do: actions.SEEKING_CONTAINER,
     until: [
-      senses.atContainer
+      senses.containerSeekerNeedsSpawn
     ]
   },
   DRAIN_CONTAINER: {
@@ -17,22 +17,22 @@ const states = {
     do: actions.DRAIN_CONTAINER,
     until: [
       senses.shouldSeek.spawn,
-      senses.isDepleted.needsContainer,
-      senses.isDepleted.needsSource
+      senses.isDepleted.needsContainer
     ]
   },
   SEEKING_SPAWN: {
     do: actions.SEEKING_SPAWN,
     code: 'SEEK_SPAWN',
     until: [
-      senses.atSpawn
+      senses.atSpawnFromContainer
     ]
   },
   CHARGE_SPAWN: {
     code: 'CHARGE_SPAWN',
     do: actions.CHARGE_SPAWN,
     until: [
-      senses.isDepleted.needsSource
+      senses.isDepleted.needsContainer,
+      senses.atContainerFromSpawn
     ]
   }
 }

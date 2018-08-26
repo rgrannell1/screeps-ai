@@ -9,9 +9,6 @@ const extensions = roomName => {
 
   for (const road of sourceRoads) {
     const block = terrain.getBlock(road.pos, 1)
-
-    //console.log(block.length)
-    //console.log(JSON.stringify(road))
   }
 
 
