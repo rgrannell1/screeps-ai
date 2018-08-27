@@ -2,17 +2,19 @@
 const terrain = {}
 
 const lookAtPos = pos => {
-  return Game.rooms[pos.roomName].lookAt(pos)
+  return pos.look()
 }
 
 terrain.is = {}
 
 terrain.is.plain = pos => {
-  return lookAtPos(pos).some(({terrain}) => terrain === 'plain')
+  const summary = lookAtPos(pos)
+  return summary.length === 1 && summary[0].terrain === 'plain'
 }
 
 terrain.is.wall = pos => {
-  return Game.rooms[pos.roomName].lookAt(pos).some(entry => entry.terrain === 'wall')
+  const summary = lookAtPos(pos)
+  return summary.length === 1 && summary[0].terrain === 'wall'
 }
 
 terrain.getBlock = (centre, dist) => {

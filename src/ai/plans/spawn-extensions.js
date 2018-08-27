@@ -66,7 +66,6 @@ const findEmptyBlock = (sum, bounds, pred, roomName) => {
 }
 
 const spawnExtensions = roomName => {
-  //delete Memory.plans
   if (structures.planExists(constants.labels.extensionBlockOne)) {
     return
   }
