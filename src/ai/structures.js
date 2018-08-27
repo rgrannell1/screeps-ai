@@ -33,6 +33,12 @@ structures.placePlans = () => {
   })
 }
 
+structures.any = {}
+
+structures.any.place = (pos, structure, metadata) => {
+  addPlan(pos, {...metadata, structure})
+}
+
 structures.roads = {}
 
 structures.roads.place = (pos, metadata) => {

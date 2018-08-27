@@ -4,7 +4,8 @@ const constants = {}
 constants.labels = {
   exitRoads: 'exit_roads',
   miningRoads: 'mining_roads',
-  ringRoads: 'ring_roads'
+  ringRoads: 'ring_roads',
+  extensionBlockOne: 'extension_block_one'
 }
 
 constants.sign = 'No intelligent life detected.'

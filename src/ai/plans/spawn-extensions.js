@@ -9,26 +9,44 @@ const parts = {
   road: {structure: STRUCTURE_ROAD}
 }
 
-const rows = {
-  mixed: new Array(3).fill(parts.extension)
-    .concat([parts.road])
-    .concat(new Array(3).fill(parts.extension)),
-  road: new Array(7).fill(parts.road)
+const createExtensionBlock = (bounds, roomName) => {
+  const xOffset = bounds.x.lower
+  const yOffset = bounds.y.lower
+  const size = 7
+
+  const output = Array(size).fill(
+    new Array(size).fill([])
+  ).map((row, ith) => {
+    return row.map((_, jth) => {
+      let structure
+
+      if (jth === 3) {
+        structure = STRUCTURE_ROAD
+      } else if (ith === 3) {
+        structure = STRUCTURE_ROAD
+      } else {
+        structure = STRUCTURE_EXTENSION
+      }
+
+      return {
+        pos: new RoomPosition(xOffset + ith, yOffset + jth, roomName),
+        plan: {
+          structures: {structure}
+        }
+      }
+    })
+  })
+
+  return  [].concat.apply([], output)
 }
 
-const flerp = () => {
-  return new Array(3).fill(rows.mixed)
-    .concat([rows.road])
-    .concat(new Array(3).fill(rows.mixed))
-}
-
-const findEmptyBlock = (sum, bounds, roomName) => {
+const findEmptyBlock = (sum, bounds, pred, roomName) => {
   const ySums = new Array(bounds.y.upper - bounds.y.lower).fill(0)
 
   for (let y = bounds.y.lower; y < bounds.y.upper; y++) {
     for (let x = bounds.x.lower; x < bounds.x.upper; x++) {
       // update the column's "y" sum for this row if present.
-      ySums[x] = terrain.is.plain(new RoomPosition(x, y, roomName))
+      ySums[x] = pred(new RoomPosition(x, y, roomName))
         ? ySums[x] + 1
         : 0
     }
@@ -48,13 +66,23 @@ const findEmptyBlock = (sum, bounds, roomName) => {
 }
 
 const spawnExtensions = roomName => {
-  return
+  //delete Memory.plans
+  if (structures.planExists(constants.labels.extensionBlockOne)) {
+    return
+  }
+
+  const tileCheck = tile => {
+    return terrain.is.plain(tile)
+  }
   const block = findEmptyBlock(7, {
     x: {lower: 0, upper: 50},
     y: {lower: 0, upper: 50}
-  }, roomName)
+  }, tileCheck, roomName)
 
-  console.log(JSON.stringify(block))
+  createExtensionBlock(block, roomName)
+    .forEach(({pos, plan}) => {
+      structures.any.place(pos, plan.structures.structure, {label: 'extension_block_one'})
+    })
 }
 
 module.exports = spawnExtensions
