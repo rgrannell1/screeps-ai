@@ -43,8 +43,8 @@ terrain.getMap = roomName => {
   const tiles = Game.rooms[roomName].lookForAtArea(
     LOOK_TERRAIN,
     0,
-    49,
     0,
+    49,
     49,
     true
   )

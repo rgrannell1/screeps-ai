@@ -79,7 +79,7 @@ setSpawnQuotas.builder = room => {
     Math.ceil(totalRequiredEnergy / ENERGY_TO_BUILDER_RATIO))
 
   Object.assign(settings, {
-    priority: 3,
+    priority: 2,
     expected,
     body: constants.roles.builder.plans.standard,
     icon: constants.roles.builder.icon
@@ -97,7 +97,7 @@ setSpawnQuotas.repairer = room => {
 
   Object.assign(settings, {
     expected: expected,
-    priority: 2,
+    priority: 3,
     body: constants.roles.repairer.plans.standard,
     icon: constants.roles.repairer.icon
   })
@@ -111,7 +111,7 @@ setSpawnQuotas.scribe = room => {
 
   Object.assign(settings, {
     expected: signNotSet ? 1 : 0,
-    priority: 2,
+    priority: 4,
     body: constants.roles.scribe.plans.standard,
     icon: constants.roles.scribe.icon
   })
@@ -215,14 +215,18 @@ const spawner = (room, spawn) => {
     }
   }
 
-  spawner.displayProgress(spawn)
-
+  spawner.displayProgress(spawn, expected, actual)
 }
 
-spawner.displayProgress = (spawn, expected) => {
+spawner.displayProgress = (spawn, expected, actual) => {
+  const counts = {
+    expected: expected.find(data => data.role === spawn.memory.queued.role).data.expected,
+    actual: actual[spawn.memory.queued.role],
+  }
+
   if (Game.time % 5 === 0) {
     if (spawn.memory.energyLock) {
-      blessed.log.blue(blessed.right(`[ ${spawn.energy} / ${spawn.memory.energyLock} towards ${spawn.memory.queued.role}]`))
+      blessed.log.blue(blessed.right(`[ ${spawn.energy} / ${spawn.memory.energyLock} towards ${spawn.memory.queued.role} (${counts.actual + 1} of ${counts.expected})]`))
     }
   }
 }

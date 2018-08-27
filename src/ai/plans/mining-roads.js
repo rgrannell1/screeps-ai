@@ -26,7 +26,6 @@ const miningRoads = roomName => {
       structures.highway.place({room, source: mineral.pos, target: entity.pos}, metadata)
       structures.highway.place({room, source: mineral.pos, target: entity.pos}, metadata)
       structures.highway.place({room, source: mineral.pos, target: entity.pos}, metadata)
-
     }
   }
 }

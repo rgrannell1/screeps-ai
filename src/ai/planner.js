@@ -25,7 +25,7 @@ planner.run = roomName => {
     plans.frequentRoads(roomName)
   }
 
-  //plans.spawnExtensions(roomName)
+  plans.spawnExtensions(roomName)
 }
 
 module.exports = planner
