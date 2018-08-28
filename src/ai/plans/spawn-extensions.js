@@ -45,20 +45,30 @@ const createExtensionBlock = (block, roomName) => {
   const isEven = block.dimension % 2 === 0
   let points = []
 
-  for (ith = 0; ith < midPoint; ith++) {
-    let left = block.x.lower + ith
-    let right = block.x.upper - ith
-    let top = block.y.upper - ith
-    let bottom = block.x.lower + ith
+  let x0  = block.x.lower
+  let x1 = block.x.upper - 1
 
-    if (ith === midPoint && !isEven) {
-      points.push(new RoomPosition(left, top, roomName))
-    } else {
-      points.push(new RoomPosition(left, top, roomName))
-      points.push(new RoomPosition(right, top, roomName))
-      points.push(new RoomPosition(left, bottom, roomName))
-      points.push(new RoomPosition(right, bottom, roomName))
+  let y0  = block.y.lower
+  let y1 = block.y.upper - 1
+
+  const mdRoad = {structure: STRUCTURE_ROAD}
+  const mdExt = {structure: STRUCTURE_EXTENSION}
+
+  while (x1 >= block.x.lower) {
+    points.push({pos: new RoomPosition(x0, y0, roomName), ...mdRoad})
+    points.push({pos: new RoomPosition(x1, y0, roomName), ...mdRoad})
+    points.push({pos: new RoomPosition(x0, y1, roomName), ...mdRoad})
+    points.push({pos: new RoomPosition(x1, y1, roomName), ...mdRoad})
+
+    if (x1 - x0 > 1) {
+      points.push({pos: new RoomPosition(x0 + 1, y0, roomName), ...mdExt})
+      points.push({pos: new RoomPosition(x0 - 1, y0, roomName), ...mdExt})
+      points.push({pos: new RoomPosition(x1 + 1, y0, roomName), ...mdExt})
+      points.push({pos: new RoomPosition(x0 - 1, y1, roomName), ...mdExt})
+      points.push({pos: new RoomPosition(x1 + 1, y1, roomName), ...mdExt})
     }
+
+    x0++, x1--, y0++, y1--
   }
 
   return points
@@ -88,12 +98,19 @@ return
 
   const xx = createExtensionBlock(block, roomName)
 
-  return
+  xx.forEach((pos, ith) => {
+    if (pos.structure === STRUCTURE_ROAD) {
+      pos.pos.createFlag(`${ith}`, COLOR_GREY)
+    } else {
+      pos.pos.createFlag(`${ith}`, COLOR_GREEN)
+    }
+  })
 
-  return
+
+return
   createExtensionBlock(block, roomName)
     .forEach(({pos, plan}) => {
-      structures.any.place(pos, plan.structures.structure, {label: 'extension_block_one'})
+      //structures.any.place(pos, plan.structures.structure, {label: 'extension_block_one'})
     })
 }
 
