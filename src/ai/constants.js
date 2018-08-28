@@ -43,7 +43,7 @@ constants.roles = {
   builder: {
     icon: 'B',
     plans: {
-      standard: [CARRY, WORK, MOVE, MOVE]
+      standard: [CARRY, CARRY, WORK, MOVE, MOVE]
     }
   },
   repairer: {
