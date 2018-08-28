@@ -9,7 +9,7 @@ const parts = {
   road: {structure: STRUCTURE_ROAD}
 }
 
-const createExtensionBlock = (bounds, roomName) => {
+const floop = (bounds, roomName) => {
   const xOffset = bounds.x.lower
   const yOffset = bounds.y.lower
   const size = 7
@@ -40,44 +40,57 @@ const createExtensionBlock = (bounds, roomName) => {
   return  [].concat.apply([], output)
 }
 
-const findEmptyBlock = (sum, bounds, pred, roomName) => {
-  const ySums = new Array(bounds.y.upper - bounds.y.lower).fill(0)
+const createExtensionBlock = (block, roomName) => {
+  const midPoint = Math.ceil(block.dimension / 2)
+  const isEven = block.dimension % 2 === 0
+  let points = []
 
-  for (let y = bounds.y.lower; y < bounds.y.upper; y++) {
-    for (let x = bounds.x.lower; x < bounds.x.upper; x++) {
-      // update the column's "y" sum for this row if present.
-      ySums[x] = pred(new RoomPosition(x, y, roomName))
-        ? ySums[x] + 1
-        : 0
-    }
-    // -- this needs support for non-zero bounds.
-    let xSum = 0
-    for (let x = 0; x < ySums.length; x++) {
-      // check there's a stretch of sufficiently tall columns
-      xSum = ySums[x] >= sum ? xSum + 1 : 0
-      if (xSum === sum) {
-        return {
-          x: {lower: x - sum, upper: x},
-          y: {lower: y - sum, upper: y}
-        }
-      }
+  for (ith = 0; ith < midPoint; ith++) {
+    let left = block.x.lower + ith
+    let right = block.x.upper - ith
+    let top = block.y.upper - ith
+    let bottom = block.x.lower + ith
+
+    if (ith === midPoint && !isEven) {
+      points.push(new RoomPosition(left, top, roomName))
+    } else {
+      points.push(new RoomPosition(left, top, roomName))
+      points.push(new RoomPosition(right, top, roomName))
+      points.push(new RoomPosition(left, bottom, roomName))
+      points.push(new RoomPosition(right, bottom, roomName))
     }
   }
+
+  return points
 }
 
 const spawnExtensions = roomName => {
   if (structures.planExists(constants.labels.extensionBlockOne)) {
     return
   }
-
+return
   const tileCheck = tile => {
     return terrain.is.plain(tile)
   }
-  const block = findEmptyBlock(7, {
-    x: {lower: 0, upper: 50},
-    y: {lower: 0, upper: 50}
-  }, tileCheck, roomName)
 
+  let block
+  for (let size = 14; size > 8; size--) {
+    block = terrain.findMatchingBlock(size, {
+      x: {lower: 0, upper: 50},
+      y: {lower: 0, upper: 50}
+    }, tileCheck, roomName)
+
+    if (block) {
+      block.dimension = size
+      break
+    }
+  }
+
+  const xx = createExtensionBlock(block, roomName)
+
+  return
+
+  return
   createExtensionBlock(block, roomName)
     .forEach(({pos, plan}) => {
       structures.any.place(pos, plan.structures.structure, {label: 'extension_block_one'})

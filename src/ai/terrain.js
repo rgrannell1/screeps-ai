@@ -41,6 +41,43 @@ terrain.getBlock = (centre, dist) => {
   return terrain
 }
 
+terrain.findMatchingBlock = (sum, bounds, pred, roomName) => {
+  const ySums = new Array(50).fill(0)
+
+  for (let y = 0; y < 50; y++) {
+    for (let x = 0; x < 50; x++) {
+      // update the column's "y" sum for this row if present.
+      ySums[x] = pred(new RoomPosition(x, y, roomName))
+        ? ySums[x] + 1
+        : 0
+    }
+    // -- this needs support for non-zero bounds.
+    let xSum = 0
+    for (let x = 0; x < ySums.length; x++) {
+      // check there's a stretch of sufficiently tall columns
+      xSum = ySums[x] >= sum ? xSum + 1 : 0
+      if (xSum === sum) {
+        return {
+          x: {lower: x - sum + 1, upper: x + 1},
+          y: {lower: y - sum + 1, upper: y + 1}
+        }
+      }
+    }
+  }
+}
+
+terrain.expandBounds = (bounds, roomName) => {
+  const tiles = []
+
+  for (let xPos = bounds.x.lower; xPos < bounds.x.upper; xPos++) {
+    for (let yPos = bounds.y.lower; yPos < bounds.y.upper; yPos++) {
+      tiles.push(new RoomPosition(xPos, yPos, roomName))
+    }
+  }
+
+  return tiles
+}
+
 terrain.getMap = roomName => {
   const tiles = Game.rooms[roomName].lookForAtArea(
     LOOK_TERRAIN,
