@@ -18,6 +18,19 @@ const setSpawnQuotas = room => {
   return settings
 }
 
+setSpawnQuotas.defender = () => {
+  const settings = {}
+
+  Object.assign(settings, {
+    expected: 4,
+    priority: constants.roles.defender.priority,
+    body: constants.roles.defender.plans.standard,
+    icon: constants.roles.defender.icon
+  })
+
+  return settings
+}
+
 setSpawnQuotas.harvester = () => {
   const settings = {}
 
@@ -53,8 +66,8 @@ setSpawnQuotas.transferer = room => {
     : 0
 
   Object.assign(settings, {
-    expected: 2,
-    priority: expected,
+    expected: expected,
+    priority: constants.roles.transferer.priority,
     body: constants.roles.transferer.plans.standard,
     icon: constants.roles.transferer.icon
   })
@@ -79,7 +92,7 @@ setSpawnQuotas.builder = room => {
     Math.ceil(totalRequiredEnergy / ENERGY_TO_BUILDER_RATIO))
 
   Object.assign(settings, {
-    priority: 2,
+    priority: constants.roles.builder.plans.priority,
     expected,
     body: constants.roles.builder.plans.standard,
     icon: constants.roles.builder.icon
@@ -97,7 +110,7 @@ setSpawnQuotas.repairer = room => {
 
   Object.assign(settings, {
     expected: expected,
-    priority: 3,
+    priority: constants.roles.repairer.plans.priority,
     body: constants.roles.repairer.plans.standard,
     icon: constants.roles.repairer.icon
   })

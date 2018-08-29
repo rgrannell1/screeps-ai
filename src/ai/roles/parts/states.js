@@ -164,4 +164,24 @@ states.DYING = () => {
   }
 }
 
+states.SEEKING_ENEMY = () => {
+  return {
+    code: constants.states.SEEKING_ENEMY.code,
+    do: actions.SEEKING_ENEMY,
+    until: [
+      senses.atEnemy
+    ]
+  }
+}
+
+states.ATTACKING = () => {
+  return {
+    code: constants.states.ATTACKING.code,
+    do: actions.ATTACKING,
+    until: [
+      senses.atEnemy
+    ]
+  }
+}
+
 module.exports = states

@@ -23,36 +23,49 @@ constants.costs = {
 
 constants.roles = {
   harvester: {
+    priority: 0,
     icon: 'H',
     plans: {
       standard: [CARRY, CARRY, WORK, MOVE]
     }
   },
   upgrader: {
+    priority: 1,
     icon: 'U',
     plans: {
       standard: [CARRY, CARRY, WORK, MOVE, MOVE]
     }
   },
+  defender: {
+    priority: 2,
+    icon: 'D',
+    plans: {
+      standard: [RANGED_ATTACK, MOVE, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH]
+    }
+  },
   transferer: {
+    priority: 3,
     icon: 'T',
     plans: {
       standard: [CARRY, CARRY, WORK, MOVE, MOVE]
     }
   },
   builder: {
+    priority: 4,
     icon: 'B',
     plans: {
       standard: [CARRY, CARRY, WORK, MOVE, MOVE]
     }
   },
   repairer: {
+    priority: 5,
     icon: 'R',
     plans: {
       standard: [CARRY, CARRY, WORK, MOVE, MOVE]
     }
   },
   scribe: {
+    priority: 6,
     icon: 'S',
     plans: {
       standard: [WORK, MOVE, MOVE]
@@ -74,6 +87,9 @@ constants.limits = {
   Information associated with each role's state
 */
 constants.states ={
+  ATTACKING: {
+    code: '⚔'
+  },
   BUILDING: {
     code: '👷'
   },
@@ -91,6 +107,9 @@ constants.states ={
   },
   HARVEST: {
     code: '⛏'
+  },
+  SEEKING_ENEMY: {
+    code: '🚚⚔'
   },
   SEEKING_SPAWN: {
     code: '🚚🏠'

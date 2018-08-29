@@ -11,4 +11,10 @@ misc.switch = (value, opts) => {
   }
 }
 
+misc.timer = (fn, timer) => {
+  if (Game.time % timer === 0) {
+    fn()
+  }
+}
+
 module.exports = misc

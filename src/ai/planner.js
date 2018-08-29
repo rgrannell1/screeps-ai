@@ -20,8 +20,6 @@ planner.run = roomName => {
   if (roomLevel >= 4) {
     plans.miningRoads(roomName)
   }
-
-  //plans.spawnExtensions(roomName)
 }
 
 module.exports = planner

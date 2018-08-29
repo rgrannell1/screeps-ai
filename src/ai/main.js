@@ -1,11 +1,12 @@
 
-const spawner = require('./spawner')
-const telemetry = require('./telemetry')
+const constants = require('./constants')
 const misc = require('./misc')
 const planner = require('./planner')
+const spawner = require('./spawner')
 const structures = require('./structures')
+const telemetry = require('./telemetry')
 const terrain = require('./terrain')
-const constants = require('./constants')
+const logger = require('./logger')
 
 const roles = require('./roles')
 
@@ -21,8 +22,6 @@ const applyRoles = () => {
   for (const name of Object.keys(Game.creeps)) {
     const creep = Game.creeps[name]
     const {role} = creep.memory
-
-    telemetry.recordCreepPosition(creep)
 
     if (roles[role]) {
       roles[role].run(creep)
@@ -65,19 +64,25 @@ const loop = () => {
     for (const roomName of Object.keys(Game.rooms)) {
       const room = Game.rooms[roomName]
 
+      misc.timer(() => {
+        logger.data('room state', {
+
+        })
+      }, 5)
+
+      misc.timer(() => {
+        planner.run(roomName)
+        structures.placePlans()
+      }, 5)
+
       for (const spawnName of Object.keys(Game.spawns)) {
         const spawn = Game.spawns[spawnName]
         spawner.spawn(room, spawn)
       }
-
-      if (Game.time % 5 === 0) planner.run(roomName)
-      structures.placePlans()
     }
 
     identifyCreeps()
     runTowers()
-    telemetry.fire()
-
   })
 }
 

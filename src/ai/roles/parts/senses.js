@@ -2,9 +2,11 @@
 const misc = require('../../misc')
 const terrain = require('../../terrain')
 const constants = require('../../constants')
+const {StateChange, Transition} = require('../../models')
 const senses = {}
 
 const states = {
+  ATTACKING: 'ATTACKING',
   BUILDING: 'BUILDING',
   SEEKING_SITE: 'SEEKING_SITE',
   CHARGE: 'CHARGE',
@@ -17,18 +19,11 @@ const states = {
   HARVEST: 'HARVEST',
   SEEKING_SOURCE: 'SEEKING_SOURCE',
   REPAIR: 'REPAIR',
+  SEEKING_ENEMY: 'SEEKING_ENEMY',
   SEEKING_CONTROLLER: 'SEEKING_CONTROLLER',
   SEEKING_DAMAGE: 'SEEKING_DAMAGE',
   SIGNING: 'SIGNING',
-  UPGRADING: 'UPGRADING',
-}
-
-const StateChange = (run, states) => {
-  return {run, states}
-}
-
-const Transition = (state, reason) => {
-  return {state, reason}
+  UPGRADING: 'UPGRADING'
 }
 
 const getObj = Game.getObjectById
@@ -188,6 +183,15 @@ senses.atSite = StateChange(creep => {
   })
 }, [states.BUILDING, states.SEEKING_SITE, states.SEEKING_CHARGE])
 
+senses.atEnemy = StateChange(creep => {
+  const enemy = getObj(creep.memory.enemyId)
+  creep.moveTo(enemy)
+  return misc.switch(creep.attack(enemy), {
+    [OK]: () => Transition(states.CHARGE, 'attack successful'),
+    [ERR_NOT_IN_RANGE]: () => Transition(states.SEEKING_ENEMY, 'not in range')
+  })
+}, [states.SEEKING_ENEMY, states.ATTACKING])
+
 senses.atSource = StateChange(creep => {
   const source = getObj(creep.memory.sourceId)
   creep.moveTo(source)
@@ -322,7 +326,7 @@ senses.isSigned = StateChange(creep => {
 senses.targetIsFull = {}
 
 senses.targetIsFull.container = StateChange(creep => {
-  const container = getObj(creep.memory.containerId)
+  const container = getObj(creep.memory.containerI1d)
   if (container && container.store.energy === CONTAINER_CAPACITY) {
     return Transition(states.SEEKING_SOURCE, 'container full')
   }

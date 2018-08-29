@@ -4,6 +4,7 @@ const terrain = require('../../terrain')
 const structures = require('../../structures')
 const constants = require('../../constants')
 const blessed = require('../../blessed')
+const creeps = require('../../creeps')
 
 const actions = {}
 
@@ -26,8 +27,7 @@ actions.BUILDING = creep => {
       creep.say('No Body')
     },
     [ERR_NOT_IN_RANGE]: () => {
-      creep.say('Stuck!')
-      creep.memory.state = 'SEEKING_SITE'
+
     },
     default: code => {
       console.log(code)
@@ -137,6 +137,34 @@ actions.DRAIN_CONTAINER = creep => {
   })
 }
 
+actions.SEEKING_ENEMY = creep => {
+  let enemyId = creep.memory.enemyId
+
+  if (!enemyId || !Game.getObjectById(enemyId)) {
+    delete creep.memory.enemyId
+    const enemy = creeps.findTargetEnemy(creep.name)
+
+    if (enemy) {
+      creep.memory.enemyId = enemy.id
+    }
+  }
+
+  const enemy = Game.getObjectById(creep.memory.enemyId)
+  if (!enemy) {
+    return
+  }
+  const moveCode = creep.moveTo(enemy)
+
+  misc.switch(moveCode, {
+    [ERR_INVALID_TARGET]: () => {
+      creep.say('Bad enemy')
+    },
+    [ERR_NO_BODYPART]: () => {
+      creep.say('No Body')
+    }
+  })
+}
+
 actions.SEEKING_CHARGE = creep => {
   delete creep.memory.siteId
 
@@ -186,20 +214,8 @@ actions.SEEKING_SITE = creep => {
 
   if (!siteId || !Game.getObjectById(siteId)) {
     delete creep.memory.siteId
-
-    let site
-    const sites = creep.room.find(FIND_CONSTRUCTION_SITES)
-    let siteTypes = ['container', 'extension', 'road', 'any']
-
-    for (const siteType of siteTypes) {
-      [site] = structures.findSite[siteType](creep.room.name)
-
-      if (site) {
-        console.log(`building a lovely new ${blessed.bold(siteType)}`)
-        siteId = site.id
-        break
-      }
-    }
+    const site = structures.findSite(creep.room.name)
+    creep.memory.siteId = site.id
   }
 
   const site = Game.getObjectById(siteId)

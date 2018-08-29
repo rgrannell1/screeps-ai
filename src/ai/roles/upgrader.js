@@ -1,5 +1,5 @@
 
-const Role = require('./role')
+const Role = require('../models/role')
 const misc = require('../misc')
 const actions = require('./parts/actions')
 const senses = require('./parts/senses')

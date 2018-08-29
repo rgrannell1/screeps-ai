@@ -119,16 +119,25 @@ structures.is.damaged = site => {
   return site.hits < site.hitsMax
 }
 
+structures.findSite = roomName => {
+  const sites = Game.rooms[roomName].find(FIND_CONSTRUCTION_SITES)
+  const siteTypes = [
+    STRUCTURE_CONTAINER,
+    STRUCTURE_EXTENSION,
+    STRUCTURE_TOWER,
+    STRUCTURE_ROAD
+  ]
 
-const findSite = (filter, roomName) => {
-  return Game.rooms[roomName].find(FIND_CONSTRUCTION_SITES, filter)
+  for (const siteType of siteTypes) {
+    let candidate = sites.find(site => site.structureType === siteType)
+    if (candidate) {
+      candidate.siteType = siteType
+      return candidate
+    }
+  }
+
+  return sites[0]
 }
 
-structures.findSite = {}
-
-structures.findSite.container = findSite.bind(null, structures.is.container)
-structures.findSite.extension = findSite.bind(null,  structures.is.extensionSite)
-structures.findSite.road = findSite.bind(null, structures.is.roadSite)
-structures.findSite.any = findSite.bind(null, _ => true)
-
+global.structures = structures
 module.exports = structures

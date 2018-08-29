@@ -1,5 +1,5 @@
 
-const Role = require('./role')
+const Role = require('../models/role')
 const actions = require('./parts/actions')
 const senses = require('./parts/senses')
 const states = require('./parts/states')
@@ -41,6 +41,12 @@ roles.scribe = Role({
   DYING: states.DYING()
 }, {
   initalState: 'SEEKING_CONTROLLER'
+})
+
+roles.defender = Role({
+  SEEKING_ENEMY: states.SEEKING_ENEMY()
+}, {
+  initalState: 'SEEKING_ENEMY'
 })
 
 roles.transferer = require('./transferer')
