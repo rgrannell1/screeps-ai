@@ -190,13 +190,15 @@ terrain.findContainers = roomName => {
   })
 }
 
-terrain.findClosestContainer = pos => {
+terrain.findClosestContainer = (pos, {notFull}) => {
   return pos.findClosestByRange(FIND_STRUCTURES, {
     filter (item) {
       const isContainer = item.structureType === STRUCTURE_CONTAINER
 
       if (isContainer) {
-        return item.store.energy < CONTAINER_CAPACITY
+        return notFull
+          ? item.store.energy < CONTAINER_CAPACITY
+          : true
       }
     }
   })

@@ -60,6 +60,8 @@ constants.roles = {
   }
 }
 
+constants.whitelist = ['iamgqr']
+
 constants.events = {
   tickWarning: 'tick_warning'
 }

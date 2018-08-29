@@ -23,7 +23,7 @@ methods.validate = (ctx, creep) => {
   const current = ctx.states[state]
 
   if (!current || typeof current.do !== 'function') {
-    throw new Error(`invalid configuration for state "${state}"`)
+    throw new Error(`invalid configuration for state "${state}" (${role})`)
   }
 
   current.until.forEach((trans, ith) => {

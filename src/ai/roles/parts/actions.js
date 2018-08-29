@@ -79,7 +79,7 @@ actions.CHARGE_CONTAINER = creep => {
   const container = Game.getObjectById(creep.memory.containerId)
 
   if (container.store.energy === CONTAINER_CAPACITY) {
-    console.log('container full! Need to seek altenative source!')
+    console.log('container full! Need to fill altenative energy sink!')
   }
 
   const chargeCode = creep.transfer(container, RESOURCE_ENERGY)
@@ -245,10 +245,13 @@ actions.SEEKING_CONTAINER = creep => {
     : null
 
   if (!containerId) {
-    const container = terrain.findClosestContainer(creep.pos)
+    const container = terrain.findClosestContainer(creep.pos, {
+      notFull: false
+    })
 
     if (!container) {
       console.log('no containers found!')
+      creep.memory.state = 'SEEKING_SPAWN'
       return
     } else {
       containerId = container.id

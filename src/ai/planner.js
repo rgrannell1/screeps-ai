@@ -10,7 +10,7 @@ planner.run = roomName => {
   const roomLevel = Game.rooms[roomName].controller.level
   if (roomLevel >= 1) {
     plans.sourceContainers(roomName)
-    plans.extensions(roomName)
+    plans.towers(roomName)
   }
 
   if (roomLevel >= 3) {
@@ -21,11 +21,7 @@ planner.run = roomName => {
     plans.miningRoads(roomName)
   }
 
-  if (Game.time % 20) {
-    //plans.frequentRoads(roomName)
-  }
-
-  plans.spawnExtensions(roomName)
+  //plans.spawnExtensions(roomName)
 }
 
 module.exports = planner

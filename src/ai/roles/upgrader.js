@@ -7,7 +7,7 @@ const senses = require('./parts/senses')
 const states = {
   SEEKING_SOURCE: {
     do: actions.SEEKING_SOURCE,
-    code: 'SEEK_SRC',
+    code: '🚚⛏',
     until: [
       senses.shouldSeek.controller,
       senses.atSource
@@ -15,6 +15,7 @@ const states = {
   },
   HARVEST: {
     do: actions.HARVEST,
+    code: '⛏',
     until: [
       senses.shouldSeek.controller,
       senses.atSource,
@@ -24,13 +25,14 @@ const states = {
   },
   SEEKING_CONTROLLER: {
     code: 'SEEK_CTRL',
+    code: '🚚🏰',
     do: actions.SEEKING_CONTROLLER,
     until: [
       senses.atController
     ]
   },
   SEEKING_CONTAINER: {
-    code: 'SEEK_CNT',
+    code: '🚚📦',
     do: actions.SEEKING_CONTAINER,
     until: [
       senses.targetIsFull.container,
@@ -38,7 +40,7 @@ const states = {
     ]
   },
   DRAIN_CONTAINER: {
-    code: 'DRN_CNT',
+    code: '+📦',
     do: actions.DRAIN_CONTAINER,
     until: [
       senses.shouldSeek.controller,
@@ -48,6 +50,7 @@ const states = {
   },
   UPGRADING: {
     do: actions.UPGRADING,
+    code: '+1',
     until: [
       senses.isDepleted.needsContainer,
       senses.isDepleted.needsSource

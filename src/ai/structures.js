@@ -55,6 +55,12 @@ structures.container.place = (pos, metadata) => {
   addPlan(pos, {...metadata, structure: STRUCTURE_CONTAINER})
 }
 
+structures.tower = {}
+
+structures.tower.place = (pos, metadata) => {
+  addPlan(pos, {...metadata, structure: STRUCTURE_TOWER})
+}
+
 structures.highway = {}
 
 structures.highway.place = ({room, source, target}, metadata) => {

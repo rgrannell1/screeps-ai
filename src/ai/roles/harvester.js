@@ -2,20 +2,23 @@
 const Role = require('./role')
 const actions = require('./parts/actions')
 const senses = require('./parts/senses')
+const states = require('./parts/states')
 
-const states = {
+const roleStates = {
   SEEKING_SOURCE: {
     do: actions.SEEKING_SOURCE,
-    code: 'SEEK_SRC',
+    code: '🚚⚡',
     until: [
+      senses.shouldSeek.container,
       senses.shouldSeek.spawn,
       senses.atSource
     ]
   },
   HARVEST: {
     do: actions.HARVEST,
+    code: '⛏',
     until: [
-      senses.shouldSeek.container,
+      senses.shouldSeek.emptyContainer,
       senses.shouldSeek.spawn,
       senses.atSource,
       senses.isDepleted.needsSource
@@ -23,27 +26,27 @@ const states = {
   },
   SEEKING_SPAWN: {
     do: actions.SEEKING_SPAWN,
-    code: 'SEEK_SPAWN',
+    code: '🚚🏠',
     until: [
       senses.atSpawn
     ]
   },
   SEEKING_CONTAINER: {
     do: actions.SEEKING_CONTAINER,
-    code: 'SEEK_CNT',
+    code: '🚚📦',
     until: [
       senses.atContainer
     ]
   },
   CHARGE_SPAWN: {
-    code: 'CHARGE_SPAWN',
+    code: '🏠⚡',
     do: actions.CHARGE_SPAWN,
     until: [
       senses.isDepleted.needsSource
     ]
   },
   CHARGE_CONTAINER: {
-    code: 'CHARGE_CONTAINER',
+    code: '📦⚡',
     do: actions.CHARGE_CONTAINER,
     until: [
       senses.targetIsFull.container,
@@ -52,6 +55,6 @@ const states = {
   }
 }
 
-module.exports = Role(states, {
+module.exports = Role(roleStates, {
   initalState: 'SEEKING_SOURCE'
 })

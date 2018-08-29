@@ -6,7 +6,7 @@ const senses = require('./parts/senses')
 
 const states = {
   SEEKING_CONTROLLER: {
-    code: 'SEEK_CTRL',
+    code: '🚚🏰',
     do: actions.SEEKING_CONTROLLER,
     until: [
       senses.canSignController

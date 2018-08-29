@@ -42,14 +42,7 @@ const identifyCreeps = () => {
     const creep = Game.creeps[name]
     const {role, stateCode, state} = creep.memory
 
-    misc.switch(`${Game.time % 10}`, {
-      0: () => {
-        if (state) creep.say(stateCode || state)
-      },
-      1: () => {
-        creep.say(creep.name)
-      }
-    })
+    if (state) creep.say(stateCode || state)
   }
 }
 
@@ -63,24 +56,31 @@ telemetry.on(constants.events.tickWarning, data => {
   // -- todo
 })
 
+const profiler = require('screeps-profiler');
+profiler.enable()
+
 const loop = () => {
-  evictCreepCache()
-  applyRoles()
+  profiler.wrap(() => {
 
-  for (const roomName of Object.keys(Game.rooms)) {
-    const room = Game.rooms[roomName]
+    evictCreepCache()
+    applyRoles()
 
-    for (const spawnName of Object.keys(Game.spawns)) {
-      const spawn = Game.spawns[spawnName]
-      spawner.spawn(room, spawn)
+    for (const roomName of Object.keys(Game.rooms)) {
+      const room = Game.rooms[roomName]
+
+      for (const spawnName of Object.keys(Game.spawns)) {
+        const spawn = Game.spawns[spawnName]
+        spawner.spawn(room, spawn)
+      }
+
+      if (Game.time % 5 === 0) planner.run(roomName)
+      structures.placePlans()
     }
 
-    planner.run(roomName)
-    structures.placePlans()
-  }
+    identifyCreeps()
+    telemetry.fire()
 
-  identifyCreeps()
-  telemetry.fire()
+  })
 }
 
 module.exports.loop = loop

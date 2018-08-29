@@ -41,37 +41,14 @@ const floop = (bounds, roomName) => {
 }
 
 const createExtensionBlock = (block, roomName) => {
-  const midPoint = Math.ceil(block.dimension / 2)
-  const isEven = block.dimension % 2 === 0
-  let points = []
+  const points = []
 
-  let x0  = block.x.lower
-  let x1 = block.x.upper - 1
+  for (let ith = block.x.lower; ith < block.x.upper; ith++) {
+    for (let jth = block.y.lower; jth < block.y.upper; jth++) {
 
-  let y0  = block.y.lower
-  let y1 = block.y.upper - 1
 
-  const mdRoad = {structure: STRUCTURE_ROAD}
-  const mdExt = {structure: STRUCTURE_EXTENSION}
-
-  while (x1 >= block.x.lower) {
-    points.push({pos: new RoomPosition(x0, y0, roomName), ...mdRoad})
-    points.push({pos: new RoomPosition(x1, y0, roomName), ...mdRoad})
-    points.push({pos: new RoomPosition(x0, y1, roomName), ...mdRoad})
-    points.push({pos: new RoomPosition(x1, y1, roomName), ...mdRoad})
-
-    if (x1 - x0 > 1) {
-      points.push({pos: new RoomPosition(x0 + 1, y0, roomName), ...mdExt})
-      points.push({pos: new RoomPosition(x0 - 1, y0, roomName), ...mdExt})
-      points.push({pos: new RoomPosition(x1 + 1, y0, roomName), ...mdExt})
-      points.push({pos: new RoomPosition(x0 - 1, y1, roomName), ...mdExt})
-      points.push({pos: new RoomPosition(x1 + 1, y1, roomName), ...mdExt})
     }
-
-    x0++, x1--, y0++, y1--
   }
-
-  return points
 }
 
 const spawnExtensions = roomName => {
@@ -83,18 +60,10 @@ return
     return terrain.is.plain(tile)
   }
 
-  let block
-  for (let size = 14; size > 8; size--) {
-    block = terrain.findMatchingBlock(size, {
-      x: {lower: 0, upper: 50},
-      y: {lower: 0, upper: 50}
-    }, tileCheck, roomName)
-
-    if (block) {
-      block.dimension = size
-      break
-    }
-  }
+  block = terrain.findMatchingBlock(4, {
+    x: {lower: 0, upper: 50},
+    y: {lower: 0, upper: 50}
+  }, tileCheck, roomName)
 
   const xx = createExtensionBlock(block, roomName)
 
@@ -105,7 +74,6 @@ return
       pos.pos.createFlag(`${ith}`, COLOR_GREEN)
     }
   })
-
 
 return
   createExtensionBlock(block, roomName)

@@ -6,14 +6,14 @@ const senses = require('./parts/senses')
 
 const states = {
   SEEKING_CONTAINER: {
-    code: 'SEEK_CNT',
+    code: '🚚📦',
     do: actions.SEEKING_CONTAINER,
     until: [
       senses.containerSeekerNeedsSpawn
     ]
   },
   DRAIN_CONTAINER: {
-    code: 'DRN_CNT',
+    code: '+⚡',
     do: actions.DRAIN_CONTAINER,
     until: [
       senses.shouldSeek.spawn,
@@ -22,13 +22,13 @@ const states = {
   },
   SEEKING_SPAWN: {
     do: actions.SEEKING_SPAWN,
-    code: 'SEEK_SPAWN',
+    code: '🚚🏠',
     until: [
       senses.atSpawnFromContainer
     ]
   },
   CHARGE_SPAWN: {
-    code: 'CHARGE_SPAWN',
+    code: '-⚡',
     do: actions.CHARGE_SPAWN,
     until: [
       senses.isDepleted.needsContainer,
