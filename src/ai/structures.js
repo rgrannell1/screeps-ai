@@ -55,10 +55,28 @@ structures.container.place = (pos, metadata) => {
   addPlan(pos, {...metadata, structure: STRUCTURE_CONTAINER})
 }
 
+structures.container.findAll = roomName => {
+  return Game.rooms[roomName].find(FIND_STRUCTURES, {
+    filter (item) {
+      return item.structureType === STRUCTURE_CONTAINER
+    }
+  })
+}
+
+structures.container.findChargeable = roomName => {
+
+}
+
 structures.tower = {}
 
 structures.tower.place = (pos, metadata) => {
   addPlan(pos, {...metadata, structure: STRUCTURE_TOWER})
+}
+
+structures.tower.findAll = roomName => {
+  return Game.rooms[roomName].find(FIND_MY_STRUCTURES, {
+    filter: {structureType: STRUCTURE_TOWER}
+  })
 }
 
 structures.highway = {}
@@ -89,8 +107,24 @@ structures.planExists = label => {
 
 structures.is = {}
 
+structures.is.extensionSite = item => item.structureType === STRUCTURE_EXTENSION
+structures.is.roadSite = item => item.structureType === STRUCTURE_ROAD
+structures.is.container = item => item.structureType === STRUCTURE_CONTAINER
+
 structures.is.damaged = site => {
   return site.hits < site.hitsMax
 }
+
+
+const findSite = (filter, roomName) => {
+  return Game.rooms[roomName].find(FIND_CONSTRUCTION_SITES, filter)
+}
+
+structures.findSite = {}
+
+structures.findSite.container = findSite.bind(null, structures.is.container)
+structures.findSite.extension = findSite.bind(null,  structures.is.extensionSite)
+structures.findSite.road = findSite.bind(null, structures.is.roadSite)
+structures.findSite.any = findSite.bind(null, _ => true)
 
 module.exports = structures

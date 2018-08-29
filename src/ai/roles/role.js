@@ -5,9 +5,11 @@ const telemetry = require('../telemetry')
 const methods = {}
 
 methods.transition = (ctx, state, newState, creep) => {
-  console.log(`${creep.name} (${creep.memory.role}) ${state} → ${newState}`)
-  creep.memory.state = newState
-  creep.memory.stateCode = ctx.states[newState] ? ctx.states[newState].code : null
+  const reason = newState.reason ? ` (${newState.reason})` : ' '
+
+  console.log(`${creep.name} (${creep.memory.role}) ${state} → ${newState.state}${reason}`)
+  creep.memory.state = newState.state
+  creep.memory.stateCode = ctx.states[newState.state] ? ctx.states[newState.state].code : null
   creep.memory.stateTicks = 0
 }
 
@@ -50,14 +52,13 @@ methods.run = (ctx, creep) => {
   const response = ctx.states[state].do(creep)
 
   for (const transition of ctx.states[state].until) {
-    const newState = transition.run(creep, transition.states)
+    const trans = transition.run(creep, transition.states)
+    const newState = typeof trans === 'string'
+      ? {state: trans}
+      : trans
 
-    if (newState) {
-      if (`${newState}` !== newState) {
-        throw new Error('non-string state returned')
-      }
-
-      if (state !== newState) {
+    if (newState && newState.state) {
+      if (state !== newState.state) {
         methods.transition(ctx, state, newState, creep)
         return
       }

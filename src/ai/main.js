@@ -37,6 +37,10 @@ const applyRoles = () => {
   }
 }
 
+const runTowers = () => {
+  // -- todo
+}
+
 const identifyCreeps = () => {
   for (const name of Object.keys(Game.creeps)) {
     const creep = Game.creeps[name]
@@ -78,6 +82,7 @@ const loop = () => {
     }
 
     identifyCreeps()
+    runTowers()
     telemetry.fire()
 
   })

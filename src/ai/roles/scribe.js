@@ -1,29 +1,15 @@
 
 const Role = require('./role')
-const misc = require('../misc')
 const actions = require('./parts/actions')
 const senses = require('./parts/senses')
+const states = require('./parts/states')
 
-const states = {
-  SEEKING_CONTROLLER: {
-    code: '🚚🏰',
-    do: actions.SEEKING_CONTROLLER,
-    until: [
-      senses.canSignController
-    ]
-  },
-  SIGNING: {
-    do: actions.SIGNING,
-    until: [
-      senses.isSigned
-    ]
-  },
-  DYING: {
-    do: actions.DYING,
-    until: []
-  }
+const roleStates = {
+  SEEKING_CONTROLLER: states.SEEKING_CONTAINER(),
+  SIGNING: states.SIGNING(),
+  DYING: states.DYING()
 }
 
-module.exports = Role(states, {
+module.exports = Role(roleStates, {
   initalState: 'SEEKING_CONTROLLER'
 })

@@ -8,6 +8,8 @@ const blessed = require('../../blessed')
 const actions = {}
 
 actions.BUILDING = creep => {
+  creep.memory.state = 'SEEKING_SITE'
+
   const site = Game.getObjectById(creep.memory.siteId)
   if (!site) {
     delete creep.memory.siteId
@@ -119,7 +121,7 @@ actions.HARVEST = creep => {
 }
 
 actions.DRAIN_CONTAINER = creep => {
-  const drainCode = creep.withdraw(Game.getObjectById(containerId), RESOURCE_ENERGY)
+  const drainCode = creep.withdraw(Game.getObjectById(creep.memory.containerId), RESOURCE_ENERGY)
 
   misc.switch(drainCode, {
     [ERR_INVALID_TARGET]: () => {
@@ -136,7 +138,6 @@ actions.DRAIN_CONTAINER = creep => {
 }
 
 actions.SEEKING_CHARGE = creep => {
-  delete creep.memory.siteId
   delete creep.memory.siteId
 
   if (!creep.memory.sourceId) {
@@ -174,26 +175,33 @@ actions.SEEKING_CONTROLLER = creep => {
   })
 }
 
+/*
+  SEEKING_SITE
+
+  Assign a prioritised site to a builder. Start with key structures.
+*/
 actions.SEEKING_SITE = creep => {
   delete creep.memory.sourceId
+  let siteId = creep.memory.siteId
 
-  let siteId = creep.memory.hasOwnProperty('siteId')
-    ? creep.memory.siteId
-    : null
-  if (!siteId) {
-    const [site] = creep.room.find(FIND_CONSTRUCTION_SITES)
-    if (site) {
-      siteId = site.id
+  if (!siteId || !Game.getObjectById(siteId)) {
+    delete creep.memory.siteId
+    let site
+    const sites = creep.room.find(FIND_CONSTRUCTION_SITES)
+    let siteTypes = ['container', 'extension', 'road', 'any']
+
+    for (const siteType of siteTypes) {
+      [site] = structures.findSite[siteType](creep.room.name)
+
+      if (site) {
+        siteId = site.id
+        break
+      }
     }
   }
 
-  if (!siteId) {
-    delete creep.memory.siteId
-    return
-  }
-
-  creep.memory.siteId = siteId
   const site = Game.getObjectById(siteId)
+  creep.memory.siteId = siteId
   const moveCode = creep.moveTo(site)
 
   misc.switch(moveCode, {
@@ -240,18 +248,12 @@ actions.SEEKING_SPAWN = creep => {
 }
 
 actions.SEEKING_CONTAINER = creep => {
-  let containerId = creep.memory.hasOwnProperty('containerId')
-    ? creep.memory.containerId
-    : null
-
+  let containerId = creep.memory.containerId
   if (!containerId) {
-    const container = terrain.findClosestContainer(creep.pos, {
-      notFull: false
-    })
+    const [container] = structures.container.findAll(creep.room.name)
 
     if (!container) {
-      console.log('no containers found!')
-      creep.memory.state = 'SEEKING_SPAWN'
+      console.log(`No container found!`)
       return
     } else {
       containerId = container.id

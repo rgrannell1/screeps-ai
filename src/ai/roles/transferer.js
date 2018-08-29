@@ -3,8 +3,9 @@ const Role = require('./role')
 const misc = require('../misc')
 const actions = require('./parts/actions')
 const senses = require('./parts/senses')
+const states = require('./parts/states')
 
-const states = {
+const roleStates = {
   SEEKING_CONTAINER: {
     code: '🚚📦',
     do: actions.SEEKING_CONTAINER,
@@ -12,21 +13,8 @@ const states = {
       senses.containerSeekerNeedsSpawn
     ]
   },
-  DRAIN_CONTAINER: {
-    code: '+⚡',
-    do: actions.DRAIN_CONTAINER,
-    until: [
-      senses.shouldSeek.spawn,
-      senses.isDepleted.needsContainer
-    ]
-  },
-  SEEKING_SPAWN: {
-    do: actions.SEEKING_SPAWN,
-    code: '🚚🏠',
-    until: [
-      senses.atSpawnFromContainer
-    ]
-  },
+  DRAIN_CONTAINER: states.DRAIN_CONTAINER(),
+  SEEKING_SPAWN: states.DRAIN_CONTAINER(),
   CHARGE_SPAWN: {
     code: '-⚡',
     do: actions.CHARGE_SPAWN,
@@ -37,6 +25,6 @@ const states = {
   }
 }
 
-module.exports = Role(states, {
+module.exports = Role(roleStates, {
   initalState: 'SEEKING_CONTAINER'
 })

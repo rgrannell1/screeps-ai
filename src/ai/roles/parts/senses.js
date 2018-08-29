@@ -27,30 +27,33 @@ const StateChange = (run, states) => {
   return {run, states}
 }
 
+const Transition = (state, reason) => {
+  return {state, reason}
+}
+
 const getObj = Game.getObjectById
 
-senses.atDamage = StateChange((creep, states2) => {
+senses.atDamage = StateChange(creep => {
   const site = getObj(creep.memory.damageId)
 
   creep.moveTo(site)
   return misc.switch(creep.repair(site), {
-    [OK]: () => states.REPAIR,
-    [ERR_NOT_IN_RANGE]: () => states.SEEKING_CHARGE
+    [OK]: () => Transition(states.REPAIR, 'repair succeeeded'),
+    [ERR_NOT_IN_RANGE]: () => Transition(states.SEEKING_CHARGE, 'not in range')
   })
 }, [states.REPAIR, states.SEEKING_CHARGE])
 
-senses.repairComplete = StateChange((creep, states2) => {
+senses.repairComplete = StateChange(creep => {
   const site = getObj(creep.memory.damageId)
 
   return misc.switch(-100, {
-    [OK]: () => states.SEEKING_CHARGE,
-    [ERR_NOT_IN_RANGE]: () => states.SEEKING_CHARGE
+    [OK]: () => Transition(states.SEEKING_CHARGE),
+    [ERR_NOT_IN_RANGE]: () => Transition(states.SEEKING_CHARGE)
   })
-
 
 }, [states.SEEKING_CHARGE])
 
-senses.atCharge = StateChange((creep, states2) => {
+senses.atCharge = StateChange(creep => {
   const loaded = getObj(creep.memory.sourceId)
   const source = loaded
     ? loaded
@@ -60,88 +63,92 @@ senses.atCharge = StateChange((creep, states2) => {
 
   creep.moveTo(source)
   return misc.switch(creep.harvest(source), {
-    [OK]: () => states.CHARGE,
-    [ERR_NOT_IN_RANGE]: () => states.SEEKING_CHARGE
+    [OK]: () => Transition(states.CHARGE, 'harvest successful'),
+    [ERR_NOT_IN_RANGE]: () => Transition(states.SEEKING_CHARGE, 'not in range')
   })
 }, [states.CHARGE, states.SEEKING_CHARGE])
 
-senses.atController = StateChange((creep, states2) => {
+senses.atController = StateChange(creep => {
   const controller = getObj(creep.memory.controllerId)
   creep.moveTo(controller)
 
   return misc.switch(creep.upgradeController(controller), {
-    [OK]: () => states.UPGRADING,
-    [ERR_NOT_IN_RANGE]: () => states.SEEKING_CONTROLLER,
+    [OK]: () => Transition(states.UPGRADING),
+    [ERR_NOT_IN_RANGE]: () => Transition(states.SEEKING_CONTROLLER, 'not in range'),
     [ERR_NO_BODYPART]: () => {
 
     }
   })
 }, [states.UPGRADING, states.SEEKING_CONTROLLER])
 
-senses.atContainerFromSpawn = StateChange((creep, states2) => {
+senses.atContainerFromSpawn = StateChange(creep => {
   const container = getObj(creep.memory.containerId)
 
   if (!container || container.store.energy < CONTAINER_CAPACITY) {
-    return states.SEEKING_CONTAINER
+    return Transition(states.SEEKING_CONTAINER, 'no container or not full')
   }
 
   creep.moveTo(container)
 
   return misc.switch(creep.withdraw(container, RESOURCE_ENERGY), {
-    [OK]: () => states.DRAIN_CONTAINER,
-    [ERR_NOT_IN_RANGE]: () => states.SEEKING_CONTAINER,
-    [ERR_FULL]: () => states.DRAIN_CONTAINER,
+    [OK]: () => Transition(states.DRAIN_CONTAINER, 'withdrew energy'),
+    [ERR_NOT_IN_RANGE]: () => Transition(states.SEEKING_CONTAINER, 'not in range'),
+    [ERR_FULL]: () => Transition(states.DRAIN_CONTAINER, 'already full'),
     default (val) {
       console.log(`at container code ${val} (${creep.memory.role})`)
     }
   })
 }, [states.SEEKING_CONTAINER, states.DRAIN_CONTAINER])
 
-senses.containerSeekerNeedsSpawn = StateChange((creep, states2) => {
+senses.containerSeekerNeedsSpawn = StateChange(creep => {
+  if (!creep.memory.containerId) {
+
+  }
+
   const container = getObj(creep.memory.containerId)
 
   if (!container || container.store.energy === 0) {
-    return states.SEEKING_SPAWN
+    return Transition(states.SEEKING_SPAWN, 'No container or container empty')
   }
 
   creep.moveTo(container)
 
   return misc.switch(creep.transfer(container, RESOURCE_ENERGY), {
-    [OK]: () => states.CHARGE_CONTAINER,
-    [ERR_NOT_IN_RANGE]: () => states.SEEKING_CONTAINER,
-    [ERR_FULL]: () => states.CHARGE_CONTAINER,
+    [OK]: () => Transition(states.CHARGE_CONTAINER, 'transfer successfully'),
+    [ERR_NOT_IN_RANGE]: () => Transition(states.SEEKING_CONTAINER, 'not in range'),
+    [ERR_FULL]: () => Transition(states.CHARGE_CONTAINER, 'already full'),
     default (val) {
       console.log(`at container code ${val} (${creep.memory.role})`)
     }
   })
 }, [states.SEEKING_SPAWN, states.CHARGE_CONTAINER, states.SEEKING_CONTAINER])
 
-senses.atContainer = StateChange((creep, states2) => {
+senses.atContainer = StateChange(creep => {
   const container = getObj(creep.memory.containerId)
 
   if (!container) {
-    return states.SEEKING_SOURCE
+    return Transition(states.SEEKING_SOURCE)
   }
 
   creep.moveTo(container)
 
   return misc.switch(creep.transfer(container, RESOURCE_ENERGY), {
-    [OK]: () => states.CHARGE_CONTAINER,
-    [ERR_NOT_IN_RANGE]: () => states.SEEKING_CONTAINER,
-    [ERR_FULL]: () => states.CHARGE_CONTAINER,
+    [OK]: () => Transition(states.CHARGE_CONTAINER, 'transfered successfully'),
+    [ERR_NOT_IN_RANGE]: () => Transition(states.SEEKING_CONTAINER, 'not in range'),
+    [ERR_FULL]: () => Transition(states.CHARGE_CONTAINER, 'already full'),
     default (val) {
       console.log(`at container code ${val} (${creep.memory.role})`)
     }
   })
 }, [states.SEEKING_SOURCE, states.CHARGE_CONTAINER, states.SEEKING_CONTAINER])
 
-senses.canSignController = StateChange((creep, states2) => {
+senses.canSignController = StateChange(creep => {
   const controller = getObj(creep.memory.controllerId)
   creep.moveTo(controller)
 
   return misc.switch(creep.signController(controller, constants.sign), {
-    [OK]: () => states.SIGNING,
-    [ERR_NOT_IN_RANGE]: () => states.SEEKING_CONTROLLER,
+    [OK]: () => Transition(states.SIGNING, 'signed successfully'),
+    [ERR_NOT_IN_RANGE]: () => Transition(states.SEEKING_CONTROLLER, 'not in range'),
     [ERR_NO_BODYPART]: () => {
 
     },
@@ -151,37 +158,37 @@ senses.canSignController = StateChange((creep, states2) => {
   })
 }, [states.SIGNING, states.SEEKING_CONTROLLER])
 
-senses.atSite = StateChange((creep, states2) => {
+senses.atSite = StateChange(creep => {
   const site = getObj(creep.memory.siteId)
   creep.moveTo(site)
 
   return misc.switch(creep.build(site), {
-    [OK]: () => states.BUILDING,
-    [ERR_INVALID_TARGET]: () => states.BUILDING,
-    [ERR_NOT_IN_RANGE]: () => states.SEEKING_SITE
+    [OK]: () => Transition(states.BUILDING, 'built successfully'),
+    [ERR_INVALID_TARGET]: () => Transition(states.BUILDING, 'bad target'),
+    [ERR_NOT_IN_RANGE]: () => Transition(states.SEEKING_SITE, 'not in range')
   })
 }, [states.BUILDING, states.SEEKING_SITE])
 
-senses.noSitesLeft = StateChange((creep, states2) => {
+senses.noSitesLeft = StateChange(creep => {
 
 }, [])
 
-senses.atSource = StateChange((creep, states2) => {
+senses.atSource = StateChange(creep => {
   const source = getObj(creep.memory.sourceId)
   creep.moveTo(source)
   return misc.switch(creep.harvest(source), {
-    [OK]: () => states.CHARGE,
-    [ERR_NOT_IN_RANGE]: () => states.SEEKING_CHARGE
+    [OK]: () => Transition(states.CHARGE, 'harvested successfully'),
+    [ERR_NOT_IN_RANGE]: () => Transition(states.SEEKING_CHARGE, 'not in range')
   })
 }, [states.CHARGE, states.SEEKING_CHARGE])
 
-senses.atSpawn = StateChange((creep, states2) => {
+senses.atSpawn = StateChange(creep => {
   const spawn = getObj(creep.memory.spawnId)
   creep.moveTo(spawn)
 
   return misc.switch(creep.transfer(spawn, RESOURCE_ENERGY), {
-    [OK]: () => states.CHARGE_SPAWN,
-    [ERR_NOT_IN_RANGE]: () => states.SEEKING_SPAWN,
+    [OK]: () => Transition(states.CHARGE_SPAWN, 'transfered successfully'),
+    [ERR_NOT_IN_RANGE]: () => Transition(states.SEEKING_SPAWN, 'not in range'),
     [ERR_FULL] () {
       // -- TODO
     },
@@ -192,26 +199,26 @@ senses.atSpawn = StateChange((creep, states2) => {
   })
 }, [states.CHARGE_SPAWN, states.SEEKING_SPAWN])
 
-senses.atSpawnFromContainer = StateChange((creep, states2) => {
+senses.atSpawnFromContainer = StateChange(creep => {
   const spawn = getObj(creep.memory.spawnId)
   creep.moveTo(spawn)
 
   return misc.switch(creep.transfer(spawn, RESOURCE_ENERGY), {
-    [OK]: () => states.CHARGE_SPAWN,
-    [ERR_NOT_IN_RANGE]: () => states.SEEKING_SPAWN,
+    [OK]: () => Transition(states.CHARGE_SPAWN, 'transfered successfully'),
+    [ERR_NOT_IN_RANGE]: () => Transition(states.SEEKING_SPAWN, 'not in range'),
     [ERR_FULL] () {
       // -- TODO
     },
-    [ERR_NOT_ENOUGH_RESOURCES]: () => states.SEEKING_CONTAINER,
+    [ERR_NOT_ENOUGH_RESOURCES]: () => Transition(states.SEEKING_CONTAINER, 'not enough resources'),
     default (code) {
       creep.say(`charge ${code}`)
     }
   })
 }, [states.CHARGE_SPAWN, states.SEEKING_SPAWN, states.SEEKING_CONTAINER])
 
-const onDepleted = state => StateChange((creep, states2) => {
+const onDepleted = state => StateChange(creep => {
   if (creep.carry.energy === 0) {
-    return state
+    return Transition(state, 'depleted')
   }
 }, )
 
@@ -223,86 +230,86 @@ senses.isDepleted = {
 
 senses.shouldSeek = {}
 
-senses.shouldSeek.damage = StateChange((creep, states2) => {
+senses.shouldSeek.damage = StateChange(creep => {
   if (creep.carry.energy === creep.carryCapacity) {
-    return states.SEEKING_DAMAGE
+    return Transition(states.SEEKING_DAMAGE, 'creep full')
   }
 }, [states.SEEKING_DAMAGE])
 
-senses.shouldSeek.controller = StateChange((creep, states2) => {
+senses.shouldSeek.controller = StateChange(creep => {
   if (creep.carry.energy === creep.carryCapacity) {
-    return states.SEEKING_CONTROLLER
+    return Transition(states.SEEKING_CONTROLLER, 'creep full')
   }
 }, [states.SEEKING_CONTROLLER])
 
-senses.shouldSeek.spawn = StateChange((creep, states2) => {
+senses.shouldSeek.spawn = StateChange(creep => {
   if (creep.carry.energy === creep.carryCapacity) {
-    return states.SEEKING_SPAWN
+    return Transition(states.SEEKING_SPAWN, 'creep full')
   }
 }, [states.SEEKING_SPAWN])
 
-senses.shouldSeek.site = StateChange((creep, states2) => {
+senses.shouldSeek.site = StateChange(creep => {
   if (creep.carry.energy === creep.carryCapacity) {
-    return states.SEEKING_SITE
+    return Transition(states.SEEKING_SITE, 'creep full')
   }
 }, [states.SEEKING_SITE])
 
-senses.shouldSeek.charge = StateChange((creep, states2) => {
+senses.shouldSeek.charge = StateChange(creep => {
   if (creep.carry.energy !== creep.carryCapacity) {
-    return states.SEEKING_CHARGE
+    return Transition(states.SEEKING_CHARGE, 'creep not full')
   }
 }, [states.SEEKING_CHARGE])
 
-senses.shouldSeek.source = StateChange((creep, states2) => {
+senses.shouldSeek.source = StateChange(creep => {
   if (creep.carry.energy !== creep.carryCapacity) {
-    return states.SEEKING_SOURCE
+    return Transition(states.SEEKING_SOURCE, 'creep not full')
   }
 }, [states.SEEKING_SOURCE])
 
-senses.shouldSeek.emptyContainer = StateChange((creep, states2) => {
+senses.shouldSeek.emptyContainer = StateChange(creep => {
   const isFull = creep.carry.energy === creep.carryCapacity
   const container = terrain.findClosestContainer(creep.pos, {
     notFull: true
   })
 
   if (isFull && container) {
-    return states.SEEKING_CONTAINER
+    return Transition(states.SEEKING_CONTAINER, 'full & container present')
   }
 }, [states.SEEKING_CONTAINER])
 
-senses.shouldSeek.container = StateChange((creep, states2) => {
+senses.shouldSeek.container = StateChange(creep => {
   const isFull = creep.carry.energy === creep.carryCapacity
   const container = terrain.findClosestContainer(creep.pos, {
     notFull: false
   })
 
   if (isFull && container) {
-    return states.SEEKING_CONTAINER
+    return Transition(states.SEEKING_CONTAINER, 'is full & container present')
   }
 }, [states.SEEKING_CONTAINER])
 
-senses.atSource = StateChange((creep, states2) => {
+senses.atSource = StateChange(creep => {
   const source = getObj(creep.memory.sourceId)
   creep.moveTo(source)
   return misc.switch(creep.harvest(source), {
-    [OK]: () => states.HARVEST,
-    [ERR_NOT_IN_RANGE]: () => states.SEEKING_SOURCE
+    [OK]: () => Transition(states.HARVEST, 'harvested successfully'),
+    [ERR_NOT_IN_RANGE]: () => Transition(states.SEEKING_SOURCE, 'not in range')
   })
 }, [states.HARVEST, states.SEEKING_SOURCE])
 
-senses.isSigned = StateChange((creep, states2) => {
+senses.isSigned = StateChange(creep => {
   const controller = getObj(creep.memory.controllerId)
   if (controller && controller.sign && controller.sign.text === constants.sign) {
-    return states.DYING
+    return Transition(states.DYING, 'tired of life')
   }
 }, [states.DYING])
 
 senses.targetIsFull = {}
 
-senses.targetIsFull.container = StateChange((creep, states2) => {
+senses.targetIsFull.container = StateChange(creep => {
   const container = getObj(creep.memory.containerId)
   if (container && container.store.energy === CONTAINER_CAPACITY) {
-    return states.SEEKING_SOURCE
+    return Transition(states.SEEKING_SOURCE, 'container full')
   }
 }, [states.SEEKING_SOURCE])
 
