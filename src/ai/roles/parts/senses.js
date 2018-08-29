@@ -160,7 +160,7 @@ senses.canSignController = StateChange(creep => {
 
 senses.atSite = StateChange(creep => {
   if (!creep.memory.siteId || !getObj(creep.memory.siteId)) {
-    console.log('Deleted site-id')
+    console.log('site missing')
     delete creep.memory.siteId
     return
   }
@@ -177,13 +177,15 @@ senses.atSite = StateChange(creep => {
     },
     [ERR_NOT_IN_RANGE]: () => {
       return Transition(states.SEEKING_SITE, 'not in range')
+    },
+    [ERR_NOT_ENOUGH_RESOURCES]: () => {
+      return Transition(states.SEEKING_CHARGE, 'needs charge')
+    },
+    default (val) {
+      console.log(`seek site code ${val}`)
     }
   })
-}, [states.BUILDING, states.SEEKING_SITE])
-
-senses.noSitesLeft = StateChange(creep => {
-
-}, [])
+}, [states.BUILDING, states.SEEKING_SITE, states.SEEKING_CHARGE])
 
 senses.atSource = StateChange(creep => {
   const source = getObj(creep.memory.sourceId)

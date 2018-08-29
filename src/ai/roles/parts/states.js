@@ -19,8 +19,7 @@ states.SEEKING_SITE = () => {
     do: actions.SEEKING_SITE,
     code: '🚚👷',
     until: [
-      senses.atSite,
-      senses.noSitesLeft
+      senses.atSite
     ]
   }
 }

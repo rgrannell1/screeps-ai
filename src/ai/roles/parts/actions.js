@@ -202,7 +202,7 @@ actions.SEEKING_SITE = creep => {
   }
 
   const site = Game.getObjectById(siteId)
-  creep.memory.siteId = siteId
+  creep.memory.siteId = site.id
   const moveCode = creep.moveTo(site)
 
   misc.switch(moveCode, {
