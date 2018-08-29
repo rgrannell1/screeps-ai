@@ -44,7 +44,8 @@ roles.scribe = Role({
 })
 
 roles.defender = Role({
-  SEEKING_ENEMY: states.SEEKING_ENEMY()
+  SEEKING_ENEMY: states.SEEKING_ENEMY(),
+  ATTACKING: states.ATTACKING(),
 }, {
   initalState: 'SEEKING_ENEMY'
 })

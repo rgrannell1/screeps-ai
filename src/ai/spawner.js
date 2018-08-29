@@ -133,7 +133,7 @@ setSpawnQuotas.scribe = room => {
 }
 
 const censusCreeps = room => {
-  const creeps = room.find(FIND_CREEPS)
+  const creeps = room.find(FIND_MY_CREEPS)
   const table = {}
 
   for (const name of Object.keys(creeps)) {
