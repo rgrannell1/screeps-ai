@@ -1,13 +1,14 @@
 
 const actions = require('./actions')
 const senses = require('./senses')
+const constants = require('../../constants')
 
 const states = {}
 
 states.BUILDING = () => {
   return {
     do: actions.BUILDING,
-    code: '👷',
+    code: constants.states.BUILDING.code,
     until: [
       senses.isDepleted.needsCharge
     ]
@@ -17,7 +18,7 @@ states.BUILDING = () => {
 states.SEEKING_SITE = () => {
   return {
     do: actions.SEEKING_SITE,
-    code: '🚚👷',
+    code: constants.states.SEEKING_SITE.code,
     until: [
       senses.atSite
     ]
@@ -27,7 +28,7 @@ states.SEEKING_SITE = () => {
 states.CHARGE = () => {
   return {
     do: actions.CHARGE,
-    code: '+⚡',
+    code: constants.states.CHARGE.code,
     until: [
       senses.shouldSeek.site,
       senses.isDepleted.needsCharge
@@ -38,7 +39,7 @@ states.CHARGE = () => {
 states.SEEKING_CHARGE = () => {
   return {
     do: actions.SEEKING_CHARGE,
-    code: '🚚⚡',
+    code: constants.states.SEEKING_CHARGE.code,
     until: [
       senses.shouldSeek.charge,
       senses.atCharge
@@ -49,7 +50,7 @@ states.SEEKING_CHARGE = () => {
 states.SEEKING_SOURCE = () => {
   return {
     do: actions.SEEKING_SOURCE,
-    code: '🚚⚡',
+    code: constants.states.SEEKING_SOURCE.code,
     until: [
       senses.shouldSeek.container,
       senses.shouldSeek.spawn,
@@ -61,7 +62,7 @@ states.SEEKING_SOURCE = () => {
 states.HARVEST = () => {
   return {
       do: actions.HARVEST,
-      code: '⛏',
+      code: constants.states.HARVEST.code,
       until: [
         senses.shouldSeek.emptyContainer,
         senses.shouldSeek.spawn,
@@ -74,7 +75,7 @@ states.HARVEST = () => {
 states.SEEKING_SPAWN = () => {
   return {
     do: actions.SEEKING_SPAWN,
-    code: '🚚🏠',
+    code: constants.states.SEEKING_SPAWN.code,
     until: [
       senses.atSpawn
     ]
@@ -84,7 +85,7 @@ states.SEEKING_SPAWN = () => {
 states.SEEKING_CONTAINER = () => {
   return {
     do: actions.SEEKING_CONTAINER,
-    code: '🚚📦',
+    code: constants.states.SEEKING_CONTAINER.code,
     until: [
       senses.atContainer
     ]
@@ -93,7 +94,7 @@ states.SEEKING_CONTAINER = () => {
 
 states.DRAIN_CONTAINER = () => {
   return {
-    code: '+⚡',
+    code: constants.states.DRAIN_CONTAINER.code,
     do: actions.DRAIN_CONTAINER,
     until: [
       senses.shouldSeek.spawn,
@@ -104,7 +105,7 @@ states.DRAIN_CONTAINER = () => {
 
 states.CHARGE_SPAWN = () => {
   return {
-    code: '🏠⚡',
+    code: constants.states.CHARGE_SPAWN.code,
     do: actions.CHARGE_SPAWN,
     until: [
       senses.isDepleted.needsSource
@@ -114,7 +115,7 @@ states.CHARGE_SPAWN = () => {
 
 states.CHARGE_CONTAINER = () => {
   return {
-    code: '📦⚡',
+    code: constants.states.CHARGE_CONTAINER.code,
     do: actions.CHARGE_CONTAINER,
     until: [
       senses.targetIsFull.container,
@@ -125,7 +126,7 @@ states.CHARGE_CONTAINER = () => {
 
 states.REPAIR = () => {
   return {
-    code: '+❤',
+    code: constants.states.REPAIR.code,
     do: actions.REPAIR,
     until: [
       senses.repairComplete,
@@ -136,7 +137,7 @@ states.REPAIR = () => {
 
 states.SEEKING_DAMAGE = () => {
   return {
-    code: '🚚❤',
+    code: constants.states.SEEKING_DAMAGE.code,
     do: actions.SEEKING_DAMAGE,
     until: [
       senses.isDepleted.needsCharge,
@@ -147,7 +148,7 @@ states.SEEKING_DAMAGE = () => {
 
 states.SIGNING = () => {
   return {
-    code: '✍',
+    code: constants.states.SIGNING.code,
     do: actions.SIGNING,
     until: [
       senses.isSigned
@@ -157,7 +158,7 @@ states.SIGNING = () => {
 
 states.DYING = () => {
   return {
-    code: '💀',
+    code: constants.states.DYING.code,
     do: actions.DYING,
     until: []
   }

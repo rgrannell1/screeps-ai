@@ -183,6 +183,7 @@ senses.atSite = StateChange(creep => {
     },
     default (val) {
       console.log(`seek site code ${val}`)
+      delete creep.memory.siteId
     }
   })
 }, [states.BUILDING, states.SEEKING_SITE, states.SEEKING_CHARGE])

@@ -7,7 +7,6 @@ const plans = {
   sourceContainers: require('./source-containers'),
   miningRoads: require('./mining-roads'),
   exitRoads: require('./exit-roads'),
-  frequentRoads: require('./frequent-roads'),
   spawnExtensions: require('./spawn-extensions'),
   towers: require('./towers'),
 }

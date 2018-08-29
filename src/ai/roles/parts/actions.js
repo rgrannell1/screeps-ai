@@ -195,6 +195,7 @@ actions.SEEKING_SITE = creep => {
       [site] = structures.findSite[siteType](creep.room.name)
 
       if (site) {
+        console.log(`building a lovely new ${blessed.bold(siteType)}`)
         siteId = site.id
         break
       }
@@ -254,7 +255,7 @@ actions.SEEKING_CONTAINER = creep => {
     const [container] = structures.container.findAll(creep.room.name)
 
     if (!container) {
-      console.log(`No container found!`)
+      console.log(`Container not found by ${blessed.red(creep.memory.role)}!`)
       return
     } else {
       containerId = container.id

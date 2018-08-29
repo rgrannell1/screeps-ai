@@ -1,13 +1,14 @@
 
 const constants = require('../constants')
 const telemetry = require('../telemetry')
+const blessed = require('../blessed')
 
 const methods = {}
 
 methods.transition = (ctx, state, newState, creep) => {
   const reason = newState.reason ? ` (${newState.reason})` : ' '
 
-  console.log(`${creep.name} (${creep.memory.role}) ${state} → ${newState.state}${reason}`)
+  console.log(`${creep.name} (${blessed.bold(creep.memory.role)}) ${state} → ${blessed.green(newState.state)}${reason}`)
   creep.memory.state = newState.state
   creep.memory.stateCode = ctx.states[newState.state] ? ctx.states[newState.state].code : null
   creep.memory.stateTicks = 0
@@ -73,7 +74,9 @@ methods.run = (ctx, creep) => {
       ticks: creep.memory.stateTicks
     })
 
-    console.log(`${creep.name} still in state ${state} after ${creep.memory.stateTicks} ticks`)
+    if (creep.memory.stateTicks % 5 === 0) {
+      console.log(`${creep.name} still in state ${state} after ${creep.memory.stateTicks} ticks`)
+    }
   }
 }
 

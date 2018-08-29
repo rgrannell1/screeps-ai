@@ -70,4 +70,55 @@ constants.limits = {
   events: 1e3
 }
 
+/*
+  Information associated with each role's state
+*/
+constants.states ={
+  BUILDING: {
+    code: '👷'
+  },
+  SEEKING_SITE: {
+    code: '🚚👷'
+  },
+  CHARGE: {
+    code: '+⚡'
+  },
+  SEEKING_CHARGE: {
+    code: '🚚⚡'
+  },
+  SEEKING_SOURCE: {
+    code: '🚚⚡'
+  },
+  HARVEST: {
+    code: '⛏'
+  },
+  SEEKING_SPAWN: {
+    code: '🚚🏠'
+  },
+  SEEKING_CONTAINER: {
+    code: '🚚📦'
+  },
+  DRAIN_CONTAINER: {
+    code: '+⚡'
+  },
+  CHARGE_SPAWN: {
+    code: '🏠⚡'
+  },
+  CHARGE_CONTAINER: {
+    code: '📦⚡'
+  },
+  REPAIR: {
+    code: '+❤'
+  },
+  SEEKING_DAMAGE: {
+    code: '🚚❤'
+  },
+  SIGNING: {
+    code: '✍'
+  },
+  DYING: {
+    code: '💀'
+  }
+}
+
 module.exports = constants
