@@ -23,6 +23,10 @@ structures.placePlans = () => {
     Memory.plans = []
   }
 
+  if (Game.time % 2 === 0) {
+    return
+  }
+
   Memory.plans.forEach(plan => {
     try {
       const pos = new RoomPosition(plan.pos.x, plan.pos.y, plan.pos.roomName)

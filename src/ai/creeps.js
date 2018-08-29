@@ -24,4 +24,8 @@ creeps.pickCreepName = role => {
   return `${constants.roles[role].icon}-${Memory.roles[role].count}`
 }
 
+creeps.getCost = parts => {
+  return parts.reduce((sum, part) => sum + constants.costs[part], 0)
+}
+
 module.exports = creeps

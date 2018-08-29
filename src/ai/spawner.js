@@ -145,7 +145,7 @@ const createCreep = (spawn, data) => {
     throw new TypeError('cannot create creep without icon')
   }
 
-  const creepCost = misc.getCreepCost(data.body)
+  const creepCost = creeps.getCost(data.body)
   spawn.memory.energyLock = creepCost
   spawn.memory.queued = data
 

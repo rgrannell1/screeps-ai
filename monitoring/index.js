@@ -1,36 +1,25 @@
 
-const request = require('request-promise-native')
+const constants = require('./constants')
+const {ScreepsAPI} = require('screeps-api')
 
-const constants = {
-  urls: {
-    screeps: ' https://screeps.com/api'
-  }
+function processEvents (events) {
+
 }
 
-global.token = process.env.SCREEPS_TOKEN
-
-if (!global.token) {
-  throw new Error('missing token.')
-}
-
-const requests = {}
-
-requests.getMemory = () => {
-  return request.get({
-    uri: `${constants.urls.screeps}/user/memory?shard=shard2`,
-    headers: {
-      'X-Token': global.token
-    },
-    json: true
+async function main () {
+  const api = new ScreepsAPI({
+    token: process.env.SCREEPS_TOKEN
   })
-}
 
-const main = async () => {
-
-  const body = await requests.getMemory()
-
-  console.log(JSON.stringify(body))
-
+  try {
+    const {data} = await api.memory.get(undefined, constants.shard)
+    const {events} = data
+    await processEvents(events)
+  } catch (err) {
+    console.log(err)
+  } finally {
+    await api.memory.set('events', [])
+  }
 }
 
 main()
