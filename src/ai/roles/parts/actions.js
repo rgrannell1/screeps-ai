@@ -186,6 +186,7 @@ actions.SEEKING_SITE = creep => {
 
   if (!siteId || !Game.getObjectById(siteId)) {
     delete creep.memory.siteId
+
     let site
     const sites = creep.room.find(FIND_CONSTRUCTION_SITES)
     let siteTypes = ['container', 'extension', 'road', 'any']

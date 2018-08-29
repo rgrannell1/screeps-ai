@@ -159,13 +159,25 @@ senses.canSignController = StateChange(creep => {
 }, [states.SIGNING, states.SEEKING_CONTROLLER])
 
 senses.atSite = StateChange(creep => {
+  if (!creep.memory.siteId || !getObj(creep.memory.siteId)) {
+    console.log('Deleted site-id')
+    delete creep.memory.siteId
+    return
+  }
+
   const site = getObj(creep.memory.siteId)
   creep.moveTo(site)
 
   return misc.switch(creep.build(site), {
-    [OK]: () => Transition(states.BUILDING, 'built successfully'),
-    [ERR_INVALID_TARGET]: () => Transition(states.BUILDING, 'bad target'),
-    [ERR_NOT_IN_RANGE]: () => Transition(states.SEEKING_SITE, 'not in range')
+    [OK]: () => {
+      return Transition(states.BUILDING, 'built successfully')
+    },
+    [ERR_INVALID_TARGET]: () => {
+      return Transition(states.BUILDING, 'bad target')
+    },
+    [ERR_NOT_IN_RANGE]: () => {
+      return Transition(states.SEEKING_SITE, 'not in range')
+    }
   })
 }, [states.BUILDING, states.SEEKING_SITE])
 

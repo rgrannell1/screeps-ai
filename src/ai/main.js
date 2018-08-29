@@ -7,14 +7,7 @@ const structures = require('./structures')
 const terrain = require('./terrain')
 const constants = require('./constants')
 
-const roles = {
-  harvester: require('./roles/harvester'),
-  upgrader: require('./roles/upgrader'),
-  builder: require('./roles/builder'),
-  repairer: require('./roles/repairer'),
-  scribe: require('./roles/scribe'),
-  transferer: require('./roles/transferer')
-}
+const roles = require('./roles')
 
 const evictCreepCache = () => {
   for (const name in Memory.creeps) {
