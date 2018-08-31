@@ -22,7 +22,7 @@ setSpawnQuotas.defender = () => {
   const settings = {}
 
   Object.assign(settings, {
-    expected: 4,
+    expected: 2,
     priority: constants.roles.defender.priority,
     body: constants.roles.defender.plans.standard,
     icon: constants.roles.defender.icon
@@ -78,8 +78,8 @@ setSpawnQuotas.transferer = room => {
 setSpawnQuotas.builder = room => {
   const settings = {}
 
-  const SITE_TO_BUILDER_RATIO = 2
-  const ENERGY_TO_BUILDER_RATIO = 750
+  const SITE_TO_BUILDER_RATIO = 10
+  const ENERGY_TO_BUILDER_RATIO = 1500
 
   const sites = room.find(FIND_CONSTRUCTION_SITES)
   const siteCount = sites.length

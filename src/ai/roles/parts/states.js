@@ -92,6 +92,16 @@ states.SEEKING_CONTAINER = () => {
   }
 }
 
+states.SEEKING_EXTENSION = () => {
+  return {
+    do: actions.SEEKING_EXTENSION,
+    code: constants.states.SEEKING_EXTENSION.code,
+    until: [
+      senses.atExtension
+    ]
+  }
+}
+
 states.DRAIN_CONTAINER = () => {
   return {
     code: constants.states.DRAIN_CONTAINER.code,
@@ -109,6 +119,17 @@ states.CHARGE_SPAWN = () => {
     do: actions.CHARGE_SPAWN,
     until: [
       senses.isDepleted.needsSource
+    ]
+  }
+}
+
+states.CHARGE_EXTENSION = () => {
+  return {
+    code: '-⚡',
+    do: actions.CHARGE_EXTENSION,
+    until: [
+      senses.isDepleted.needsContainer,
+      senses.atExtension
     ]
   }
 }

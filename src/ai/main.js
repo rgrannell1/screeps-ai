@@ -7,6 +7,7 @@ const structures = require('./structures')
 const telemetry = require('./telemetry')
 const terrain = require('./terrain')
 const logger = require('./logger')
+const tower = require('./tower')
 
 const roles = require('./roles')
 
@@ -29,8 +30,8 @@ const applyRoles = () => {
   }
 }
 
-const runTowers = () => {
-  // -- todo
+const runTowers = (roomName) => {
+  tower.run(roomName)
 }
 
 const identifyCreeps = () => {
@@ -38,7 +39,9 @@ const identifyCreeps = () => {
     const creep = Game.creeps[name]
     const {role, stateCode, state} = creep.memory
 
-    if (state) creep.say(stateCode || state)
+    misc.timer(() => {
+      creep.say(stateCode || state)
+    }, 3)
   }
 }
 
@@ -79,10 +82,9 @@ const loop = () => {
         const spawn = Game.spawns[spawnName]
         spawner.spawn(room, spawn)
       }
+      runTowers(roomName)
+      identifyCreeps()
     }
-
-    identifyCreeps()
-    runTowers()
   })
 }
 

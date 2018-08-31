@@ -86,16 +86,41 @@ senses.atContainerFromSpawn = StateChange(creep => {
   creep.moveTo(container)
 
   return misc.switch(creep.withdraw(container, RESOURCE_ENERGY), {
-    [OK]: () => Transition(states.DRAIN_CONTAINER, 'withdrew energy'),
-    [ERR_NOT_IN_RANGE]: () => Transition(states.SEEKING_CONTAINER, 'not in range'),
-    [ERR_FULL]: () => Transition(states.DRAIN_CONTAINER, 'already full'),
+    [OK]: () => {
+      return Transition(states.DRAIN_CONTAINER, 'withdrew energy')
+    },
+    [ERR_NOT_IN_RANGE]: () => {
+      return Transition(states.SEEKING_CONTAINER, 'not in range')
+    },
+    [ERR_FULL]: () => {
+      return Transition(states.DRAIN_CONTAINER, 'already full')
+    },
     default (val) {
       console.log(`at container code ${val} (${creep.memory.role})`)
     }
   })
 }, [states.SEEKING_CONTAINER, states.DRAIN_CONTAINER])
 
-senses.containerSeekerNeedsSpawn = StateChange(creep => {
+senses.atExtension = StateChange(creep => {
+  const extension = getObj(creep.memory.extensionId)
+
+  if (!extension || extension.store.energy < EXTENSION_CAPACITY) {
+    return Transition(states.SEEKING_EXTENSION, 'no container or not full')
+  }
+
+  creep.moveTo(container)
+
+  return misc.switch(creep.transfer(container, RESOURCE_ENERGY), {
+    [OK]: () => Transition(states.CHARGE_EXTENSION, 'transfered energy'),
+    [ERR_NOT_IN_RANGE]: () => Transition(states.SEEKING_CONTAINER, 'not in range'),
+    [ERR_FULL]: () => Transition(states.CHARGE_EXTENSION, 'already full'),
+    default (val) {
+      console.log(`at container code ${val} (${creep.memory.role})`)
+    }
+  })
+}, [states.SEEKING_CONTAINER, states.CHARGE_EXTENSION])
+
+senses.canWithdrawFromContainer = StateChange(creep => {
   if (!creep.memory.containerId) {
 
   }
@@ -108,10 +133,16 @@ senses.containerSeekerNeedsSpawn = StateChange(creep => {
 
   creep.moveTo(container)
 
-  return misc.switch(creep.transfer(container, RESOURCE_ENERGY), {
-    [OK]: () => Transition(states.CHARGE_CONTAINER, 'transfer successfully'),
-    [ERR_NOT_IN_RANGE]: () => Transition(states.SEEKING_CONTAINER, 'not in range'),
-    [ERR_FULL]: () => Transition(states.CHARGE_CONTAINER, 'already full'),
+  return misc.switch(creep.withdraw(container, RESOURCE_ENERGY), {
+    [OK]: () => {
+      return Transition(states.DRAIN_CONTAINER, 'transfer successfully')
+    },
+    [ERR_NOT_IN_RANGE]: () => {
+      return Transition(states.SEEKING_CONTAINER, 'not in range')
+    },
+    [ERR_FULL]: () => {
+      return Transition(states.SEEKING_SPAWN, 'creep full')
+    },
     default (val) {
       console.log(`at container code ${val} (${creep.memory.role})`)
     }
@@ -128,9 +159,18 @@ senses.atContainer = StateChange(creep => {
   creep.moveTo(container)
 
   return misc.switch(creep.transfer(container, RESOURCE_ENERGY), {
-    [OK]: () => Transition(states.CHARGE_CONTAINER, 'transfered successfully'),
-    [ERR_NOT_IN_RANGE]: () => Transition(states.SEEKING_CONTAINER, 'not in range'),
-    [ERR_FULL]: () => Transition(states.CHARGE_CONTAINER, 'already full'),
+    [OK]: () => {
+      return Transition(states.CHARGE_CONTAINER, 'transfered successfully')
+    },
+    [ERR_NOT_IN_RANGE]: () => {
+      return Transition(states.SEEKING_CONTAINER, 'not in range')
+    },
+    [ERR_FULL]: () => {
+      return Transition(states.CHARGE_CONTAINER, 'already full')
+    },
+    [ERR_NOT_ENOUGH_RESOURCES]: () => {
+      return Transition(states.SEEKING_SOURCE, 'fallback to initial state')
+    },
     default (val) {
       console.log(`at container code ${val} (${creep.memory.role})`)
     }
@@ -187,8 +227,12 @@ senses.atEnemy = StateChange(creep => {
   const enemy = getObj(creep.memory.enemyId)
   creep.moveTo(enemy)
   return misc.switch(creep.attack(enemy), {
-    [OK]: () => Transition(states.CHARGE, 'attack successful'),
-    [ERR_NOT_IN_RANGE]: () => Transition(states.SEEKING_ENEMY, 'not in range')
+    [OK]: () => {
+      return Transition(states.CHARGE, 'attack successful')
+    },
+    [ERR_NOT_IN_RANGE]: () => {
+      return Transition(states.SEEKING_ENEMY, 'not in range')
+    }
   })
 }, [states.SEEKING_ENEMY, states.ATTACKING])
 
@@ -196,8 +240,12 @@ senses.atSource = StateChange(creep => {
   const source = getObj(creep.memory.sourceId)
   creep.moveTo(source)
   return misc.switch(creep.harvest(source), {
-    [OK]: () => Transition(states.CHARGE, 'harvested successfully'),
-    [ERR_NOT_IN_RANGE]: () => Transition(states.SEEKING_CHARGE, 'not in range')
+    [OK]: () => {
+      return Transition(states.CHARGE, 'harvested successfully')
+    },
+    [ERR_NOT_IN_RANGE]: () => {
+      return Transition(states.SEEKING_CHARGE, 'not in range')
+    }
   })
 }, [states.CHARGE, states.SEEKING_CHARGE])
 
@@ -207,16 +255,20 @@ senses.atSpawn = StateChange(creep => {
 
   return misc.switch(creep.transfer(spawn, RESOURCE_ENERGY), {
     [OK]: () => Transition(states.CHARGE_SPAWN, 'transfered successfully'),
-    [ERR_NOT_IN_RANGE]: () => Transition(states.SEEKING_SPAWN, 'not in range'),
+    [ERR_NOT_IN_RANGE]: () => {
+      return Transition(states.SEEKING_SPAWN, 'not in range')
+    },
     [ERR_FULL] () {
       // -- TODO
     },
-    [ERR_NOT_ENOUGH_RESOURCES]: () => 'aaaaaaaaaaa',
+    [ERR_NOT_ENOUGH_RESOURCES]: () => {
+      return Transition(states.HARVEST, 'need to harvest')
+    },
     default (code) {
       creep.say(`charge ${code}`)
     }
   })
-}, [states.CHARGE_SPAWN, states.SEEKING_SPAWN])
+}, [states.CHARGE_SPAWN, states.SEEKING_SPAWN, states.HARVEST])
 
 senses.atSpawnFromContainer = StateChange(creep => {
   const spawn = getObj(creep.memory.spawnId)
@@ -328,8 +380,8 @@ senses.targetIsFull = {}
 senses.targetIsFull.container = StateChange(creep => {
   const container = getObj(creep.memory.containerI1d)
   if (container && container.store.energy === CONTAINER_CAPACITY) {
-    return Transition(states.SEEKING_SOURCE, 'container full')
+    return Transition(states.SEEKING_EXTENSION, 'container full')
   }
-}, [states.SEEKING_SOURCE])
+}, [states.SEEKING_EXTENSION])
 
 module.exports = senses

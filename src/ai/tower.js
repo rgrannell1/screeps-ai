@@ -3,8 +3,8 @@ const constants = require('./constants')
 
 const tower = {}
 
-tower.run = () => {
-  const towers = structures.tower.findAll()
+tower.run = roomName => {
+  const towers = structures.tower.findAll(roomName)
 
   for (const tower of towers) {
     const nearbyHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS, {

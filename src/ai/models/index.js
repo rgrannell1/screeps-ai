@@ -7,4 +7,12 @@ const Transition = (state, reason) => {
   return {state, reason}
 }
 
-module.exports = {StateChange, Transition}
+const State = ({code, run, transitions}) => {
+  return {code, run, transitions}
+}
+
+const StateMachine = (states, initialState) => {
+  return {states, initialState}
+}
+
+module.exports = {StateChange, Transition, State, StateMachine}

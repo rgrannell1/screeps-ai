@@ -77,11 +77,32 @@ actions.CHARGE_SPAWN = creep => {
   })
 }
 
+actions.CHARGE_EXTENSION = creep => {
+  const upgradeCode = creep.transfer(Game.getObjectById(creep.memory.extensionId), RESOURCE_ENERGY)
+  misc.switch(upgradeCode, {
+    [OK]: () => {},
+    [ERR_INVALID_TARGET]: () => {
+      creep.say('Bad spwn')
+    },
+    [ERR_NO_BODYPART]: () => {
+      creep.say('No Body')
+    },
+    [ERR_NOT_IN_RANGE]: () => {
+      creep.say('Stuck!')
+      creep.memory.state = 'SEEKING_EXTENSION'
+    },
+    default: code => {
+      console.log(code)
+    }
+  })
+}
+
 actions.CHARGE_CONTAINER = creep => {
   const container = Game.getObjectById(creep.memory.containerId)
 
   if (container.store.energy === CONTAINER_CAPACITY) {
     console.log('container full! Need to fill altenative energy sink!')
+    return
   }
 
   const chargeCode = creep.transfer(container, RESOURCE_ENERGY)
@@ -216,6 +237,7 @@ actions.SEEKING_SITE = creep => {
     delete creep.memory.siteId
     const site = structures.findSite(creep.room.name)
     creep.memory.siteId = site.id
+    return
   }
 
   const site = Game.getObjectById(siteId)

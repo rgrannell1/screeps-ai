@@ -23,10 +23,6 @@ structures.placePlans = () => {
     Memory.plans = []
   }
 
-  if (Game.time % 2 === 0) {
-    return
-  }
-
   Memory.plans.forEach(plan => {
     try {
       const pos = new RoomPosition(plan.pos.x, plan.pos.y, plan.pos.roomName)
@@ -137,6 +133,28 @@ structures.findSite = roomName => {
   }
 
   return sites[0]
+}
+
+structures.isSuitableEnergySource = source => {
+  return true
+}
+
+structures.isSuitableEnergySink = sink => {
+  return true
+}
+
+structures.findEnergySource = (roomName) => {
+  const sources = {
+
+  }
+}
+
+structures.findEnergySink = (roomName, priorities) => {
+  const sinks = {
+    spawns: Game.rooms[roomName].fin3(FIND_MY_SPAWNS),
+    towers: structures.tower.findAll(roomName),
+    containers: structures.container.findAll(roomName)
+  }
 }
 
 global.structures = structures

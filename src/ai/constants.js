@@ -40,7 +40,7 @@ constants.roles = {
     priority: 2,
     icon: 'D',
     plans: {
-      standard: [RANGED_ATTACK, MOVE, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH]
+      standard: [ATTACK, ATTACK, MOVE, TOUGH, TOUGH, TOUGH, TOUGH]
     }
   },
   transferer: {
@@ -115,6 +115,9 @@ constants.states ={
     code: '🚚🏠'
   },
   SEEKING_CONTAINER: {
+    code: '🚚📦'
+  },
+  SEEKING_EXTENSION: {
     code: '🚚📦'
   },
   DRAIN_CONTAINER: {
