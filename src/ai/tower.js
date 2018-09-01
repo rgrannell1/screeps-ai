@@ -1,4 +1,5 @@
 
+const misc = require('./misc')
 const constants = require('./constants')
 
 const tower = {}
@@ -13,8 +14,19 @@ tower.run = roomName => {
       }
     })
 
+    const canRepair = tower.energy > 0.6 * tower.energyCapacity
+
     if (nearbyHostile) {
       tower.attack(nearbyHostile)
+    } else if (canRepair && !nearbyHostile) {
+      const damaged = structures.findDamagedStructure(roomName)
+
+      misc.switch(tower.repair(damaged), {
+        [OK] () {},
+        default (val) {
+          console.log(`tower code ${val}`)
+        }
+      })
     }
   }
 }

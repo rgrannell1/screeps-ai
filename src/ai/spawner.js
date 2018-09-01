@@ -62,7 +62,7 @@ setSpawnQuotas.transferer = room => {
   const settings = {}
 
   const expected = terrain.exists.container(room.name)
-    ? 1
+    ? 3
     : 0
 
   Object.assign(settings, {

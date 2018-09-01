@@ -170,5 +170,15 @@ structures.findEnergySink = (roomName, priorities) => {
   }
 }
 
+structures.findDamagedStructure = (roomName, priorities) => {
+  const damaged = Game.rooms[roomName].find(FIND_STRUCTURES, {
+    filter (object) {
+      return object.hits < object.hitsMax
+    }
+  })
+
+  return damaged[0]
+}
+
 global.structures = structures
 module.exports = structures

@@ -1,12 +1,23 @@
 
 const misc = require('../misc')
+const middleware = require('./middleware')
 const blessed = require('../blessed')
 const {Transition, State, StateMachine, StateChange} = require('../models/updated')
+
+const assertProperties = (ctx, props) => {
+  for (const prop of props) {
+    if (!ctx.hasOwnProperty(prop)) {
+      throw new Error(`ctx has no property "${prop}"`)
+    }
+  }
+}
 
 const transitions = {}
 
 transitions.atLocation = (ARRIVAL_STATE, MOVING_STATE) => {
   return StateChange((ctx, states) => {
+    assertProperties(ctx, ['target'])
+
     const moveCode = ctx.creep.moveTo(ctx.target.target.pos)
 
     return misc.switch(moveCode, {
@@ -40,14 +51,6 @@ transitions.maintainCreepEnergy = StateChange((ctx, states) => {
   }
 })
 
-const assertProperties = (ctx, props) => {
-  for (const prop of props) {
-    if (!ctx.hasOwnProperty(prop)) {
-      throw new Error(`ctx has no property "${prop}"`)
-    }
-  }
-}
-
 const states = {}
 
 /*
@@ -69,7 +72,7 @@ states.SEEKING_SOURCE = State({
       //shouldSwitch = !structures.isSuitableEnergySource(ctx.target.target)
     }
 
-    if (!ctx.target || shouldSwitch) {
+    if (!ctx.target || ctx.target.category !== 'source' || shouldSwitch) {
       output.target = {
         target: structures.findEnergySource(ctx.creep.room.name, ['container']),
         category: 'source'
@@ -113,31 +116,30 @@ states.SEEKING_TARGET = State({
       // -- check the target is valid.
     }
 
-    if (!output.target || shouldSwitch) {
-      output.target = structures.findEnergySink(ctx.creep.room.name, ['tower'])
+    if (!output.target || ctx.target.category !== 'target' || shouldSwitch) {
+      output.target = {
+        target: structures.findEnergySink(ctx.creep.room.name, ['towers', 'extensions', 'spawn']),
+        category: 'target'
+      }
     }
 
     return output
   },
   transitions: [
+    transitions.atLocation('CHARGING_TARGET', 'SEEKING_TARGET'),
     transitions.maintainCreepEnergy
   ]
 })
 
-/*
-
-
-
-*/
 states.CHARGING_TARGET = State({
   code: 'x',
   run (ctx) {
     assertProperties(ctx, ['creep'])
-    console.log('at target now')
 
+    ctx.creep.transfer(ctx.target.target, RESOURCE_ENERGY)
   },
   transitions: [
-
+    transitions.maintainCreepEnergy
   ]
 })
 
@@ -148,14 +150,7 @@ const transferer = StateMachine({
   CHARGING_TARGET: states.CHARGING_TARGET
 }, {
   initialState: 'SEEKING_SOURCE',
-  middleware: {
-    onRun: ctx => {
-      console.log('running state.')
-    },
-    onTransition: (ctx, state, newState) => {
-      console.log(`${ctx.creep.name} ${state} -> ${newState.state} (${blessed.blue(newState.metadata.reason)})`)
-    }
-  }
+  middleware
 })
 
 module.exports = transferer
