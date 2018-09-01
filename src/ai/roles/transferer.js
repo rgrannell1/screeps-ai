@@ -1,26 +1,42 @@
 
 const misc = require('../misc')
+const blessed = require('../blessed')
 const {Transition, State, StateMachine, StateChange} = require('../models/updated')
 
 const transitions = {}
 
-transitions.atLocation = StateChange((ctx, states) => {
-  const moveCode = ctx.creep.moveTo(ctx.target.target)
-  return misc.switch(moveCode, {
-    [OK] () {
-      return Transition(states.AT_LOCATION)
-    },
-    [ERR_NOT_IN_RANGE] () {
-      return Transition(states.SEEKING_LOCATION)
-    }
+transitions.atLocation = (ARRIVAL_STATE, MOVING_STATE) => {
+  return StateChange((ctx, states) => {
+    const moveCode = ctx.creep.moveTo(ctx.target.target.pos)
+
+    return misc.switch(moveCode, {
+      [OK] () {
+        return Transition(ARRIVAL_STATE, {
+          reason: 'arrived'
+        })
+      },
+      [ERR_NOT_IN_RANGE] () {
+        return Transition(MOVING_STATE, {
+          reason: 'still moving'
+        })
+      },
+      [ERR_INVALID_TARGET] (val) {
+        console.log(`invalid target provided`)
+      }
+    })
   })
-})
+}
+
 
 transitions.maintainCreepEnergy = StateChange((ctx, states) => {
   if (ctx.creep.carry.energy === ctx.creep.carryCapacity) {
-    return Transition(states.SEEKING_TARGET)
+    return Transition(states.SEEKING_TARGET, {
+      reason: 'full'
+    })
   } else if (ctx.creep.carry.energy === 0) {
-    return Transition(states.SEEKING_SOURCE)
+    return Transition(states.SEEKING_SOURCE, {
+      reason: 'empty'
+    })
   }
 })
 
@@ -49,12 +65,13 @@ states.SEEKING_SOURCE = State({
 
     let shouldSwitch = false
     if (ctx.target) {
-      shouldSwitch = !structures.isSuitableEnergySource(ctx.target.target)
+      shouldSwitch = false
+      //shouldSwitch = !structures.isSuitableEnergySource(ctx.target.target)
     }
 
     if (!ctx.target || shouldSwitch) {
       output.target = {
-        target: structures.findEnergySource(ctx.creep.room.name),
+        target: structures.findEnergySource(ctx.creep.room.name, ['container']),
         category: 'source'
       }
     }
@@ -62,7 +79,7 @@ states.SEEKING_SOURCE = State({
     return output
   },
   transitions: [
-    transitions.atLocation,
+    transitions.atLocation('DRAINING_SOURCE', 'SEEKING_SOURCE'),
     transitions.maintainCreepEnergy
   ]
 })
@@ -87,14 +104,17 @@ states.SEEKING_TARGET = State({
   code: '🚚📦',
   run (ctx) {
     assertProperties(ctx, ['creep'])
+    const output = {
+      creep: ctx.creep
+    }
 
     let shouldSwitch = false
     if (output.target) {
-
+      // -- check the target is valid.
     }
 
     if (!output.target || shouldSwitch) {
-      output.target = structures.findEnergySource(creep.room.name)
+      output.target = structures.findEnergySink(ctx.creep.room.name, ['tower'])
     }
 
     return output
@@ -113,6 +133,7 @@ states.CHARGING_TARGET = State({
   code: 'x',
   run (ctx) {
     assertProperties(ctx, ['creep'])
+    console.log('at target now')
 
   },
   transitions: [
@@ -129,10 +150,10 @@ const transferer = StateMachine({
   initialState: 'SEEKING_SOURCE',
   middleware: {
     onRun: ctx => {
-      // -- push events off to Memory.events.
+      console.log('running state.')
     },
     onTransition: (ctx, state, newState) => {
-      console.log(`${ctx.creep.name} ${state} -> ${newState}`)
+      console.log(`${ctx.creep.name} ${state} -> ${newState.state} (${blessed.blue(newState.metadata.reason)})`)
     }
   }
 })

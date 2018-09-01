@@ -143,17 +143,30 @@ structures.isSuitableEnergySink = sink => {
   return true
 }
 
-structures.findEnergySource = (roomName) => {
+structures.findEnergySource = (roomName, priorities) => {
   const sources = {
+    sources: terrain.findSources(roomName),
+    container: structures.container.findAll(roomName)
+  }
 
+  for (const prop of priorities) {
+    if(sources[prop].length > 0) {
+      return sources[prop][0]
+    }
   }
 }
 
 structures.findEnergySink = (roomName, priorities) => {
   const sinks = {
-    spawns: Game.rooms[roomName].fin3(FIND_MY_SPAWNS),
+    spawns: Game.rooms[roomName].find(FIND_MY_SPAWNS),
     towers: structures.tower.findAll(roomName),
     containers: structures.container.findAll(roomName)
+  }
+
+  for (const prop of priorities) {
+    if(sinks[prop] && sinks[prop].length > 0) {
+      return sinks[prop][0]
+    }
   }
 }
 

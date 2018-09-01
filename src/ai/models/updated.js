@@ -34,27 +34,29 @@ index.StateMachine = (states, {initialState, middleware}) => {
   const methods = {}
 
   methods.transition = (ctx, state, newState) => {
-    ctx.creep.memory.state = newState
+    ctx.creep.memory.state = newState.state
+    ctx.state = newState.state
   }
 
   methods.run = (ctx, creep) => {
     Object.assign(ctx, {creep})
 
     const currentRun = states[ctx.state]
-    ctx = Object.assign({state: ctx.state}, currentRun.run(ctx))
+    Object.assign(ctx, {state: ctx.state}, currentRun.run(ctx))
     middleware.onRun(ctx)
 
     for (const transition of currentRun.transitions) {
       validate.transition(transition, ctx.state)
-      const newState = transition.run(ctx, mappings)
+      const transitionResult = transition.run(ctx, mappings)
 
-      const innerState = newState
-       ? newState.state
-       : ctx.state
+      const newState = transitionResult
+       ? transitionResult
+       : {state: ctx.state, reason: 'current state'}
 
-      middleware.onTransition(ctx, ctx.state, innerState)
-      if (innerState !== ctx.state) {
-        methods.transition(ctx, ctx.state, innerState)
+      middleware.onTransition(ctx, ctx.state, newState)
+
+      if (newState && newState !== ctx.state) {
+        methods.transition(ctx, ctx.state, newState)
         break
       }
     }
@@ -70,6 +72,9 @@ index.StateChange = run => {
 }
 
 index.Transition = (state, metadata) => {
+  if (!state) {
+    throw new Error(`state missing alongside metadata ${JSON.stringify(metadata)}`)
+  }
   return {state, metadata}
 }
 
