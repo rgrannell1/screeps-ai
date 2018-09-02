@@ -26,8 +26,15 @@ tower.run = roomName => {
     } else if (canRepair && !nearbyHostile) {
       const damaged = structures.findDamagedStructure(roomName, ['containers', 'roads'])
 
+      if (!damaged) {
+        return
+      }
+
       misc.switch(tower.repair(damaged), {
         [OK] () {},
+        [ERR_INVALID_TARGET] () {
+          console.log(`bad target selected for repair: ${JSON.stringify(damaged)}`)
+        },
         default (val) {
           console.log(`tower repair ${val}`)
         }

@@ -14,7 +14,7 @@ const assertProperties = (ctx, props) => {
 
 const transitions = {}
 
-transitions.atLocation = (ARRIVAL_STATE, MOVING_STATE) => {
+transitions.atLocation = ({onArrival, onMove}) => {
   return StateChange((ctx, states) => {
     assertProperties(ctx, ['target', 'creep'])
 
@@ -22,49 +22,54 @@ transitions.atLocation = (ARRIVAL_STATE, MOVING_STATE) => {
     try {
       moveCode = ctx.creep.moveTo(ctx.target.target.pos)
     } catch (err) {
-      return Transition(MOVING_STATE, {
-        reason: 'target missing'
+      return Transition(onMove, {
+        reason: `target missing: ${err.message}`,
+        name: 'atLocation'
       })
-    }
-
-    if (ctx.creep.memory.debug) {} {
-      console.log('debugging')
     }
 
     return misc.switch(moveCode, {
       [OK] () {
-        return Transition(ARRIVAL_STATE, {
-          reason: 'arrived'
+        return Transition(onArrival, {
+          reason: 'arrived at target',
+          name: 'atLocation'
         })
       },
       [ERR_NOT_IN_RANGE] () {
-        return Transition(MOVING_STATE, {
-          reason: 'still moving'
-        })
+        console.error(`not in range`)
       },
       [ERR_INVALID_TARGET] (val) {
-        return Transition(MOVING_STATE, {
-          reason: 'invalid target'
-        })
+        console.error(`invalid target`)
+      },
+      [ERR_NO_PATH] (val) {
+        console.error(`no path to target`)
       },
       default (val) {
-        return Transition(MOVING_STATE, {
-          reason: `unknown status code ${val}`
+        return Transition(onMove, {
+          reason: `unknown move code ${val}`,
+          name: 'atLocation'
         })
       }
     })
   })
 }
 
-transitions.maintainCreepEnergy = () => {
+transitions.maintainCreepEnergy = ({onEmpty, onFull}) => {
   return StateChange((ctx, states) => {
-    if (ctx.creep.carry.energy === ctx.creep.carryCapacity) {
-      return Transition(states.SEEKING_TARGET, {
-        reason: 'full'
+    const isFull = ctx.creep.carry.energy === ctx.creep.carryCapacity
+    const isEmpty = ctx.creep.carry.energy === 0
+
+    if (isFull && ctx.state !== onFull) {
+      return Transition(onFull, {
+        reason: 'full',
+        name: 'maintainCreepEnergy'
       })
-    } else if (ctx.creep.carry.energy === 0) {
-      return Transition(states.SEEKING_SOURCE, {
-        reason: `${ctx.creep.carry.energy} energy`
+    }
+
+    if (isEmpty && ctx.state !== isEmpty) {
+      return Transition(onEmpty, {
+        reason: `${ctx.creep.carry.energy} energy`,
+        name: 'maintainCreepEnergy'
       })
     }
   })

@@ -14,6 +14,18 @@ validate.transition = (transition, state) => {
   if (!transition.run) throw new Error(`transition.run() is missing for state "${state}"`)
 }
 
+validate.transitionState = (result, transition) => {
+  if (typeof result !== 'undefined' && typeof result !== 'object') {
+    throw new Error(`invalid return value "${result} from ${transition}"`)
+  }
+}
+
+validate.stateRun = (ctx, curentResult) => {
+  if (typeof curentResult !== 'object' || curentResult === null) {
+    throw new Error(`non-object ctx returned for state ${ctx.state}: ${JSON.stringify(curentResult)}`)
+  }
+}
+
 index.State = ({code, run, transitions}) => {
   if (!code) throw new Error('missing code')
   if (!run) throw new Error('missing run()')
@@ -38,6 +50,8 @@ index.StateMachine = (states, {initialState, middleware}) => {
       throw new Error(`trying to transition to undefined state.`)
     }
 
+    middleware.onTransition(ctx, ctx.state, newState)
+
     ctx.creep.memory.state = newState.state
     ctx.state = newState.state
   }
@@ -45,24 +59,43 @@ index.StateMachine = (states, {initialState, middleware}) => {
   methods.run = (ctx, creep) => {
     Object.assign(ctx, {creep})
 
-    ctx.creep.memory.state = ctx.state
+    const curentState = creep.memory.state || initialState
+    const currentRun = states[curentState]
+    if (!states[curentState]) {
+      console.log(`${curentState} not a supported state!; falling back to "${initialState}"`)
 
-    const currentRun = states[ctx.state]
-    Object.assign(ctx, {state: ctx.state}, currentRun.run(ctx))
+      methods.transition(ctx, null, {
+        state: initialState,
+        metadata: {
+          reason: 'exception occurred.',
+          name: '.run'
+        }
+      })
+      return
+    }
+
+    const curentResult = currentRun.run(ctx)
+    validate.stateRun(ctx, curentResult)
+
+    Object.assign(ctx, curentResult, {state: curentState})
     middleware.onRun(ctx)
 
     for (const transition of currentRun.transitions) {
-      validate.transition(transition, ctx.state)
+      validate.transition(transition, curentState)
       const transitionResult = transition.run(ctx, mappings)
+
+      validate.transitionState(transitionResult, transition)
 
       const newState = transitionResult
        ? transitionResult
-       : {state: ctx.state, reason: 'current state'}
+       : {
+          state: curentState,
+          reason: 'current state',
+          name: 'default'
+        }
 
-
-      if (newState && newState !== ctx.state) {
-        middleware.onTransition(ctx, ctx.state, newState)
-        methods.transition(ctx, ctx.state, newState)
+      if (newState && newState.state !== curentState) {
+        methods.transition(ctx, curentState, newState)
         break
       }
     }

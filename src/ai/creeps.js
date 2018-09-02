@@ -39,4 +39,65 @@ creeps.findTargetEnemy = creepName => {
   return nearbyHostile
 }
 
+const flerp = (initial, extension, capacity) => {
+  const currentCost = creeps.getCost(initial)
+
+  let parts = initial
+  while (true) {
+    let proposed = extension
+
+    if (creeps.getCost(parts.concat(proposed)) < capacity) {
+      parts = parts.concat(proposed)
+    } else {
+      break
+    }
+  }
+
+  return parts
+}
+
+creeps.roles = {}
+
+creeps.harvester = {}
+
+creeps.harvester.body = capacity => {
+  return flerp([CARRY, CARRY, WORK, MOVE], [WORK, CARRY, MOVE], capacity)
+}
+
+creeps.upgrader = {}
+
+creeps.upgrader.body = capacity => {
+  return flerp([CARRY, CARRY, WORK, MOVE, MOVE], [WORK, CARRY, MOVE], capacity)
+}
+
+creeps.defender = {}
+
+creeps.defender.body = capacity => {
+  return [ATTACK, ATTACK, MOVE, MOVE, TOUGH, TOUGH]
+}
+
+creeps.transferer = {}
+
+creeps.transferer.body = capacity => {
+  return flerp([CARRY, CARRY, WORK, MOVE, MOVE], [CARRY, CARRY, MOVE], capacity)
+}
+
+creeps.builder = {}
+
+creeps.builder.body = capacity => {
+  return flerp([CARRY, CARRY, WORK, MOVE, MOVE], [CARRY, CARRY, MOVE], capacity)
+}
+
+creeps.repairer = {}
+
+creeps.repairer.body = capacity => {
+  return flerp([CARRY, CARRY, WORK, MOVE, MOVE], [CARRY, CARRY, MOVE], capacity)
+}
+
+creeps.scribe = {}
+
+creeps.scribe.body = capacity => {
+  return [WORK, MOVE, MOVE]
+}
+
 module.exports = creeps

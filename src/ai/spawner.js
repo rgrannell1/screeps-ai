@@ -150,7 +150,7 @@ const censusCreeps = room => {
   return table
 }
 
-const createCreep = (spawn, data) => {
+const createCreep = (spawn, room, data) => {
   if (!data.role) {
     throw new TypeError('cannot create creep without role')
   }
@@ -158,11 +158,14 @@ const createCreep = (spawn, data) => {
     throw new TypeError('cannot create creep without icon')
   }
 
-  const creepCost = creeps.getCost(data.body)
+  const roomCapacity = room.energyAvailable
+  const bodyBuilder = creeps[data.role].body(roomCapacity)
+
+  const creepCost = creeps.getCost(bodyBuilder)
   spawn.memory.energyLock = creepCost
   spawn.memory.queued = data
 
-  if (spawn.energy < creepCost) {
+  if (room.energyAvailable < creepCost) {
     return
   } else {
     delete spawn.memory.energyLock
@@ -171,7 +174,7 @@ const createCreep = (spawn, data) => {
 
   // -- TODO add specialisations
   const spawnArgs = [
-    data.body,
+    bodyBuilder,
     data.name,
     {
       role: data.role,
@@ -224,15 +227,15 @@ const spawner = (room, spawn) => {
     const shouldCreateCreep = expectedCount > requiredCount
 
     if (shouldCreateCreep) {
-      createCreep(spawn, {...data, role, name: creeps.pickCreepName(role)})
+      createCreep(spawn, room, {...data, role, name: creeps.pickCreepName(role)})
       break
     }
   }
 
-  spawner.displayProgress(spawn, expected, actual)
+  spawner.displayProgress(spawn, room, expected, actual)
 }
 
-spawner.displayProgress = (spawn, expected, actual) => {
+spawner.displayProgress = (spawn, room, expected, actual) => {
   const counts = {
     expected: expected.find(data => data.role === spawn.memory.queued.role).data.expected,
     actual: actual[spawn.memory.queued.role],
@@ -240,7 +243,7 @@ spawner.displayProgress = (spawn, expected, actual) => {
 
   if (Game.time % 5 === 0) {
     if (spawn.memory.energyLock) {
-      blessed.log.blue(blessed.right(`[ ${spawn.energy} / ${spawn.memory.energyLock} towards ${spawn.memory.queued.role} (${counts.actual + 1} of ${counts.expected})]`))
+      blessed.log.blue(blessed.right(`[ ${room.energyAvailable} / ${spawn.memory.energyLock} towards ${spawn.memory.queued.role} (${counts.actual + 1} of ${counts.expected})]`))
     }
   }
 }

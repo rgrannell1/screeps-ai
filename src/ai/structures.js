@@ -75,6 +75,28 @@ structures.container.findChargeable = roomName => {
 
 }
 
+structures.extensions = {}
+
+structures.extensions.hasEnergy = extensions => {
+
+}
+
+structures.extensions.place = (pos, metadata) => {
+  addPlan(pos, {...metadata, structure: STRUCTURE_extensions})
+}
+
+structures.extensions.findAll = roomName => {
+  return Game.rooms[roomName].find(FIND_STRUCTURES, {
+    filter (item) {
+      return item.structureType === STRUCTURE_EXTENSION
+    }
+  })
+}
+
+structures.extensions.findChargeable = roomName => {
+
+}
+
 structures.tower = {}
 
 structures.tower.place = (pos, metadata) => {
@@ -165,11 +187,23 @@ structures.findEnergySource = (roomName, priorities) => {
 }
 
 structures.findEnergySink = (roomName, priorities) => {
-  const sinks = {
-    spawns: Game.rooms[roomName].find(FIND_MY_SPAWNS),
-    towers: structures.tower.findAll(roomName),
-    containers: structures.container.findAll(roomName)
+  if (!priorities) {
+    throw new Error('missing priorities')
   }
+  const sinks = {}
+
+  sinks.spawns = Game.rooms[roomName].find(FIND_MY_SPAWNS).filter(item => {
+    return item.energy < item.energyCapacity
+  })
+  sinks.towers = structures.tower.findAll(roomName).filter(item => {
+    return item.energy < item.energyCapacity
+  })
+  sinks.containers = structures.container.findAll(roomName).filter(item => {
+    return item.energy < item.energyCapacity
+  })
+  sinks.extensions = structures.extensions.findAll(roomName).filter(item => {
+    return item.energy < item.energyCapacity
+  })
 
   for (const prop of priorities) {
     if (sinks[prop] && sinks[prop].length > 0) {

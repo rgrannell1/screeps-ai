@@ -7,8 +7,12 @@ const serial = fns => (...args) => {
 
 const middleware = {}
 
+middleware.countStateTicks = ctx => {
+
+}
+
 middleware.logState = ctx => {
-  console.log(`${ctx.creep.name} in state "${blessed.green(ctx.creep.memory.state)}"`)
+  console.log(`${blessed.bold(ctx.creep.name)} in state "${blessed.green(ctx.creep.memory.state)}"`)
 }
 
 middleware.logTransition = (ctx, state, newState) => {
@@ -16,7 +20,11 @@ middleware.logTransition = (ctx, state, newState) => {
     ? newState.metadata.reason
     : 'unknown'
 
-  console.log(`${ctx.creep.name} ${state} -> ${newState.state} (${blessed.blue(reason)})`)
+  const name = newState.metadata && newState.metadata.name
+    ? newState.metadata.name
+    : 'unknown'
+
+  console.log(`${ctx.creep.name} ${state} -> ${newState.state} (${blessed.blue(name + ':' + reason)})`)
 }
 
 const chains = {}
