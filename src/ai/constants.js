@@ -40,7 +40,7 @@ constants.roles = {
     priority: 2,
     icon: 'D',
     plans: {
-      standard: [ATTACK, ATTACK, MOVE, TOUGH, TOUGH, TOUGH, TOUGH]
+      standard: [ATTACK, ATTACK, MOVE, MOVE, TOUGH, TOUGH]
     }
   },
   transferer: {

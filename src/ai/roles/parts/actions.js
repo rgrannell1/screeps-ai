@@ -100,6 +100,10 @@ actions.CHARGE_EXTENSION = creep => {
 actions.CHARGE_CONTAINER = creep => {
   const container = Game.getObjectById(creep.memory.containerId)
 
+  if (!container) {
+    creep.memory.state = 'SEEKING_CONTAINER'
+  }
+
   if (container.store.energy === CONTAINER_CAPACITY) {
     console.log('container full! Need to fill altenative energy sink!')
     return
@@ -235,7 +239,7 @@ actions.SEEKING_SITE = creep => {
 
   if (!siteId || !Game.getObjectById(siteId)) {
     delete creep.memory.siteId
-    const site = structures.findSite(creep.room.name)
+    const site = structures.findSite(creep.room.name, ['container', 'extension', 'tower', 'road'])
     creep.memory.siteId = site.id
     return
   }

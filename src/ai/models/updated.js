@@ -34,12 +34,18 @@ index.StateMachine = (states, {initialState, middleware}) => {
   const methods = {}
 
   methods.transition = (ctx, state, newState) => {
+    if (!newState.state) {
+      throw new Error(`trying to transition to undefined state.`)
+    }
+
     ctx.creep.memory.state = newState.state
     ctx.state = newState.state
   }
 
   methods.run = (ctx, creep) => {
     Object.assign(ctx, {creep})
+
+    ctx.creep.memory.state = ctx.state
 
     const currentRun = states[ctx.state]
     Object.assign(ctx, {state: ctx.state}, currentRun.run(ctx))
@@ -53,9 +59,9 @@ index.StateMachine = (states, {initialState, middleware}) => {
        ? transitionResult
        : {state: ctx.state, reason: 'current state'}
 
-      middleware.onTransition(ctx, ctx.state, newState)
 
       if (newState && newState !== ctx.state) {
+        middleware.onTransition(ctx, ctx.state, newState)
         methods.transition(ctx, ctx.state, newState)
         break
       }

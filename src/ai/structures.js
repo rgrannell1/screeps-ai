@@ -45,6 +45,14 @@ structures.roads.place = (pos, metadata) => {
   addPlan(pos, {...metadata, structure: STRUCTURE_ROAD})
 }
 
+structures.roads.findAll = roomName => {
+  return Game.rooms[roomName].find(FIND_STRUCTURES, {
+    filter (item) {
+      return item.structureType === STRUCTURE_ROAD
+    }
+  })
+}
+
 structures.container = {}
 
 structures.container.hasEnergy = container => {
@@ -164,20 +172,35 @@ structures.findEnergySink = (roomName, priorities) => {
   }
 
   for (const prop of priorities) {
-    if(sinks[prop] && sinks[prop].length > 0) {
-      return sinks[prop][0]
+    if (sinks[prop] && sinks[prop].length > 0) {
+      return {
+        value: sinks[prop][0],
+        label: prop
+      }
     }
   }
 }
 
-structures.findDamagedStructure = (roomName, priorities) => {
-  const damaged = Game.rooms[roomName].find(FIND_STRUCTURES, {
-    filter (object) {
-      return object.hits < object.hitsMax
-    }
-  })
+const isDamaged = {
+  road (item) {
+    return item.hits < (0.75 * item.hitsMax)
+  },
+  container (item) {
+    return item.hits < item.hitsMax
+  },
+}
 
-  return damaged[0]
+structures.findDamagedStructure = (roomName, priorities) => {
+  const builldings = {
+    containers: structures.container.findAll(roomName).filter(isDamaged.container),
+    roads: structures.roads.findAll(roomName).filter(isDamaged.road)
+  }
+
+  for (const prop of priorities) {
+    if(builldings[prop] && builldings[prop].length > 0) {
+      return builldings[prop][0]
+    }
+  }
 }
 
 global.structures = structures

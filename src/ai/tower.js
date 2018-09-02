@@ -14,17 +14,22 @@ tower.run = roomName => {
       }
     })
 
-    const canRepair = tower.energy > 0.6 * tower.energyCapacity
+    const canRepair = tower.energy > 0.2 * tower.energyCapacity
 
     if (nearbyHostile) {
-      tower.attack(nearbyHostile)
+      misc.switch(tower.attack(nearbyHostile), {
+        [OK] () {},
+        default (val) {
+          console.log(`tower attack ${val}`)
+        }
+      })
     } else if (canRepair && !nearbyHostile) {
-      const damaged = structures.findDamagedStructure(roomName)
+      const damaged = structures.findDamagedStructure(roomName, ['containers', 'roads'])
 
       misc.switch(tower.repair(damaged), {
         [OK] () {},
         default (val) {
-          console.log(`tower code ${val}`)
+          console.log(`tower repair ${val}`)
         }
       })
     }

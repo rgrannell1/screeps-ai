@@ -22,7 +22,7 @@ setSpawnQuotas.defender = () => {
   const settings = {}
 
   Object.assign(settings, {
-    expected: 2,
+    expected: 0,
     priority: constants.roles.defender.priority,
     body: constants.roles.defender.plans.standard,
     icon: constants.roles.defender.icon
@@ -62,7 +62,7 @@ setSpawnQuotas.transferer = room => {
   const settings = {}
 
   const expected = terrain.exists.container(room.name)
-    ? 3
+    ? 4
     : 0
 
   Object.assign(settings, {
@@ -169,6 +169,7 @@ const createCreep = (spawn, data) => {
     delete spawn.memory.data
   }
 
+  // -- TODO add specialisations
   const spawnArgs = [
     data.body,
     data.name,
