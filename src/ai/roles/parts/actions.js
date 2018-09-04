@@ -239,8 +239,16 @@ actions.SEEKING_SITE = creep => {
 
   if (!siteId || !Game.getObjectById(siteId)) {
     delete creep.memory.siteId
-    const site = structures.findSite(creep.room.name, ['container', 'extension', 'tower', 'road'])
-    creep.memory.siteId = site.id
+    const site = structures.findSite(creep.room.name, [
+      STRUCTURE_CONTAINER,
+      STRUCTURE_EXTENSION,
+      STRUCTURE_TOWER,
+      STRUCTURE_STORAGE,
+      STRUCTURE_ROAD,
+      STRUCTURE_RAMPART
+    ])
+
+    creep.memory.siteId = site ? site.id : null
     return
   }
 

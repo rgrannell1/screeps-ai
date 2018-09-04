@@ -16,6 +16,7 @@ const placeTower = roomName => {
 const towers = roomName => {
   placeTower(roomName)
   placeTower(roomName)
+  placeTower(roomName)
 }
 
 module.exports = towers

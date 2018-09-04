@@ -1,4 +1,5 @@
 
+const misc = require('./misc')
 const terrain = require('./terrain')
 
 const structures = {}
@@ -52,6 +53,17 @@ structures.roads.findAll = roomName => {
     }
   })
 }
+
+structures.walls = {}
+
+structures.walls.findAll = roomName => {
+  return Game.rooms[roomName].find(FIND_STRUCTURES, {
+    filter (item) {
+      return item.structureType === STRUCTURE_WALL
+    }
+  })
+}
+
 
 structures.container = {}
 
@@ -149,8 +161,10 @@ structures.findSite = roomName => {
   const sites = Game.rooms[roomName].find(FIND_CONSTRUCTION_SITES)
   const siteTypes = [
     STRUCTURE_CONTAINER,
+    STRUCTURE_STORAGE,
     STRUCTURE_EXTENSION,
     STRUCTURE_TOWER,
+    STRUCTURE_RAMPART,
     STRUCTURE_ROAD
   ]
 
@@ -173,66 +187,103 @@ structures.isSuitableEnergySink = sink => {
   return true
 }
 
+
+const isEnergySource = item => {
+  return true
+}
+
 structures.findEnergySource = (roomName, priorities) => {
-  const sources = {
-    sources: terrain.findSources(roomName),
-    container: structures.container.findAll(roomName)
+  if (!priorities) {
+    throw new Error('missing priorities')
   }
 
+  const buildings = Game.rooms[roomName].find(FIND_STRUCTURES, {
+    filter (item) {
+      const isPrioritiedStructure = priorities.includes(item.structureType)
+      return isPrioritiedStructure && isEnergySource(item)
+    }
+  })
+
   for (const prop of priorities) {
-    if(sources[prop].length > 0) {
-      return sources[prop][0]
+    let match = buildings.find(item => item.structureType === prop)
+    if (match) {
+      return {value: match}
     }
   }
+}
+
+const isEnergySink = item => {
+  return misc.switch(item.structureType, {
+    [STRUCTURE_SPAWN] () {
+      return item.energy < SPAWN_ENERGY_CAPACITY
+    },
+    [STRUCTURE_STORAGE] () {
+      return item.room.storage.store[RESOURCE_ENERGY] < 10000
+    },
+    default () {
+      return item.energy < item.energyCapacity
+    }
+  })
 }
 
 structures.findEnergySink = (roomName, priorities) => {
   if (!priorities) {
     throw new Error('missing priorities')
   }
-  const sinks = {}
 
-  sinks.spawns = Game.rooms[roomName].find(FIND_MY_SPAWNS).filter(item => {
-    return item.energy < item.energyCapacity
-  })
-  sinks.towers = structures.tower.findAll(roomName).filter(item => {
-    return item.energy < item.energyCapacity
-  })
-  sinks.containers = structures.container.findAll(roomName).filter(item => {
-    return item.energy < item.energyCapacity
-  })
-  sinks.extensions = structures.extensions.findAll(roomName).filter(item => {
-    return item.energy < item.energyCapacity
+  const buildings = Game.rooms[roomName].find(FIND_STRUCTURES, {
+    filter (item) {
+      const isPrioritiedStructure = priorities.includes(item.structureType)
+      return isPrioritiedStructure && isEnergySink(item)
+    }
   })
 
   for (const prop of priorities) {
-    if (sinks[prop] && sinks[prop].length > 0) {
-      return {
-        value: sinks[prop][0],
-        label: prop
-      }
+    let match = buildings.find(item => item.structureType === prop)
+    if (match) {
+      return {value: match}
     }
   }
 }
 
-const isDamaged = {
-  road (item) {
-    return item.hits < (0.75 * item.hitsMax)
-  },
-  container (item) {
-    return item.hits < item.hitsMax
-  },
+const isDamaged = item => {
+  return misc.switch(item.structureType, {
+    [STRUCTURE_ROAD] (val) {
+      return val.hits < (0.75 * val.hitsMax)
+    },
+    [STRUCTURE_CONTAINER] (val) {
+      return val.hits < val.hitsMax
+    },
+    [STRUCTURE_EXTENSION] (val) {
+      return val.hits < (0.25 * val.hitsMax)
+    },
+    [STRUCTURE_TOWER] (val) {
+      return val.hits < (0.25 * val.hitsMax)
+    },
+    [STRUCTURE_RAMPART] (val) {
+      return val.hits < (0.25 * val.hitsMax)
+    },
+    [STRUCTURE_STORAGE] (val) {
+      return val.hits < (0.25 * val.hitsMax)
+    },
+    default (val) {
+      return val.hits < (0.25 * val.hitsMax)
+    }
+  })
 }
 
 structures.findDamagedStructure = (roomName, priorities) => {
-  const builldings = {
-    containers: structures.container.findAll(roomName).filter(isDamaged.container),
-    roads: structures.roads.findAll(roomName).filter(isDamaged.road)
-  }
+  const buildings = Game.rooms[roomName].find(FIND_STRUCTURES, {
+    filter (item) {
+      const isPrioritiedStructure = priorities.includes(item.structureType)
+      return isPrioritiedStructure && isDamaged(item)
+    }
+  })
 
   for (const prop of priorities) {
-    if(builldings[prop] && builldings[prop].length > 0) {
-      return builldings[prop][0]
+    let match = buildings.find(item => item.structureType === prop)
+    if (match) {
+      return match
     }
   }
 }

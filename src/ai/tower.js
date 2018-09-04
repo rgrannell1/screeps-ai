@@ -24,7 +24,12 @@ tower.run = roomName => {
         }
       })
     } else if (canRepair && !nearbyHostile) {
-      const damaged = structures.findDamagedStructure(roomName, ['containers', 'roads'])
+      const damaged = structures.findDamagedStructure(roomName, [
+        STRUCTURE_CONTAINER,
+        STRUCTURE_ROAD,
+        STRUCTURE_WALL,
+        STRUCTURE_RAMPART
+      ])
 
       if (!damaged) {
         return

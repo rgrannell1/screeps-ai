@@ -35,7 +35,7 @@ setSpawnQuotas.harvester = () => {
   const settings = {}
 
   Object.assign(settings, {
-    expected: 3,
+    expected: 2,
     priority: 0,
     body: constants.roles.harvester.plans.standard,
     icon: constants.roles.harvester.icon
@@ -48,7 +48,7 @@ setSpawnQuotas.upgrader = () => {
   const settings = {}
 
   Object.assign(settings, {
-    expected: 5,
+    expected: 3,
     priority: 1,
     body: constants.roles.upgrader.plans.standard,
     icon: constants.roles.upgrader.icon
@@ -78,8 +78,8 @@ setSpawnQuotas.transferer = room => {
 setSpawnQuotas.builder = room => {
   const settings = {}
 
-  const SITE_TO_BUILDER_RATIO = 10
-  const ENERGY_TO_BUILDER_RATIO = 1500
+  const SITE_TO_BUILDER_RATIO = 12
+  const ENERGY_TO_BUILDER_RATIO = 2000
 
   const sites = room.find(FIND_CONSTRUCTION_SITES)
   const siteCount = sites.length
@@ -109,7 +109,7 @@ setSpawnQuotas.repairer = room => {
   const expected = Math.ceil(structureCount / STRUCTURE_TO_REPAIRER_RATIO)
 
   Object.assign(settings, {
-    expected: expected,
+    expected: 0,
     priority: constants.roles.repairer.plans.priority,
     body: constants.roles.repairer.plans.standard,
     icon: constants.roles.repairer.icon
@@ -249,5 +249,6 @@ spawner.displayProgress = (spawn, room, expected, actual) => {
 }
 
 module.exports = {
-  spawn: spawner
+  spawn: spawner,
+  censusCreeps
 }

@@ -39,9 +39,6 @@ const identifyCreeps = () => {
     const creep = Game.creeps[name]
     const {role, stateCode, state} = creep.memory
 
-    misc.timer(() => {
-      creep.say(stateCode || state)
-    }, 3)
   }
 }
 
@@ -50,10 +47,6 @@ const quantifyResources = roomName => {
     const quality = terrain.getSourceQuality(source)
   }
 }
-
-telemetry.on(constants.events.tickWarning, data => {
-  // -- todo
-})
 
 const profiler = require('screeps-profiler');
 profiler.enable()
@@ -68,10 +61,8 @@ const loop = () => {
       const room = Game.rooms[roomName]
 
       misc.timer(() => {
-        logger.data('room state', {
-
-        })
-      }, 5)
+        telemetry.logGameState(roomName)
+      }, 10)
 
       misc.timer(() => {
         planner.run(roomName)
