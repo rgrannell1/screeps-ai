@@ -8,7 +8,10 @@
   "dependencies": {
     "@rgrannell/index": "8.2.0",
     "@rgrannell/pulp": "8.2.0",
+    "@types/screeps": "2.4.1",
+    "@types/screeps-profiler": "1.2.1",
     "chai": "4.1.2",
+    "cjs-to-es6": "1.1.1",
     "eslint-config-screeps": "1.1.1",
     "eslint-config-standard": "11.0.0",
     "eslint-plugin-import": "2.14.0",
@@ -17,6 +20,7 @@
     "eslint-plugin-screeps": "1.4.0",
     "eslint-plugin-standard": "3.1.0",
     "screeps-profiler": "2.0.1",
+    "ts-loader": "5.0.0",
     "typescript": "3.0.3"
   },
   "devDependencies": {
