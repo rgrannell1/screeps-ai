@@ -1,5 +1,7 @@
 dist
 dist/*
+data/*
+tsdist/*
 node_modules/*
 monitoring/node_modules/*
 *.sublime-workspace

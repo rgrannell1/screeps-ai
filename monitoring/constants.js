@@ -1,5 +1,6 @@
 
 const constants = {
+  appName: 'screeps-monitoring',
   shard: 'shard2'
 }
 

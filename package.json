@@ -16,7 +16,8 @@
     "eslint-plugin-promise": "4.0.0",
     "eslint-plugin-screeps": "1.4.0",
     "eslint-plugin-standard": "3.1.0",
-    "screeps-profiler": "2.0.1"
+    "screeps-profiler": "2.0.1",
+    "typescript": "3.0.3"
   },
   "devDependencies": {
     "eslint": "5.4.0",

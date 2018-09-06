@@ -248,31 +248,37 @@ structures.findEnergySink = (roomName, priorities) => {
 
 const isDamaged = item => {
   return misc.switch(item.structureType, {
-    [STRUCTURE_ROAD] (val) {
-      return val.hits < (0.75 * val.hitsMax)
+    [STRUCTURE_ROAD] () {
+      return item.hits < (0.75 * item.hitsMax)
     },
-    [STRUCTURE_CONTAINER] (val) {
-      return val.hits < val.hitsMax
+    [STRUCTURE_CONTAINER] () {
+      return item.hits < item.hitsMax
     },
-    [STRUCTURE_EXTENSION] (val) {
-      return val.hits < (0.25 * val.hitsMax)
+    [STRUCTURE_EXTENSION] () {
+      return item.hits < (0.9 * item.hitsMax)
     },
-    [STRUCTURE_TOWER] (val) {
-      return val.hits < (0.25 * val.hitsMax)
+    [STRUCTURE_TOWER] () {
+      return item.hits < (0.9 * item.hitsMax)
     },
-    [STRUCTURE_RAMPART] (val) {
-      return val.hits < (0.25 * val.hitsMax)
+    [STRUCTURE_RAMPART] () {
+      return item.hits < 10000
     },
-    [STRUCTURE_STORAGE] (val) {
-      return val.hits < (0.25 * val.hitsMax)
+    [STRUCTURE_WALL] () {
+      return item.hits < 10000
     },
-    default (val) {
-      return val.hits < (0.25 * val.hitsMax)
+    [STRUCTURE_STORAGE] () {
+      return item.hits < (0.9 * item.hitsMax)
+    },
+    default () {
+      return item.hits < (0.25 * item.hitsMax)
     }
   })
 }
 
 structures.findDamagedStructure = (roomName, priorities) => {
+  if (!priorities) {
+    throw new Error('priorities missing.')
+  }
   const buildings = Game.rooms[roomName].find(FIND_STRUCTURES, {
     filter (item) {
       const isPrioritiedStructure = priorities.includes(item.structureType)
