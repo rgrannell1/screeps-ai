@@ -1,5 +1,5 @@
 
-import constants from './constants';
+import constants from './constants'
 
 const creeps = {} as any
 
@@ -107,31 +107,25 @@ const hasPriority = (transferers, priority) => {
 
 creeps.chooseEnergySink = (creep, priorityLists) => {
   let priorities = priorityLists.spawns
-
   const others = Object.entries(Game.creeps)
     .filter(([name, data]) => {
       return data.memory.role === creep.memory.role && name !== creep.name
     })
 
   if (creep.memory.sinkPriority) {
-    priorities = priorityLists[creep.memory.sinkPriority]
+    priorities = priorityLists.find(list => list.label === creep.memory.sinkPriority)
   } else {
-    // -- not currently set in memory.
-
-    if (!hasPriority(others, 'spawns')) {
-      priorities = priorityLists.spawns
-      creep.memory.sinkPriority = 'spawns'
-    } else if (!hasPriority(others, 'towers')) {
-      priorities = priorityLists.towers
-      creep.memory.sinkPriority = 'towers'
-    } else if (!hasPriority(others, 'extensions')) {
-      priorities = priorityLists.extensions
-      creep.memory.sinkPriority = 'extensions'
+    for (const data of priorityLists) {
+      if (!hasPriority(others, data.label)) {
+        priorities = priorityLists.find(list => list.label === data.label).priorities
+        creep.memory.sinkPriority = data.label
+        break
+      }
     }
   }
 
   if (!priorities) {
-    console.log(`missing priorities for "${creep.memory.sinkPriority}"`)
+    console.log(`missing priorities for creep ${creep.memory.role}/${creep.memory.sinkPriority}`)
     delete creep.memory.sinkPriority
   }
 
@@ -139,4 +133,4 @@ creeps.chooseEnergySink = (creep, priorityLists) => {
 }
 
 
-export default creeps;
+export default creeps

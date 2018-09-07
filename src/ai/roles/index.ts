@@ -1,19 +1,14 @@
 
-import Role from '../models/role';
-import actions from './parts/actions';
-import senses from './parts/senses';
-import states from './parts/states';
+import Role from '../models/role'
+import actions from './parts/actions'
+import senses from './parts/senses'
+import states from './parts/states'
+
+import transferer from './transferer'
+import upgrader from './upgrader'
+import builder from './builder'
 
 const roles = {} as any
-
-roles.builder = Role({
-  SEEKING_CHARGE: states.SEEKING_CHARGE(),
-  CHARGE: states.CHARGE(),
-  SEEKING_SITE: states.SEEKING_SITE(),
-  BUILDING: states.BUILDING()
-}, {
-  initalState: 'SEEKING_CHARGE'
-})
 
 roles.harvester = Role({
   SEEKING_SOURCE: states.SEEKING_SOURCE(),
@@ -27,15 +22,6 @@ roles.harvester = Role({
   initalState: 'SEEKING_SOURCE'
 })
 
-roles.repairer = Role({
-  SEEKING_CHARGE: states.SEEKING_CHARGE(),
-  CHARGE: states.CHARGE(),
-  REPAIR: states.REPAIR(),
-  SEEKING_DAMAGE: states.SEEKING_DAMAGE()
-}, {
-  initalState: 'SEEKING_CHARGE'
-})
-
 roles.scribe = Role({
   SEEKING_CONTROLLER: states.SEEKING_CONTAINER(),
   SIGNING: states.SIGNING(),
@@ -44,14 +30,8 @@ roles.scribe = Role({
   initalState: 'SEEKING_CONTROLLER'
 })
 
-roles.defender = Role({
-  SEEKING_ENEMY: states.SEEKING_ENEMY(),
-  ATTACKING: states.ATTACKING(),
-}, {
-  initalState: 'SEEKING_ENEMY'
-})
+roles.transferer = transferer
+roles.upgrader = upgrader
+roles.builder = builder
 
-roles.transferer = require('./transferer')
-roles.upgrader = require('./upgrader')
-
-export default roles;
+export default roles

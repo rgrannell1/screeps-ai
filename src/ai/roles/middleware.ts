@@ -1,11 +1,11 @@
 
-import blessed from '../blessed';
+import blessed from '../blessed'
 
 const serial = fns => (...args) => {
   fns.forEach(fn => fn(...args))
 }
 
-const middleware = {}
+const middleware = {} as any
 
 middleware.countStateTicks = ctx => {
 
@@ -27,7 +27,7 @@ middleware.logTransition = (ctx, state, newState) => {
   console.log(`${ctx.creep.name} ${state} -> ${newState.state} (${blessed.blue(name + ':' + reason)})`)
 }
 
-const chains = {}
+const chains = {} as any
 
 chains.onRun = serial([
   middleware.logState
@@ -37,4 +37,4 @@ chains.onTransition = serial([
   middleware.logTransition
 ])
 
-export default chains;
+export default chains

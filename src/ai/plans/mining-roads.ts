@@ -1,7 +1,7 @@
 
-import terrain from '../terrain';
-import constants from '../constants';
-import structures from '../structures';
+import terrain from '../terrain'
+import constants from '../constants'
+import structures from '../structures'
 
 const miningRoads = roomName => {
   const room = Game.rooms[roomName]
@@ -30,4 +30,4 @@ const miningRoads = roomName => {
   }
 }
 
-export default miningRoads;
+export default miningRoads

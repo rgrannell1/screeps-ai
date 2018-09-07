@@ -1,7 +1,7 @@
 
-import constants from '../constants';
-import telemetry from '../telemetry';
-import blessed from '../blessed';
+import constants from '../constants'
+import telemetry from '../telemetry'
+import blessed from '../blessed'
 
 const methods = {} as any
 
@@ -36,7 +36,7 @@ methods.validate = (ctx, creep) => {
 
     if (!ctx.states.hasOwnProperty(state)) {
       creep.memory.state = ctx.initalState
-      throw new Error(`state ${state} for role ${role} not supported; reverting to initial-state`)
+      throw new Error(`state ${state} for role ${role} not supported reverting to initial-state`)
     }
 
     const current = ctx.states[state]
@@ -106,7 +106,7 @@ methods.validate = (ctx, creep) => {
 
   if (!ctx.states.hasOwnProperty(state)) {
     creep.memory.state = ctx.initalState
-    throw new Error(`state ${state} for role ${role} not supported; reverting to initial-state`)
+    throw new Error(`state ${state} for role ${role} not supported reverting to initial-state`)
   }
 
   const current = ctx.states[state]
@@ -172,4 +172,4 @@ function Role (states, {initalState}) {
   return ctx
 }
 
-export default Role;
+export default Role

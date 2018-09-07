@@ -1,7 +1,7 @@
 
-import misc from '../misc';
-import terrain from '../terrain';
-import structures from '../structures';
+import misc from '../misc'
+import terrain from '../terrain'
+import structures from '../structures'
 
 const sourceContainers = roomName => {
   const sources = terrain.findSources(roomName)
@@ -24,4 +24,4 @@ const sourceContainers = roomName => {
   }
 }
 
-export default sourceContainers;
+export default sourceContainers

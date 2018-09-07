@@ -1,7 +1,7 @@
 
-import blessed from './blessed';
-import constants from './constants';
-import { censusCreeps } from './spawner';
+import blessed from './blessed'
+import constants from './constants'
+import { censusCreeps } from './spawner'
 
 const telemetry = {} as any
 
@@ -33,4 +33,4 @@ telemetry.logGameState = roomName => {
   })
 }
 
-export default telemetry;
+export default telemetry

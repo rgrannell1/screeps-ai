@@ -9,4 +9,4 @@ logger.data = (message, meta) => {
   }
 }
 
-export default logger;
+export default logger

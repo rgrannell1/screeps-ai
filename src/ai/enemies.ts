@@ -1,4 +1,4 @@
 
 const enemies = {}
 
-export default enemies;
+export default enemies

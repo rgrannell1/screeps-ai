@@ -1,6 +1,6 @@
 
-import plans from './plans';
-import terrain from './terrain.ts';
+import plans from './plans'
+import terrain from './terrain.ts'
 
 const planner = {} as any
 
@@ -22,4 +22,4 @@ planner.run = roomName => {
   }
 }
 
-export default planner;
+export default planner

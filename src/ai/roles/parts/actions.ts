@@ -1,10 +1,10 @@
 
-import misc from '../../misc';
-import terrain from '../../terrain';
-import structures from '../../structures';
-import constants from '../../constants';
-import blessed from '../../blessed';
-import creeps from '../../creeps';
+import misc from '../../misc'
+import terrain from '../../terrain'
+import structures from '../../structures'
+import constants from '../../constants'
+import blessed from '../../blessed'
+import creeps from '../../creeps'
 
 const actions = {} as any
 
@@ -437,4 +437,4 @@ actions.REPAIR = creep => {
   }
 }
 
-export default actions;
+export default actions

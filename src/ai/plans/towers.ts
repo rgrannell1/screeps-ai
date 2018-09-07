@@ -1,7 +1,7 @@
 
-import constants from '../constants';
-import structures from '../structures';
-import terrain from '../terrain';
+import constants from '../constants'
+import structures from '../structures'
+import terrain from '../terrain'
 
 const placeTower = roomName => {
   const candidatePositions = terrain
@@ -19,4 +19,4 @@ const towers = roomName => {
   placeTower(roomName)
 }
 
-export default towers;
+export default towers

@@ -1,14 +1,15 @@
 
-import constants from './constants.ts';
-import misc from './misc.ts';
-import planner from './planner.ts';
-import {spawner} from './spawner.ts';
-import structures from './structures.ts';
-import telemetry from './telemetry.ts';
-import terrain from './terrain.ts';
-import logger from './logger.ts';
-import tower from './tower.ts';
-import roles from './roles';
+import constants from './constants.ts'
+import misc from './misc.ts'
+import planner from './planner.ts'
+import {spawner} from './spawner.ts'
+import structures from './structures.ts'
+import telemetry from './telemetry.ts'
+import terrain from './terrain.ts'
+import logger from './logger.ts'
+import tower from './tower.ts'
+import roles from './roles'
+import profiler from 'screeps-profiler'
 
 const evictCreepCache = () => {
   for (const name in Memory.creeps) {
@@ -24,11 +25,7 @@ const applyRoles = () => {
     const {role} = creep.memory
 
     if (roles[role]) {
-      try {
-        roles[role].run(creep)
-      } catch (err) {
-        console.log(`error when running role "${role}"; ${err.message}`)
-      }
+      roles[role].run(creep)
     }
   }
 }
@@ -41,7 +38,6 @@ const identifyCreeps = () => {
   for (const name of Object.keys(Game.creeps)) {
     const creep = Game.creeps[name]
     const {role, stateCode, state} = creep.memory
-
   }
 }
 
@@ -51,7 +47,6 @@ const quantifyResources = roomName => {
   }
 }
 
-import profiler from 'screeps-profiler';
 profiler.enable()
 
 const loop = () => {
@@ -82,4 +77,4 @@ const loop = () => {
   })
 }
 
-export { loop };
+export { loop }

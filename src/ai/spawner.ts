@@ -1,18 +1,18 @@
 
-import constants from './constants';
-import misc from './misc';
-import creeps from './creeps';
-import terrain from './terrain';
-import blessed from './blessed';
+import constants from './constants'
+import misc from './misc'
+import creeps from './creeps'
+import terrain from './terrain'
+import blessed from './blessed'
 
 const setQuota = {} as any
 const setSpawnQuotas = room => {
   const settings = []
 
-  Object.keys(setSpawnQuotas).forEach(role => {
+  Object.keys(setQuota).forEach(role => {
     settings.push({
       role,
-      data: setSpawnQuotas[role](room)
+      data: setQuota[role](room)
     })
   })
 
@@ -231,7 +231,7 @@ const displayProgress = (spawn, room, expected, actual) => {
 }
 
 const spawner = (room, spawn) => {
-  const expected = setSpawnQuotas(room) || []
+  const expected = setSpawnQuotas(room)
   const actual = censusCreeps(room)
 
   for (const {role, data} of expected.sort(sortByPriority)) {
@@ -246,7 +246,7 @@ const spawner = (room, spawn) => {
     }
   }
 
-  //displayProgress(spawn, room, expected, actual)
+  displayProgress(spawn, room, expected, actual)
 }
 
 export {censusCreeps, spawner}

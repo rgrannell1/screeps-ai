@@ -220,7 +220,7 @@ terrain.findDamagedStructure = roomName => {
   })
 }
 
-terrain.exists = {};
+terrain.exists = {}
 
 terrain.exists.container = roomName => {
   const room = Game.rooms[roomName]
@@ -234,4 +234,4 @@ terrain.exists.container = roomName => {
   return container.length > 0
 }
 
-export default terrain;
+export default terrain

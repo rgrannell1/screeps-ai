@@ -1,8 +1,8 @@
 
-import misc from '../../misc';
-import terrain from '../../terrain';
-import constants from '../../constants';
-import { StateChange, Transition } from '../../models';
+import misc from '../../misc'
+import terrain from '../../terrain'
+import constants from '../../constants'
+import { StateChange, Transition } from '../../models'
 
 const senses = {} as any
 
@@ -12,13 +12,16 @@ const states = {
   SEEKING_SITE: 'SEEKING_SITE',
   CHARGE: 'CHARGE',
   SEEKING_CHARGE: 'SEEKING_CHARGE',
+  CHARGE_EXTENSION: 'CHARGE_EXTENSION',
   CHARGE_CONTAINER: 'CHARGE_CONTAINER',
   SEEKING_CONTAINER: 'SEEKING_CONTAINER',
+  DRAIN_CONTAINER: 'DRAIN_CONTAINER',
   CHARGE_SPAWN: 'CHARGE_SPAWN',
   SEEKING_SPAWN: 'SEEKING_SPAWN',
   DYING: 'DYING',
   HARVEST: 'HARVEST',
   SEEKING_SOURCE: 'SEEKING_SOURCE',
+  SEEKING_EXTENSION: 'SEEKING_EXTENSION',
   REPAIR: 'REPAIR',
   SEEKING_ENEMY: 'SEEKING_ENEMY',
   SEEKING_CONTROLLER: 'SEEKING_CONTROLLER',
@@ -27,10 +30,8 @@ const states = {
   UPGRADING: 'UPGRADING'
 }
 
-const getObj = Game.getObjectById
-
 senses.atDamage = StateChange(creep => {
-  const site = getObj(creep.memory.damageId)
+  const site = Game.getObjectById(creep.memory.damageId)
 
   creep.moveTo(site)
   return misc.match(creep.repair(site), {
@@ -40,17 +41,17 @@ senses.atDamage = StateChange(creep => {
 }, [states.REPAIR, states.SEEKING_CHARGE])
 
 senses.repairComplete = StateChange(creep => {
-  const site = getObj(creep.memory.damageId)
+  const site = Game.getObjectById(creep.memory.damageId)
 
   return misc.match(-100, {
-    [OK]: () => Transition(states.SEEKING_CHARGE),
-    [ERR_NOT_IN_RANGE]: () => Transition(states.SEEKING_CHARGE)
+    [OK]: () => Transition(states.SEEKING_CHARGE, 'repair done'),
+    [ERR_NOT_IN_RANGE]: () => Transition(states.SEEKING_CHARGE, 'not in range')
   })
 
 }, [states.SEEKING_CHARGE])
 
 senses.atCharge = StateChange(creep => {
-  const loaded = getObj(creep.memory.sourceId)
+  const loaded = Game.getObjectById(creep.memory.sourceId)
   const source = loaded
     ? loaded
     : terrain.findClosestSource(creep.pos)
@@ -65,7 +66,7 @@ senses.atCharge = StateChange(creep => {
 }, [states.CHARGE, states.SEEKING_CHARGE])
 
 senses.atController = StateChange(creep => {
-  const controller = getObj(creep.memory.controllerId)
+  const controller = Game.getObjectById(creep.memory.controllerId)
   creep.moveTo(controller)
 
   return misc.match(creep.upgradeController(controller), {
@@ -78,7 +79,7 @@ senses.atController = StateChange(creep => {
 }, [states.UPGRADING, states.SEEKING_CONTROLLER])
 
 senses.atContainerFromSpawn = StateChange(creep => {
-  const container = getObj(creep.memory.containerId)
+  const container = Game.getObjectById(creep.memory.containerId)
 
   if (!container || container.store.energy < CONTAINER_CAPACITY) {
     return Transition(states.SEEKING_CONTAINER, 'no container or not full')
@@ -103,7 +104,7 @@ senses.atContainerFromSpawn = StateChange(creep => {
 }, [states.SEEKING_CONTAINER, states.DRAIN_CONTAINER])
 
 senses.atExtension = StateChange(creep => {
-  const extension = getObj(creep.memory.extensionId)
+  const extension = Game.getObjectById(creep.memory.extensionId)
 
   if (!extension || extension.store.energy < EXTENSION_CAPACITY) {
     return Transition(states.SEEKING_EXTENSION, 'no container or not full')
@@ -126,7 +127,7 @@ senses.canWithdrawFromContainer = StateChange(creep => {
 
   }
 
-  const container = getObj(creep.memory.containerId)
+  const container = Game.getObjectById(creep.memory.containerId)
 
   if (!container || container.store.energy === 0) {
     return Transition(states.SEEKING_SPAWN, 'No container or container empty')
@@ -151,10 +152,10 @@ senses.canWithdrawFromContainer = StateChange(creep => {
 }, [states.SEEKING_SPAWN, states.CHARGE_CONTAINER, states.SEEKING_CONTAINER])
 
 senses.atContainer = StateChange(creep => {
-  const container = getObj(creep.memory.containerId)
+  const container = Game.getObjectById(creep.memory.containerId)
 
   if (!container) {
-    return Transition(states.SEEKING_SOURCE)
+    return Transition(states.SEEKING_SOURCE, 'no container found')
   }
 
   creep.moveTo(container)
@@ -179,7 +180,7 @@ senses.atContainer = StateChange(creep => {
 }, [states.SEEKING_SOURCE, states.CHARGE_CONTAINER, states.SEEKING_CONTAINER])
 
 senses.canSignController = StateChange(creep => {
-  const controller = getObj(creep.memory.controllerId)
+  const controller = Game.getObjectById(creep.memory.controllerId)
   creep.moveTo(controller)
 
   return misc.match(creep.signController(controller, constants.sign), {
@@ -195,13 +196,13 @@ senses.canSignController = StateChange(creep => {
 }, [states.SIGNING, states.SEEKING_CONTROLLER])
 
 senses.atSite = StateChange(creep => {
-  if (!creep.memory.siteId || !getObj(creep.memory.siteId)) {
+  if (!creep.memory.siteId || !Game.getObjectById(creep.memory.siteId)) {
     console.log('site missing')
     delete creep.memory.siteId
     return
   }
 
-  const site = getObj(creep.memory.siteId)
+  const site = Game.getObjectById(creep.memory.siteId)
   creep.moveTo(site)
 
   return misc.match(creep.build(site), {
@@ -225,7 +226,7 @@ senses.atSite = StateChange(creep => {
 }, [states.BUILDING, states.SEEKING_SITE, states.SEEKING_CHARGE])
 
 senses.atEnemy = StateChange(creep => {
-  const enemy = getObj(creep.memory.enemyId)
+  const enemy = Game.getObjectById(creep.memory.enemyId)
   creep.moveTo(enemy)
   return misc.match(creep.attack(enemy), {
     [OK]: () => {
@@ -238,7 +239,7 @@ senses.atEnemy = StateChange(creep => {
 }, [states.SEEKING_ENEMY, states.ATTACKING])
 
 senses.atSource = StateChange(creep => {
-  const source = getObj(creep.memory.sourceId)
+  const source = Game.getObjectById(creep.memory.sourceId)
   creep.moveTo(source)
   return misc.match(creep.harvest(source), {
     [OK]: () => {
@@ -251,7 +252,7 @@ senses.atSource = StateChange(creep => {
 }, [states.CHARGE, states.SEEKING_CHARGE])
 
 senses.atSpawn = StateChange(creep => {
-  const spawn = getObj(creep.memory.spawnId)
+  const spawn = Game.getObjectById(creep.memory.spawnId)
   creep.moveTo(spawn)
 
   return misc.match(creep.transfer(spawn, RESOURCE_ENERGY), {
@@ -272,7 +273,7 @@ senses.atSpawn = StateChange(creep => {
 }, [states.CHARGE_SPAWN, states.SEEKING_SPAWN, states.HARVEST])
 
 senses.atSpawnFromContainer = StateChange(creep => {
-  const spawn = getObj(creep.memory.spawnId)
+  const spawn = Game.getObjectById(creep.memory.spawnId)
   creep.moveTo(spawn)
 
   return misc.match(creep.transfer(spawn, RESOURCE_ENERGY), {
@@ -361,7 +362,7 @@ senses.shouldSeek.container = StateChange(creep => {
 }, [states.SEEKING_CONTAINER])
 
 senses.atSource = StateChange(creep => {
-  const source = getObj(creep.memory.sourceId)
+  const source = Game.getObjectById(creep.memory.sourceId)
   creep.moveTo(source)
   return misc.match(creep.harvest(source), {
     [OK]: () => Transition(states.HARVEST, 'harvested successfully'),
@@ -370,7 +371,7 @@ senses.atSource = StateChange(creep => {
 }, [states.HARVEST, states.SEEKING_SOURCE])
 
 senses.isSigned = StateChange(creep => {
-  const controller = getObj(creep.memory.controllerId)
+  const controller = Game.getObjectById(creep.memory.controllerId)
   if (controller && controller.sign && controller.sign.text === constants.sign) {
     return Transition(states.DYING, 'tired of life')
   }
@@ -379,10 +380,10 @@ senses.isSigned = StateChange(creep => {
 senses.targetIsFull = {}
 
 senses.targetIsFull.container = StateChange(creep => {
-  const container = getObj(creep.memory.containerI1d)
+  const container = Game.getObjectById(creep.memory.containerI1d)
   if (container && container.store.energy === CONTAINER_CAPACITY) {
     return Transition(states.SEEKING_EXTENSION, 'container full')
   }
 }, [states.SEEKING_EXTENSION])
 
-export default senses;
+export default senses

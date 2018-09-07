@@ -1,6 +1,6 @@
 
-import constants from '../constants';
-import structures from '../structures';
+import constants from '../constants'
+import structures from '../structures'
 
 const ringRoads = roomName => {
   const room = Game.rooms[roomName]
@@ -22,4 +22,4 @@ const ringRoads = roomName => {
   }
 }
 
-export default ringRoads;
+export default ringRoads

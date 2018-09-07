@@ -1,7 +1,7 @@
 
-import misc from './misc';
-import structures from './structures';
-import constants from './constants';
+import misc from './misc'
+import structures from './structures'
+import constants from './constants'
 
 const run = roomName => {
   const towers = structures.tower.findAll(roomName)
@@ -47,4 +47,4 @@ const run = roomName => {
   }
 }
 
-export default {run};
+export default {run}

@@ -143,4 +143,4 @@ constants.states ={
   }
 }
 
-export default constants;
+export default constants

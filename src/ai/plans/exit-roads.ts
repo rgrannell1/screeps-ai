@@ -1,7 +1,7 @@
 
-import constants from '../constants';
-import terrain from '../terrain';
-import structures from '../structures';
+import constants from '../constants'
+import terrain from '../terrain'
+import structures from '../structures'
 
 const exitRoads = roomName => {
   const room = Game.rooms[roomName]
@@ -29,4 +29,4 @@ const exitRoads = roomName => {
   }
 }
 
-export default exitRoads;
+export default exitRoads

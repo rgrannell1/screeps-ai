@@ -1,8 +1,8 @@
 
-import Role from '../models/role';
-import misc from '../misc';
-import actions from './parts/actions';
-import senses from './parts/senses';
+import Role from '../models/role'
+import misc from '../misc'
+import actions from './parts/actions'
+import senses from './parts/senses'
 
 const states = {
   SEEKING_SOURCE: {
@@ -60,4 +60,4 @@ const states = {
 
 export default Role(states, {
   initalState: 'SEEKING_SOURCE'
-});
+})

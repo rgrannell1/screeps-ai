@@ -1,6 +1,6 @@
 
-import misc from './misc';
-import terrain from './terrain';
+import misc from './misc'
+import terrain from './terrain'
 
 const structures = {
   any: {},
@@ -186,15 +186,10 @@ const isEnergySource = item => {
   return true
 }
 
-structures.findEnergySource = (roomName, priorities) => {
-  if (!priorities) {
-    throw new Error('missing priorities')
-  }
-
+structures.findEnergySource = (roomName:string, priorities:string[]) => {
   const buildings = Game.rooms[roomName].find(FIND_STRUCTURES, {
     filter (item) {
-      const isPrioritiedStructure = priorities.includes(item.structureType)
-      return isPrioritiedStructure && isEnergySource(item)
+      return priorities.indexOf(item.structureType) !== -1 && isEnergySource(item)
     }
   })
 
@@ -220,14 +215,14 @@ const isEnergySink = item => {
   })
 }
 
-structures.findEnergySink = (roomName, priorities) => {
+structures.findEnergySink = (roomName, priorities:string[]) => {
   if (!priorities) {
     throw new Error('missing priorities')
   }
 
   const buildings = Game.rooms[roomName].find(FIND_STRUCTURES, {
     filter (item) {
-      const isPrioritiedStructure = priorities.includes(item.structureType)
+      const isPrioritiedStructure = priorities.indexOf(item.structureType) !== -1
       return isPrioritiedStructure && isEnergySink(item)
     }
   })
@@ -269,13 +264,10 @@ const isDamaged = item => {
   })
 }
 
-structures.findDamagedStructure = (roomName, priorities) => {
-  if (!priorities) {
-    throw new Error('priorities missing.')
-  }
+structures.findDamagedStructure = (roomName:string, priorities:string[]) => {
   const buildings = Game.rooms[roomName].find(FIND_STRUCTURES, {
     filter (item) {
-      const isPrioritiedStructure = priorities.includes(item.structureType)
+      const isPrioritiedStructure = priorities.indexOf(item.structureType) !== -1
       return isPrioritiedStructure && isDamaged(item)
     }
   })
@@ -288,4 +280,4 @@ structures.findDamagedStructure = (roomName, priorities) => {
   }
 }
 
-export default structures;
+export default structures

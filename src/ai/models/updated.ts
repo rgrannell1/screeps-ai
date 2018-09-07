@@ -62,7 +62,7 @@ index.StateMachine = (states, {initialState, middleware}) => {
     const curentState = creep.memory.state || initialState
     const currentRun = states[curentState]
     if (!states[curentState]) {
-      console.log(`${curentState} not a supported state!; falling back to "${initialState}"`)
+      console.log(`${curentState} not a supported state! falling back to "${initialState}"`)
 
       methods.transition(ctx, null, {
         state: initialState,
@@ -117,4 +117,4 @@ index.Transition = (state, metadata) => {
   return {state, metadata}
 }
 
-export default index;
+export default index

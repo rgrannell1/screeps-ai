@@ -1,5 +1,5 @@
 
-import constants from './constants';
+import constants from './constants'
 
 const misc = {} as any
 
@@ -12,7 +12,7 @@ misc.match = (value, opts) => {
   }
 }
 
-misc.timer = (fn, timer) => {
+misc.timer = (fn, timer:number) => {
   if (Game.time % timer === 0) {
     fn()
   }

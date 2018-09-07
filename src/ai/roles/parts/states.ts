@@ -1,7 +1,7 @@
 
-import actions from './actions';
-import senses from './senses';
-import constants from '../../constants';
+import actions from './actions'
+import senses from './senses'
+import constants from '../../constants'
 
 const states = {} as any
 
@@ -205,4 +205,4 @@ states.ATTACKING = () => {
   }
 }
 
-export default states;
+export default states
