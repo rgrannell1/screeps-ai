@@ -29,13 +29,17 @@ shared.chargeCreep = (sinks:string[], creep:Creep):void => {
   const moveCode = creep.moveTo(source.value.pos)
 
   logger.data('creep move status', 'creep_move', {
-    code: telemetry.moveCode(moveCode)
+    code: telemetry.moveCode(moveCode),
+    creepName: creep.name,
+    roomName: creep.room.name
   })
 
   const chargeCode = creep.withdraw(source.value, RESOURCE_ENERGY)
 
   logger.data('creep withdraw status', 'creep_withdraw', {
-    code: telemetry.withdrawCode(chargeCode)
+    code: telemetry.withdrawCode(chargeCode),
+    creepName: creep.name,
+    roomName: creep.room.name
   })
 }
 
@@ -51,7 +55,9 @@ shared.chargeTarget = (sinkPriorities:Array<Priority>, creep:any):void => {
 
   const moveCode = creep.moveTo(target.value.pos)
   logger.data('creep move status', 'creep_move', {
-    code: telemetry.moveCode(moveCode)
+    code: telemetry.moveCode(moveCode),
+    creepName: creep.name,
+    roomName: creep.room.name
   })
 
   const transferCode = creep.transfer(target.value, RESOURCE_ENERGY)

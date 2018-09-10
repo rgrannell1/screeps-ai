@@ -35,45 +35,67 @@ telemetry.logGameState = (roomName:string) => {
   })
 }
 
+
 telemetry.moveCode = (code:number):string => {
-  return misc.match(code, {
-    [OK]: () => 'OK',
-    [ERR_NOT_OWNER]: () => 'ERR_NOT_OWNER',
-    [ERR_NO_PATH]: () => 'ERR_NO_PATH',
-    [ERR_BUSY]: () => 'ERR_BUSY',
-    [ERR_INVALID_TARGET]: () => 'ERR_INVALID_TARGET',
-    [ERR_TIRED]: () => 'ERR_TIRED',
-    [ERR_NO_BODYPART]: () => 'ERR_NO_BODYPART',
-    default: () => `unknown ${code}`
-  })
+  const codes = [
+    [OK, 'OK'],
+    [ERR_NOT_OWNER, 'ERR_NOT_OWNER'],
+    [ERR_NO_PATH, 'ERR_NO_PATH'],
+    [ERR_BUSY, 'ERR_BUSY'],
+    [ERR_INVALID_TARGET, 'ERR_INVALID_TARGET'],
+    [ERR_TIRED, 'ERR_TIRED'],
+    [ERR_NO_BODYPART, 'ERR_NO_BODYPART'],
+  ] as Array<[number, string]>
+
+  for (const [candidateCode, description] of codes) {
+    if (candidateCode === code) {
+      return description
+    }
+  }
+
+  return `unknown code ${code}`
 }
 
 telemetry.withdrawCode = (code:number):string => {
-  return misc.match(code, {
-    [OK]: () => 'OK',
-    [ERR_NOT_OWNER]: () => 'ERR_NOT_OWNER',
-    [ERR_BUSY]: () => 'ERR_BUSY',
-    [ERR_NOT_ENOUGH_RESOURCES]: () => 'ERR_NOT_ENOUGH_RESOURCES',
-    [ERR_INVALID_TARGET]: () => 'ERR_INVALID_TARGET',
-    [ERR_FULL]: () => 'ERR_FULL',-
-    [ERR_NOT_IN_RANGE]: () => 'ERR_NOT_IN_RANGE',
-    [ERR_INVALID_ARGS]: () => 'ERR_INVALID_ARGS',
-    default: () => `unknown ${code}`
-  })
+  const codes = [
+    [OK,'OK'],
+    [ERR_NOT_OWNER,'ERR_NOT_OWNER'],
+    [ERR_BUSY,'ERR_BUSY'],
+    [ERR_NOT_ENOUGH_RESOURCES,'ERR_NOT_ENOUGH_RESOURCES'],
+    [ERR_INVALID_TARGET,'ERR_INVALID_TARGET'],
+    [ERR_FULL,'ERR_FULL'],
+    [ERR_NOT_IN_RANGE,'ERR_NOT_IN_RANGE'],
+    [ERR_INVALID_ARGS,'ERR_INVALID_ARGS']
+  ] as Array<[number, string]>
+
+  for (const [candidateCode, description] of codes) {
+    if (candidateCode === code) {
+      return description
+    }
+  }
+
+  return `unknown code ${code}`
 }
 
 telemetry.transferCode = (code:number):string => {
-  return misc.match(code, {
-    [OK]: () => 'OK',
-    [ERR_NOT_OWNER]: () => 'ERR_NOT_OWNER',
-    [ERR_BUSY]: () => 'ERR_BUSY',
-    [ERR_NOT_ENOUGH_RESOURCES]: () => 'ERR_NOT_ENOUGH_RESOURCES',
-    [ERR_INVALID_TARGET]: () => 'ERR_INVALID_TARGET',
-    [ERR_FULL]: () => 'ERR_FULL',
-    [ERR_NOT_IN_RANGE]: () => 'ERR_NOT_IN_RANGE',
-    [ERR_INVALID_ARGS]: () => 'ERR_INVALID_ARGS',
-    default: () => `unknown ${code}`
-  })
+  const codes = [
+    [OK,'OK'],
+    [ERR_NOT_OWNER,'ERR_NOT_OWNER'],
+    [ERR_BUSY,'ERR_BUSY'],
+    [ERR_NOT_ENOUGH_RESOURCES,'ERR_NOT_ENOUGH_RESOURCES'],
+    [ERR_INVALID_TARGET,'ERR_INVALID_TARGET'],
+    [ERR_FULL,'ERR_FULL'],
+    [ERR_NOT_IN_RANGE,'ERR_NOT_IN_RANGE'],
+    [ERR_INVALID_ARGS,'ERR_INVALID_ARGS']
+  ] as Array<[number, string]>
+
+  for (const [candidateCode, description] of codes) {
+    if (candidateCode === code) {
+      return description
+    }
+  }
+
+  return `unknown code ${code}`
 }
 
 export default telemetry
