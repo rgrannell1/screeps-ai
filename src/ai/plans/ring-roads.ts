@@ -2,7 +2,7 @@
 import constants from '../constants'
 import structures from '../structures'
 
-const ringRoads = roomName => {
+const ringRoads = (roomName:string) => {
   const room = Game.rooms[roomName]
   const sources = room.find(FIND_SOURCES)
   const spawns = Game.spawns

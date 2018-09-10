@@ -177,7 +177,7 @@ terrain.findRoads = roomName => {
   })
 }
 
-terrain.findController = roomName => {
+terrain.findController = (roomName:string):StructureController => {
   return Game.rooms[roomName].controller
 }
 
@@ -210,10 +210,10 @@ terrain.findDamagedStructure = roomName => {
   const REASONABLE_DAMAGE = 250
   const isRepairable = new Set([STRUCTURE_EXTENSION, STRUCTURE_ROAD])
   return room.find(FIND_STRUCTURES, {
-    filter (object) {
-      const shouldFix = isRepairable.has(object.structureType)
-      const hasReasonableDamage = (object.hitsMax - object.hits) > REASONABLE_DAMAGE
-      const isHalfDead = (object.hits < (7 * (object.hitsMax / 8)))
+    filter (item) {
+      const shouldFix = isRepairable.has(<string>item.structureType)
+      const hasReasonableDamage = (item.hitsMax - item.hits) > REASONABLE_DAMAGE
+      const isHalfDead = (item.hits < (7 * (item.hitsMax / 8)))
 
       return shouldFix && (hasReasonableDamage || isHalfDead)
     }

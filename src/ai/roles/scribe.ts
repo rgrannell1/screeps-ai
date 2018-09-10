@@ -1,30 +1,22 @@
 
-/*
-const sign = constants.sign
-const signCode = creep.signController(Game.getObjectById(creep.memory.controllerId), sign)
-
-
-
-
-
-  creep.say('Bye!')
-  creep.suicide()
-
-*/
-
-
 import misc from '../misc'
 import middleware from './middleware'
 import blessed from '../blessed'
 import creeps from '../creeps'
-import structures from '../structures'
+import terrain from '../terrain'
+import constants from '../constants'
+import shared from './shared'
+import {Role} from '../types'
 
-const run = creep => {
-  if (creep.carry.energy < creep.carryCapacity) {
-    chargeCreep(creep)
-  } else if (creep.carry.energy === creep.carryCapacity) {
-    chargeTarget(creep)
+const run = (creep:Creep):void => {
+  const controller = terrain.findController(creep.room.name)
+  const isSigned = controller && controller.sign && controller.sign.text === constants.sign
+  if (controller) {
+    shared.killCreep(creep)
+  } else {
+    shared.signController(creep, controller, constants.sign)
   }
 }
 
-export default {run}
+const scribe = <Role>{run}
+export default scribe

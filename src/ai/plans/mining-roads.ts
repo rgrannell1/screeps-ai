@@ -3,7 +3,7 @@ import terrain from '../terrain'
 import constants from '../constants'
 import structures from '../structures'
 
-const miningRoads = roomName => {
+const miningRoads = (roomName:string) => {
   const room = Game.rooms[roomName]
 
   if (structures.planExists(constants.labels.miningRoads)) {

@@ -1,11 +1,13 @@
 
 import blessed from './blessed'
 import constants from './constants'
-import { censusCreeps } from './spawner'
+import logger from './logger'
+import misc from './misc'
+import {censusCreeps} from './spawner'
 
 const telemetry = {} as any
 
-telemetry.emit = (label, data) => {
+telemetry.emit = (label:string, data:object) => {
   if (!Memory.events || Memory.events.length > constants.limits.events) {
     Memory.events = []
   }
@@ -21,10 +23,10 @@ telemetry.emit = (label, data) => {
   }
 }
 
-telemetry.logGameState = roomName => {
+telemetry.logGameState = (roomName:string) => {
   const room = Game.rooms[roomName]
 
-  telemetry.emit('room_state', {
+  logger.data('room_state', 'room_state', {
     room_name: roomName,
     energy_available: room.energyAvailable,
     energy_capacity_available: room.energyCapacityAvailable,
@@ -33,4 +35,48 @@ telemetry.logGameState = roomName => {
   })
 }
 
+telemetry.moveCode = (code:number):string => {
+  return misc.match(code, {
+    [OK]: () => 'OK',
+    [ERR_NOT_OWNER]: () => 'ERR_NOT_OWNER',
+    [ERR_NO_PATH]: () => 'ERR_NO_PATH',
+    [ERR_BUSY]: () => 'ERR_BUSY',
+    [ERR_INVALID_TARGET]: () => 'ERR_INVALID_TARGET',
+    [ERR_TIRED]: () => 'ERR_TIRED',
+    [ERR_NO_BODYPART]: () => 'ERR_NO_BODYPART',
+    default: () => `unknown ${code}`
+  })
+}
+
+telemetry.withdrawCode = (code:number):string => {
+  return misc.match(code, {
+    [OK]: () => 'OK',
+    [ERR_NOT_OWNER]: () => 'ERR_NOT_OWNER',
+    [ERR_BUSY]: () => 'ERR_BUSY',
+    [ERR_NOT_ENOUGH_RESOURCES]: () => 'ERR_NOT_ENOUGH_RESOURCES',
+    [ERR_INVALID_TARGET]: () => 'ERR_INVALID_TARGET',
+    [ERR_FULL]: () => 'ERR_FULL',-
+    [ERR_NOT_IN_RANGE]: () => 'ERR_NOT_IN_RANGE',
+    [ERR_INVALID_ARGS]: () => 'ERR_INVALID_ARGS',
+    default: () => `unknown ${code}`
+  })
+}
+
+telemetry.transferCode = (code:number):string => {
+  return misc.match(code, {
+    [OK]: () => 'OK',
+    [ERR_NOT_OWNER]: () => 'ERR_NOT_OWNER',
+    [ERR_BUSY]: () => 'ERR_BUSY',
+    [ERR_NOT_ENOUGH_RESOURCES]: () => 'ERR_NOT_ENOUGH_RESOURCES',
+    [ERR_INVALID_TARGET]: () => 'ERR_INVALID_TARGET',
+    [ERR_FULL]: () => 'ERR_FULL',
+    [ERR_NOT_IN_RANGE]: () => 'ERR_NOT_IN_RANGE',
+    [ERR_INVALID_ARGS]: () => 'ERR_INVALID_ARGS',
+    default: () => `unknown ${code}`
+  })
+}
+
 export default telemetry
+
+
+

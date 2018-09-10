@@ -94,7 +94,7 @@ structures.extensions.hasEnergy = extensions => {
 }
 
 structures.extensions.place = (pos, metadata) => {
-  addPlan(pos, {...metadata, structure: STRUCTURE_extensions})
+  addPlan(pos, {...metadata, structure: STRUCTURE_EXTENSION})
 }
 
 structures.extensions.findAll = roomName => {
@@ -115,7 +115,9 @@ structures.tower.place = (pos, metadata) => {
 
 structures.tower.findAll = roomName => {
   return Game.rooms[roomName].find(FIND_MY_STRUCTURES, {
-    filter: {structureType: STRUCTURE_TOWER}
+    filter (item) {
+      return item.structureType === STRUCTURE_TOWER
+    }
   })
 }
 
@@ -173,23 +175,22 @@ structures.findSite = roomName => {
   return sites[0]
 }
 
-structures.isSuitableEnergySource = source => {
-  return true
-}
-
-structures.isSuitableEnergySink = sink => {
-  return true
-}
-
-
 const isEnergySource = item => {
   return true
+  return misc.match(item.structureType, {
+    [STRUCTURE_STORAGE] () {
+      return item.room.storage.store[RESOURCE_ENERGY] > 0
+    },
+    default () {
+      return item.energy > 0
+    }
+  })
 }
 
 structures.findEnergySource = (roomName:string, priorities:string[]) => {
   const buildings = Game.rooms[roomName].find(FIND_STRUCTURES, {
     filter (item) {
-      return priorities.indexOf(item.structureType) !== -1 && isEnergySource(item)
+      return priorities.includes(item.structureType) && isEnergySource(item)
     }
   })
 
@@ -215,14 +216,17 @@ const isEnergySink = item => {
   })
 }
 
-structures.findEnergySink = (roomName, priorities:string[]) => {
+structures.findEnergySink = (roomName:string, priorities:string[]) => {
   if (!priorities) {
     throw new Error('missing priorities')
+  }
+  if (!priorities.includes) {
+    throw new Error(`missing priorities.includes: ${JSON.stringify(priorities)}`)
   }
 
   const buildings = Game.rooms[roomName].find(FIND_STRUCTURES, {
     filter (item) {
-      const isPrioritiedStructure = priorities.indexOf(item.structureType) !== -1
+      const isPrioritiedStructure = priorities.includes(item.structureType)
       return isPrioritiedStructure && isEnergySink(item)
     }
   })
@@ -267,7 +271,7 @@ const isDamaged = item => {
 structures.findDamagedStructure = (roomName:string, priorities:string[]) => {
   const buildings = Game.rooms[roomName].find(FIND_STRUCTURES, {
     filter (item) {
-      const isPrioritiedStructure = priorities.indexOf(item.structureType) !== -1
+      const isPrioritiedStructure = priorities.includes(item.structureType)
       return isPrioritiedStructure && isDamaged(item)
     }
   })

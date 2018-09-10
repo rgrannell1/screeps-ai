@@ -79,7 +79,7 @@ setQuota.transferer = room => {
 setQuota.builder = room => {
   const settings = {}
 
-  const SITE_TO_BUILDER_RATIO = 12
+  const SITE_TO_BUILDER_RATIO = 20
   const ENERGY_TO_BUILDER_RATIO = 2000
 
   const sites = room.find(FIND_CONSTRUCTION_SITES)

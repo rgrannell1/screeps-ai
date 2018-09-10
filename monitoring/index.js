@@ -9,7 +9,7 @@ function processEvents (events) {
 
 async function writeResults (data) {
   const writeable = await data
-  await fs.writeFile('../data/screeps-events.json', JSON.stringify(writeable, null, 2))
+  await fs.writeFile(constants.paths.database, JSON.stringify(writeable, null, 2))
 }
 
 async function main () {

@@ -3,7 +3,7 @@ import misc from '../misc'
 import terrain from '../terrain'
 import structures from '../structures'
 
-const sourceContainers = roomName => {
+const sourceContainers = (roomName:string) => {
   const sources = terrain.findSources(roomName)
   for (const source of sources) {
 

@@ -7,6 +7,7 @@ import states from './parts/states'
 import transferer from './transferer'
 import upgrader from './upgrader'
 import builder from './builder'
+import scribe from './scribe'
 
 const roles = {} as any
 
@@ -22,16 +23,9 @@ roles.harvester = Role({
   initalState: 'SEEKING_SOURCE'
 })
 
-roles.scribe = Role({
-  SEEKING_CONTROLLER: states.SEEKING_CONTAINER(),
-  SIGNING: states.SIGNING(),
-  DYING: states.DYING()
-}, {
-  initalState: 'SEEKING_CONTROLLER'
-})
-
 roles.transferer = transferer
 roles.upgrader = upgrader
 roles.builder = builder
+roles.scribe = scribe
 
 export default roles

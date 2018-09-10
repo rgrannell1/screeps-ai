@@ -3,7 +3,7 @@ import constants from '../constants'
 import terrain from '../terrain'
 import structures from '../structures'
 
-const exitRoads = roomName => {
+const exitRoads = (roomName:string) => {
   const room = Game.rooms[roomName]
 
   if (structures.planExists(constants.labels.exitRoads)) {
@@ -24,8 +24,9 @@ const exitRoads = roomName => {
 
   const metadata = {label: constants.labels.exitRoads}
   const controller = terrain.findController(roomName)
-  for (target of targets) {
-    structures.highway.place({room, source: controller.pos, target: target}, metadata)
+
+  for (const target of targets) {
+    structures.highway.place({room, source: controller.pos, target}, metadata)
   }
 }
 

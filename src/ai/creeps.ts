@@ -1,5 +1,6 @@
 
 import constants from './constants'
+import {Priority} from './types'
 
 const creeps = {} as any
 
@@ -11,7 +12,7 @@ creeps.exists = (roleName, roomName, count = 1) => {
   }).length >= count
 }
 
-creeps.pickCreepName = role => {
+creeps.pickCreepName = (role:string) => {
   if (!Memory.roles) {
     Memory.roles = {}
   }
@@ -25,11 +26,11 @@ creeps.pickCreepName = role => {
   return `${constants.roles[role].icon}-${Memory.roles[role].count}`
 }
 
-creeps.getCost = parts => {
+creeps.getCost = (parts:string[]):number => {
   return parts.reduce((sum, part) => sum + constants.costs[part], 0)
 }
 
-creeps.findTargetEnemy = creepName => {
+creeps.findTargetEnemy = (creepName:string) => {
   const creep = Game.creeps[creepName]
   const nearbyHostile = creep.pos.findClosestByRange(FIND_HOSTILE_CREEPS, {
     filter (creep) {
@@ -61,43 +62,43 @@ creeps.roles = {}
 
 creeps.harvester = {}
 
-creeps.harvester.body = capacity => {
+creeps.harvester.body = (capacity:number) => {
   return createBodyPlan([CARRY, CARRY, WORK, MOVE], [WORK, CARRY, MOVE], capacity)
 }
 
 creeps.upgrader = {}
 
-creeps.upgrader.body = capacity => {
+creeps.upgrader.body = (capacity:number) => {
   return createBodyPlan([CARRY, CARRY, WORK, MOVE, MOVE], [WORK, CARRY, MOVE], capacity)
 }
 
 creeps.defender = {}
 
-creeps.defender.body = capacity => {
+creeps.defender.body = (capacity:number) => {
   return [ATTACK, ATTACK, MOVE, MOVE, TOUGH, TOUGH]
 }
 
 creeps.transferer = {}
 
-creeps.transferer.body = capacity => {
+creeps.transferer.body = (capacity:number) => {
   return createBodyPlan([CARRY, CARRY, WORK, MOVE, MOVE], [CARRY, CARRY, MOVE], capacity)
 }
 
 creeps.builder = {}
 
-creeps.builder.body = capacity => {
+creeps.builder.body = (capacity:number) => {
   return createBodyPlan([CARRY, CARRY, WORK, MOVE, MOVE], [CARRY, CARRY, MOVE], capacity)
 }
 
 creeps.repairer = {}
 
-creeps.repairer.body = capacity => {
+creeps.repairer.body = (capacity:number) => {
   return createBodyPlan([CARRY, CARRY, WORK, MOVE, MOVE], [CARRY, CARRY, MOVE], capacity)
 }
 
 creeps.scribe = {}
 
-creeps.scribe.body = capacity => {
+creeps.scribe.body = (capacity:number) => {
   return [WORK, MOVE, MOVE]
 }
 
@@ -105,8 +106,12 @@ const hasPriority = (transferers, priority) => {
   return transferers.some(([_, data]) => data.memory.sinkPriority === priority)
 }
 
-creeps.chooseEnergySink = (creep, priorityLists) => {
-  let priorities = priorityLists.spawns
+creeps.chooseEnergySink = (creep:Creep, priorityLists:Array<Priority>):Priority => {
+  if (priorityLists.length === 0) {
+    throw new Error('priority lists must be provided')
+  }
+
+  let priorities = priorityLists.find(list => list.label === 'spawns')
   const others = Object.entries(Game.creeps)
     .filter(([name, data]) => {
       return data.memory.role === creep.memory.role && name !== creep.name
@@ -117,16 +122,21 @@ creeps.chooseEnergySink = (creep, priorityLists) => {
   } else {
     for (const data of priorityLists) {
       if (!hasPriority(others, data.label)) {
-        priorities = priorityLists.find(list => list.label === data.label).priorities
+        priorities = priorityLists.find(list => list.label === data.label)
         creep.memory.sinkPriority = data.label
         break
       }
     }
+    creep.memory.sinkPriority = priorityLists[0].label
   }
 
   if (!priorities) {
     console.log(`missing priorities for creep ${creep.memory.role}/${creep.memory.sinkPriority}`)
     delete creep.memory.sinkPriority
+  }
+
+  if (!priorities) {
+    throw new Error(`no priorities yielded from ${JSON.stringify(priorityLists)}`)
   }
 
   return priorities

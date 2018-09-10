@@ -22,10 +22,6 @@ const config = {
     extensions: ['.ts', '.js']
   },
   output: {
-    filename: 'bundle.js',
-    path: path.resolve(__dirname, 'dist')
-  },
-  output: {
     path: BUILD_DIR,
     filename: '[name].js',
     libraryTarget: 'commonjs'

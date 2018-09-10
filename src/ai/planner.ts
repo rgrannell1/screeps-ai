@@ -1,10 +1,10 @@
 
-import plans from './plans'
-import terrain from './terrain.ts'
+import plans from './plans/index'
+import terrain from './terrain'
 
 const planner = {} as any
 
-planner.run = roomName => {
+planner.run = (roomName:string):void => {
   plans.ringRoads(roomName)
 
   const roomLevel = Game.rooms[roomName].controller.level

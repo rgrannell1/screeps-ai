@@ -4,6 +4,9 @@ import misc from '../misc'
 import actions from './parts/actions'
 import senses from './parts/senses'
 
+// if needs energy; seek container or storage or harvest
+// when has enough energy, go to container and upgrade
+
 const states = {
   SEEKING_SOURCE: {
     do: actions.SEEKING_SOURCE,
@@ -24,7 +27,6 @@ const states = {
     ]
   },
   SEEKING_CONTROLLER: {
-    code: 'SEEK_CTRL',
     code: '🚚🏰',
     do: actions.SEEKING_CONTROLLER,
     until: [

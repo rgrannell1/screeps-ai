@@ -26,7 +26,6 @@ format.center = (txt:string):string => {
   return `{center}${txt}{/center}`
 }
 
-
 format.bold = (txt:string):string => {
   return `{bold}${txt}{/bold}`
 }

@@ -2,6 +2,7 @@
 import misc from './misc'
 import structures from './structures'
 import constants from './constants'
+import {Tower} from './types'
 
 const run = roomName => {
   const towers = structures.tower.findAll(roomName)
@@ -13,7 +14,7 @@ const run = roomName => {
       }
     })
 
-    const canRepair = tower.energy > 0.2 * tower.energyCapacity
+    const canRepair = tower.energy > 0.5 * tower.energyCapacity
 
     if (nearbyHostile) {
       misc.match(tower.attack(nearbyHostile), {
@@ -47,4 +48,4 @@ const run = roomName => {
   }
 }
 
-export default {run}
+export default <Tower>{run}

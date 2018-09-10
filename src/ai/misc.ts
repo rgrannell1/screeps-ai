@@ -12,7 +12,7 @@ misc.match = (value, opts) => {
   }
 }
 
-misc.timer = (fn, timer:number) => {
+misc.timer = (fn:Function, timer: number) => {
   if (Game.time % timer === 0) {
     fn()
   }

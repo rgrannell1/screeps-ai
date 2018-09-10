@@ -1,14 +1,14 @@
 
-import constants from './constants.ts'
-import misc from './misc.ts'
-import planner from './planner.ts'
-import {spawner} from './spawner.ts'
-import structures from './structures.ts'
-import telemetry from './telemetry.ts'
-import terrain from './terrain.ts'
-import logger from './logger.ts'
-import tower from './tower.ts'
-import roles from './roles'
+import constants from './constants'
+import misc from './misc'
+import planner from './planner'
+import {spawner} from './spawner'
+import structures from './structures'
+import telemetry from './telemetry'
+import terrain from './terrain'
+import logger from './logger'
+import tower from './tower'
+import roles from './roles/index'
 import profiler from 'screeps-profiler'
 
 const evictCreepCache = () => {
@@ -30,7 +30,7 @@ const applyRoles = () => {
   }
 }
 
-const runTowers = (roomName) => {
+const runTowers = (roomName:string) => {
   tower.run(roomName)
 }
 
@@ -41,13 +41,19 @@ const identifyCreeps = () => {
   }
 }
 
-const quantifyResources = roomName => {
+const quantifyResources = (roomName:string) => {
   for (const source of terrain.findSources(roomName)) {
     const quality = terrain.getSourceQuality(source)
   }
 }
 
 profiler.enable()
+
+declare global {
+  interface CreepMemory {
+    [key:string]: any
+  }
+}
 
 const loop = () => {
   profiler.wrap(() => {
