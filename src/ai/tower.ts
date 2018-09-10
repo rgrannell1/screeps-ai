@@ -4,7 +4,7 @@ import structures from './structures'
 import constants from './constants'
 import {Tower} from './types'
 
-const run = roomName => {
+const run = (roomName:string) => {
   const towers = structures.tower.findAll(roomName)
 
   for (const tower of towers) {

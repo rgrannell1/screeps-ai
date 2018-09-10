@@ -1,65 +1,34 @@
 
-import Role from '../models/role'
+
 import misc from '../misc'
-import actions from './parts/actions'
-import senses from './parts/senses'
+import middleware from './middleware'
+import blessed from '../blessed'
+import creeps from '../creeps'
+import structures from '../structures'
+import shared from './shared'
+import {Role} from '../types'
 
-// if needs energy; seek container or storage or harvest
-// when has enough energy, go to container and upgrade
+const run = (creep:Creep):void => {
+  const priorities = [STRUCTURE_STORAGE, STRUCTURE_CONTAINER]
+  const hasSource = !!structures.findEnergySource(creep.room.name, priorities)
 
-const states = {
-  SEEKING_SOURCE: {
-    do: actions.SEEKING_SOURCE,
-    code: '🚚⛏',
-    until: [
-      senses.shouldSeek.controller,
-      senses.atSource
-    ]
-  },
-  HARVEST: {
-    do: actions.HARVEST,
-    code: '⛏',
-    until: [
-      senses.shouldSeek.controller,
-      senses.atSource,
-      senses.isDepleted.needsContainer,
-      senses.isDepleted.needsSource
-    ]
-  },
-  SEEKING_CONTROLLER: {
-    code: '🚚🏰',
-    do: actions.SEEKING_CONTROLLER,
-    until: [
-      senses.atController
-    ]
-  },
-  SEEKING_CONTAINER: {
-    code: '🚚📦',
-    do: actions.SEEKING_CONTAINER,
-    until: [
-      senses.targetIsFull.container,
-      senses.atContainer
-    ]
-  },
-  DRAIN_CONTAINER: {
-    code: '+📦',
-    do: actions.DRAIN_CONTAINER,
-    until: [
-      senses.shouldSeek.controller,
-      senses.isDepleted.needsContainer,
-      senses.isDepleted.needsSource
-    ]
-  },
-  UPGRADING: {
-    do: actions.UPGRADING,
-    code: '+1',
-    until: [
-      senses.isDepleted.needsContainer,
-      senses.isDepleted.needsSource
-    ]
+  if (!creep.memory.isActive) {
+    if (hasSource) {
+      shared.chargeCreep(priorities, creep)
+    } else {
+      shared.harvestSource(creep)
+    }
+  } else if (creep.memory.isActive) {
+    shared.upgradeController(creep)
+  }
+
+  if (creep.carry.energy === 0) {
+    creep.memory.isActive = false
+  } else if (creep.carry.energy === creep.carryCapacity) {
+    creep.memory.isActive = true
   }
 }
 
-export default Role(states, {
-  initalState: 'SEEKING_SOURCE'
-})
+const upgrader = <Role>{run}
+
+export default upgrader

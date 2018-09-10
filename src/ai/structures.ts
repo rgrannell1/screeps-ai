@@ -176,7 +176,6 @@ structures.findSite = roomName => {
 }
 
 const isEnergySource = item => {
-  return true
   return misc.match(item.structureType, {
     [STRUCTURE_STORAGE] () {
       return item.room.storage.store[RESOURCE_ENERGY] > 0

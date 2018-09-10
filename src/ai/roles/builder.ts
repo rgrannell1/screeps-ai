@@ -9,7 +9,7 @@ import {Role} from '../types'
 
 const run = (creep:Creep):void => {
   if (creep.carry.energy === 0) {
-    shared.chargeCreep([STRUCTURE_STORAGE, STRUCTURE_CONTAINER], creep)
+    shared.chargeCreep([STRUCTURE_STORAGE, STRUCTURE_CONTAINER, STRUCTURE_SPAWN], creep)
   } else if (creep.carry.energy === creep.carryCapacity) {
     shared.buildSite(creep)
   }

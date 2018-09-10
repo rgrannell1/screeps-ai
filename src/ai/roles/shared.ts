@@ -89,4 +89,33 @@ shared.signController = (creep:Creep, controller:StructureController, sign:strin
   creep.signController(controller, sign)
 }
 
+shared.upgradeController = (creep:Creep) => {
+  creep.memory.state = 'upgrade_controller'
+
+  const controller = terrain.findController(creep.room.name)
+
+  const moveCode = creep.moveTo(controller.pos)
+  logger.data('creep move status', 'creep_move', {
+    code: telemetry.moveCode(moveCode),
+    creepName: creep.name,
+    roomName: creep.room.name
+  })
+
+  const upgradeCode = creep.upgradeController(controller)
+}
+
+shared.harvestSource = (creep:Creep):void => {
+  creep.memory.state = 'harvest_source'
+  const [source] = terrain.findSources(creep.room.name)
+
+  const moveCode = creep.moveTo(source.pos)
+  logger.data('creep move status', 'creep_move', {
+    code: telemetry.moveCode(moveCode),
+    creepName: creep.name,
+    roomName: creep.room.name
+  })
+
+  const chargeCode = creep.harvest(source)
+}
+
 export default shared

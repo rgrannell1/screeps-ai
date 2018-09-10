@@ -7,7 +7,7 @@ const lookAtPos = pos => {
 
 terrain.is = {}
 
-terrain.is.plain = pos => {
+terrain.is.plain = (pos:RoomPosition) => {
   const summary = lookAtPos(pos)
   return summary.length === 1 && summary[0].terrain === 'plain'
 }

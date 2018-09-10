@@ -11,7 +11,6 @@ logger.data = (message:string, label:string, meta:object) => {
     tick: Game.time
   }
 
-  console.log(`${label} ${JSON.stringify(data, null, 2)}`)
   telemetry.emit(label, data)
 }
 
