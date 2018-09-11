@@ -1,7 +1,7 @@
 
 const terrain = {} as any
 
-const lookAtPos = pos => {
+const lookAtPos = (pos:RoomPosition) => {
   return pos.look()
 }
 
@@ -91,27 +91,33 @@ terrain.getMap = roomName => {
   return tiles
 }
 
-terrain.getBorder = (centre, dist) => {
+terrain.getBorder = (centre, dist, roomName:string) => {
   const bounds = {
     x: {
       lower: Math.max(0, centre.x - dist),
-      upper: centre.x + dist
+      upper: Math.min(centre.x + dist, 49)
     },
     y: {
       lower: Math.max(0, centre.y - dist),
-      upper: centre.y + dist
+      upper: Math.min(centre.y + dist, 49)
     }
   }
 
-  const tiles = terrain.getBlock(centre, dist)
+  const tiles = []
 
-  return tiles.filter(tile => {
-    const isValid = {
-      x: tile.x === bounds.x.lower || tile.x === bounds.x.upper,
-      y: tile.y === bounds.y.lower || tile.y === bounds.y.upper
+  for (const y of [bounds.y.lower, bounds.y.upper]) {
+    for (let x = bounds.x.lower; x < bounds.x.upper; x++) {
+      tiles.push(new RoomPosition(x, y, roomName))
     }
-    return isValid.x && isValid.y
-  })
+  }
+
+  for (const x of [bounds.x.lower, bounds.x.upper]) {
+    for (let y = bounds.y.lower; y < bounds.y.upper; y++) {
+      tiles.push(new RoomPosition(x, y, roomName))
+    }
+  }
+
+  return tiles
 }
 
 terrain.getExitTiles = roomName => {
@@ -148,7 +154,7 @@ terrain.findSources = roomName => {
 
 
 terrain.getSourceQuality = source => {
-  const surrounding = terrain.getBorder(source.pos, 1)
+  const surrounding = terrain.getBorder(source.pos, 1, source.room.name)
 
   return
   return surrounding.filter(tile => {

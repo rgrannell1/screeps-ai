@@ -75,6 +75,10 @@ shared.buildSite = (creep:Creep) => {
     STRUCTURE_RAMPART
   ])
 
+  if (!site) {
+    return
+  }
+
   const moveCode = creep.moveTo(site.pos)
   const buildCode = creep.build(site)
 
