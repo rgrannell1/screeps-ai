@@ -180,6 +180,9 @@ const isEnergySource = item => {
     [STRUCTURE_STORAGE] () {
       return item.room.storage.store[RESOURCE_ENERGY] > 0
     },
+    [STRUCTURE_CONTAINER] () {
+      return item.store.energy > 0
+    },
     default () {
       return item.energy > 0
     }

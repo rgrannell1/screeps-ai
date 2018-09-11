@@ -22,7 +22,7 @@ shared.chargeCreep = (sinks:string[], creep:Creep):void => {
   const source = structures.findEnergySource(creep.room.name, sinks)
 
   if (!source) {
-    console.log('no energy sources.')
+    console.log('no energy sources to charge creep.')
     return
   }
 

@@ -28,13 +28,42 @@ const sinkPriorities = [
 ] as Array<Priority>
 
 const run = (creep:Creep):void => {
-  if (creep.carry.energy < creep.carryCapacity) {
-    shared.chargeCreep([STRUCTURE_CONTAINER, STRUCTURE_STORAGE], creep)
-  } else if (creep.carry.energy === creep.carryCapacity) {
+  if (!creep.memory.isActive) {
+    shared.chargeCreep([STRUCTURE_CONTAINER, ], creep)
+  } else if (creep.memory.isActive) {
     shared.chargeTarget(sinkPriorities, creep)
+  }
+
+  if (creep.carry.energy === 0) {
+    creep.memory.isActive = false
+  } else if (creep.carry.energy === creep.carryCapacity) {
+    creep.memory.isActive = true
   }
 }
 
 const transferer = <Role>{run}
 
 export default transferer
+
+/*
+
+  const priorities = [STRUCTURE_STORAGE, STRUCTURE_CONTAINER]
+  const hasSource = !!structures.findEnergySource(creep.room.name, priorities)
+
+  if (!creep.memory.isActive) {
+    if (hasSource) {
+      shared.chargeCreep(priorities, creep)
+    } else {
+      shared.harvestSource(creep)
+    }
+  } else if (creep.memory.isActive) {
+    shared.upgradeController(creep)
+  }
+
+  if (creep.carry.energy === 0) {
+    creep.memory.isActive = false
+  } else if (creep.carry.energy === creep.carryCapacity) {
+    creep.memory.isActive = true
+  }
+
+*/
