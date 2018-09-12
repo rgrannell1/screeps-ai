@@ -133,6 +133,21 @@ setQuota.scribe = room => {
   return settings
 }
 
+/*
+
+setQuota.claimer = () => {
+  const settings = {}
+
+  Object.assign(settings, {
+    expected: 0,
+    priority: 4,
+    icon: constants.roles.claimer.icon
+  })
+
+  return settings
+}
+*/
+
 const censusCreeps = room => {
   const creeps = room.find(FIND_MY_CREEPS)
   const table = {}
@@ -180,7 +195,8 @@ const createCreep = (spawn, room, data) => {
     {
       role: data.role,
       icon: data.icon,
-      priority: data.priority
+      priority: data.priority,
+      spawnRoom: spawn.room.name
     }
   ]
 

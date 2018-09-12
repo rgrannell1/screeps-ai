@@ -9,7 +9,7 @@ import terrain from './terrain'
 import logger from './logger'
 import tower from './tower'
 import roles from './roles/index'
-import profiler from 'screeps-profiler'
+import * as profiler from 'screeps-profiler'
 
 const evictCreepCache = () => {
   for (const name in Memory.creeps) {
@@ -70,7 +70,7 @@ const loop = () => {
 
       misc.timer(() => {
         planner.run(roomName)
-        structures.placePlans()
+        structures.placePlans(roomName)
       }, 5)
 
       for (const spawnName of Object.keys(Game.spawns)) {

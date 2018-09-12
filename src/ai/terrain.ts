@@ -2,19 +2,50 @@
 const terrain = {} as any
 
 const lookAtPos = (pos:RoomPosition) => {
-  return pos.look()
+  return pos.look().filter(data => {
+    return data.type !== 'flag'
+  })
+}
+
+terrain.findUnexploredRooms = (roomName:string) => {
+  const nearby = Game.map.describeExits(roomName)
+
+  if (!Memory.externalRooms) {
+    Memory.externalRooms = {}
+  }
+
+  return Object.values(nearby).filter((neighbour:string) => {
+    return !Memory.externalRooms.hasOwnProperty(neighbour)
+  })
+}
+
+terrain.findClaimableRooms = () => {
+  const rooms = []
+
+  for (const [name, data] of Object.entries(Memory.externalRooms)) {
+    if (data.controller && data.controller.owner === '') {
+
+    }
+  }
+
+  return rooms
 }
 
 terrain.is = {}
 
 terrain.is.plain = (pos:RoomPosition) => {
   const summary = lookAtPos(pos)
+
   return summary.length === 1 && summary[0].terrain === 'plain'
 }
 
 terrain.is.wall = pos => {
   const summary = lookAtPos(pos)
   return summary.length === 1 && summary[0].terrain === 'wall'
+}
+
+terrain.placeFlag = (pos:RoomPosition, {name, colour, secondaryColour}) => {
+  pos.createFlag(name, colour, secondaryColour)
 }
 
 terrain.getBlock = (centre, dist) => {
@@ -217,7 +248,7 @@ terrain.findDamagedStructure = roomName => {
   const isRepairable = new Set([STRUCTURE_EXTENSION, STRUCTURE_ROAD])
   return room.find(FIND_STRUCTURES, {
     filter (item) {
-      const shouldFix = isRepairable.has(<string>item.structureType)
+      const shouldFix = isRepairable.has(<any>item.structureType)
       const hasReasonableDamage = (item.hitsMax - item.hits) > REASONABLE_DAMAGE
       const isHalfDead = (item.hits < (7 * (item.hitsMax / 8)))
 
@@ -225,6 +256,8 @@ terrain.findDamagedStructure = roomName => {
     }
   })
 }
+
+
 
 terrain.exists = {}
 

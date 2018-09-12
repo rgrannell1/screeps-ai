@@ -10,19 +10,25 @@ Just another Screeps AI
 ## Roles
 
 - **builder**: Seeks charge & builds nearby construction-sites.
-- **harvester**: Harvest energy from a source, and transfers it to either a nearby container or spawn.
+- **harvester**: Harvest energy from a source, and transfers it to a nearby energy sink.
 - **repairer**: Seeks charge & repairs nearby damaged structures.
 - **scribe**: Updates the room's sign, before self-annihilating.
-- **transferer**: Transfers charge from a container to a spawn.
-- **upgrader**: Either receives charge from a container or harvests a source, then upgrades the controller.
+- **transferer**: Transfers charge from a container to an energy sink.
+- **upgrader**: Either receives charge from an energy-store or harvests a source, then upgrades the controller.
 
 ## Plans
+
+- **Exit-roads**: Build roads to each directional exit
+- **Ring-roads**: Build a ring-road between spawns, sources, and containers
+- **Source-containers**: Build a container by each source
+- **Towers**: Place several defensive / repair towers near the controller
 
 ## Usage
 
 ```bash
 yarn # or npm install
 node pulpfile.js build --watch
+node pulpfile.js upload
 ```
 
 ## License

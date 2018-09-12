@@ -8,7 +8,7 @@ constants.labels = {
   extensionBlockOne: 'extension_block_one'
 }
 
-constants.sign = 'No intelligent life detected.'
+constants.sign = 'No uncaught exceptions in three days.'
 
 constants.costs = {
   move: 50,
@@ -69,6 +69,13 @@ constants.roles = {
     icon: 'S',
     plans: {
       standard: [WORK, MOVE, MOVE]
+    }
+  },
+  claimer: {
+    priority: 4,
+    icon: 'C',
+    plans: {
+      standard: [CLAIM, MOVE, MOVE]
     }
   }
 }

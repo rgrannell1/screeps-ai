@@ -102,6 +102,12 @@ creeps.scribe.body = (capacity:number) => {
   return [WORK, MOVE, MOVE]
 }
 
+creeps.claimer = {}
+
+creeps.claimer.body = (capacity:number) => {
+  return [MOVE, TOUGH, TOUGH, TOUGH]
+}
+
 const hasPriority = (transferers, priority) => {
   return transferers.some(([_, data]) => data.memory.sinkPriority === priority)
 }
@@ -111,15 +117,15 @@ creeps.chooseEnergySink = (creep:Creep, priorityLists:Array<Priority>):Priority 
     throw new Error('priority lists must be provided')
   }
 
-  let priorities = priorityLists.find(list => list.label === 'spawns')
-  const others = Object.entries(Game.creeps)
-    .filter(([name, data]) => {
-      return data.memory.role === creep.memory.role && name !== creep.name
-    })
-
+  let priorities = null
   if (creep.memory.sinkPriority) {
     priorities = priorityLists.find(list => list.label === creep.memory.sinkPriority)
   } else {
+    const others = Object.entries(Game.creeps)
+      .filter(([name, data]) => {
+        return data.memory.role === creep.memory.role && name !== creep.name
+      })
+
     for (const data of priorityLists) {
       if (!hasPriority(others, data.label)) {
         priorities = priorityLists.find(list => list.label === data.label)
@@ -127,12 +133,11 @@ creeps.chooseEnergySink = (creep:Creep, priorityLists:Array<Priority>):Priority 
         break
       }
     }
-    creep.memory.sinkPriority = priorityLists[0].label
-  }
 
-  if (!priorities) {
-    console.log(`missing priorities for creep ${creep.memory.role}/${creep.memory.sinkPriority}`)
-    delete creep.memory.sinkPriority
+    if (!priorities) {
+      creep.memory.sinkPriority = priorityLists[0].label
+      priorities = priorityLists.find(list => list.label === creep.memory.sinkPriority)
+    }
   }
 
   if (!priorities) {
@@ -142,5 +147,10 @@ creeps.chooseEnergySink = (creep:Creep, priorityLists:Array<Priority>):Priority 
   return priorities
 }
 
+
+creeps.findExitPath = (creep:Creep, roomName) => {
+  const exitDir = creep.room.findExitTo(roomName)
+  return creep.pos.findClosestByRange(<any>exitDir)
+}
 
 export default creeps

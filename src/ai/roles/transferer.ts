@@ -29,7 +29,7 @@ const sinkPriorities = [
 
 const run = (creep:Creep):void => {
   if (!creep.memory.isActive) {
-    shared.chargeCreep([STRUCTURE_CONTAINER, ], creep)
+    shared.chargeCreep([STRUCTURE_CONTAINER], creep)
   } else if (creep.memory.isActive) {
     shared.chargeTarget(sinkPriorities, creep)
   }

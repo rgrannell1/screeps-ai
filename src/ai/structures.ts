@@ -28,14 +28,14 @@ const addPlan = (pos, plan) => {
   Memory.plans.push({pos, plan})
 }
 
-structures.placePlans = () => {
+structures.placePlans = (roomName) => {
   if (!Memory.plans) {
     Memory.plans = []
   }
 
   Memory.plans.forEach(plan => {
     try {
-      const pos = new RoomPosition(plan.pos.x, plan.pos.y, plan.pos.roomName)
+      const pos = new RoomPosition(plan.pos.x, plan.pos.y, roomName)
       pos.createConstructionSite(plan.plan.structure)
     } catch (err) {
       throw new Error(`invalid plan ${JSON.stringify(plan)}: ${err.message}`)
@@ -167,7 +167,6 @@ structures.findSite = roomName => {
   for (const siteType of siteTypes) {
     let candidate = sites.find(site => site.structureType === siteType)
     if (candidate) {
-      candidate.siteType = siteType
       return candidate
     }
   }
@@ -210,7 +209,10 @@ const isEnergySink = item => {
       return item.energy < SPAWN_ENERGY_CAPACITY
     },
     [STRUCTURE_STORAGE] () {
-      return item.room.storage.store[RESOURCE_ENERGY] < 10000
+      return item.room.storage.store[RESOURCE_ENERGY] < STORAGE_CAPACITY
+    },
+    [STRUCTURE_CONTAINER] () {
+      return item.store.energy < CONTAINER_CAPACITY
     },
     default () {
       return item.energy < item.energyCapacity

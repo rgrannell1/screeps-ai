@@ -9,20 +9,8 @@ import {Role, Priority} from '../types'
 
 const sinkPriorities = [
   {
-    label: 'spawns',
-    priorities: [STRUCTURE_SPAWN, STRUCTURE_EXTENSION, STRUCTURE_TOWER, STRUCTURE_STORAGE]
-  },
-  {
-    label: 'storage',
-    priorities: [STRUCTURE_STORAGE, STRUCTURE_EXTENSION, STRUCTURE_TOWER, STRUCTURE_SPAWN]
-  },
-  {
-    label: 'extensions',
-    priorities: [STRUCTURE_EXTENSION, STRUCTURE_TOWER, STRUCTURE_SPAWN, STRUCTURE_STORAGE]
-  },
-  {
-    label: 'towers',
-    priorities: [STRUCTURE_TOWER, STRUCTURE_SPAWN, STRUCTURE_EXTENSION, STRUCTURE_STORAGE]
+    label: 'container',
+    priorities: [STRUCTURE_CONTAINER, STRUCTURE_SPAWN, STRUCTURE_EXTENSION, STRUCTURE_STORAGE, STRUCTURE_TOWER]
   }
 ] as Array<Priority>
 

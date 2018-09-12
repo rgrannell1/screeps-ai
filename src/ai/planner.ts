@@ -8,6 +8,7 @@ planner.run = (roomName:string):void => {
   plans.ringRoads(roomName)
 
   const roomLevel = Game.rooms[roomName].controller.level
+
   if (roomLevel >= 1) {
     plans.sourceContainers(roomName)
     plans.towers(roomName)
