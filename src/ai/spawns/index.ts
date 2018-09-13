@@ -3,6 +3,8 @@ import creeps from '../creeps'
 import terrain from '../terrain'
 import structures from '../structures'
 import constants from '../constants'
+import telemetry from '../telemetry'
+import {RoleLabel} from '../types'
 
 const creepRequired = {} as {[str: string]:Function}
 
@@ -67,16 +69,42 @@ creepRequired.scribe = (roomName:string):boolean => {
 
 const spawns = {} as {[str: string]:Function}
 
-const spawner = (roomName:string):void => {
-  const expected = []
-  for (const  [role, notEnough] of Object.entries(creepRequired)) {
-    const shouldBuild = notEnough(roomName)
-    if (shouldBuild) {
-      expected.push([role, shouldBuild])
-    }
+const priorities = [
+  'upgrader',
+  'harvester',
+  'transferer',
+  'builder',
+  'scribe'
+] as Array<RoleLabel>
+
+const createCreep = (roomName:string, spawn:StructureSpawn, role:RoleLabel) => {
+  const room = Game.rooms[roomName]
+
+  const roomCapacity = room.energyAvailable
+  const parts = creeps[role].body(roomCapacity)
+  const creepCost = creeps.getCost(parts)
+
+  if (room.energyAvailable < creepCost) {
+    return
   }
 
-  console.log(JSON.stringify(expected, null, 2))
+  const creepCode = spawn.createCreep(parts, creeps.pickCreepName(role), {
+    role,
+    spawnRoom: spawn.room.name
+  })
+
+  // -- telemetry for spawn.
+
+}
+
+const spawner = (roomName:string, spawn:StructureSpawn):void => {
+  for (const role of priorities) {
+    const shouldBuild = creepRequired[role](roomName)
+    if (shouldBuild) {
+      createCreep(roomName, spawn, role)
+      break
+    }
+  }
 }
 
 export default {spawner}

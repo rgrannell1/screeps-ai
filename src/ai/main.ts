@@ -78,7 +78,7 @@ const loop = () => {
         const spawn = Game.spawns[spawnName]
         spawner(room, spawn)
 
-        spawns.spawner(roomName)
+        spawns.spawner(roomName, spawn)
       }
 
       runTowers(roomName)
