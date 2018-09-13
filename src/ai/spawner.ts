@@ -19,19 +19,6 @@ const setSpawnQuotas = room => {
   return settings
 }
 
-setQuota.defender = () => {
-  const settings = {}
-
-  Object.assign(settings, {
-    expected: 0,
-    priority: constants.roles.defender.priority,
-    body: constants.roles.defender.plans.standard,
-    icon: constants.roles.defender.icon
-  })
-
-  return settings
-}
-
 setQuota.harvester = () => {
   const settings = {}
 
@@ -97,23 +84,6 @@ setQuota.builder = room => {
     expected,
     body: constants.roles.builder.plans.standard,
     icon: constants.roles.builder.icon
-  })
-
-  return settings
-}
-
-setQuota.repairer = room => {
-  const settings = {}
-
-  const STRUCTURE_TO_REPAIRER_RATIO = 50
-  const structureCount = room.find(FIND_STRUCTURES).length
-  const expected = Math.ceil(structureCount / STRUCTURE_TO_REPAIRER_RATIO)
-
-  Object.assign(settings, {
-    expected: 0,
-    priority: constants.roles.repairer.plans.priority,
-    body: constants.roles.repairer.plans.standard,
-    icon: constants.roles.repairer.icon
   })
 
   return settings

@@ -11,3 +11,5 @@ export interface Role {
 export interface Tower {
   run (roomName:string):void
 }
+
+export type RoleLabel = 'builder'| 'claimer'| 'harvester'| 'scribe'| 'transferer'| 'upgrader'

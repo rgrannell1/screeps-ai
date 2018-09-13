@@ -3,6 +3,7 @@ import constants from './constants'
 import misc from './misc'
 import planner from './planner'
 import {spawner} from './spawner'
+import spawns from './spawns/index'
 import structures from './structures'
 import telemetry from './telemetry'
 import terrain from './terrain'
@@ -76,7 +77,10 @@ const loop = () => {
       for (const spawnName of Object.keys(Game.spawns)) {
         const spawn = Game.spawns[spawnName]
         spawner(room, spawn)
+
+        spawns.spawner(roomName)
       }
+
       runTowers(roomName)
       identifyCreeps()
     }

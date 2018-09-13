@@ -7,6 +7,14 @@ Just another Screeps AI
 
 ![Example](readme/example.png)
 
+## Usage
+
+```bash
+yarn # or npm install
+node pulpfile.js build --watch
+node pulpfile.js upload
+```
+
 ## Roles
 
 - **builder**: Seeks charge & builds nearby construction-sites.
@@ -22,14 +30,6 @@ Just another Screeps AI
 - **Ring-roads**: Build a ring-road between spawns, sources, and containers
 - **Source-containers**: Build a container by each source
 - **Towers**: Place several defensive / repair towers near the controller
-
-## Usage
-
-```bash
-yarn # or npm install
-node pulpfile.js build --watch
-node pulpfile.js upload
-```
 
 ## License
 

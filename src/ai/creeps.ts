@@ -1,6 +1,6 @@
 
 import constants from './constants'
-import {Priority} from './types'
+import {Priority, RoleLabel} from './types'
 
 const creeps = {} as any
 
@@ -10,6 +10,12 @@ creeps.exists = (roleName, roomName, count = 1) => {
   return room.find(FIND_CREEPS).filter(creep => {
     creep.memory.roleName === roleName
   }).length >= count
+}
+
+creeps.countYoungCreeps = (role:RoleLabel) => {
+  return Object.values(Game.creeps).filter(creep => {
+    return creep.memory.role === role && creep.ticksToLive > constants.limits.endOfYouth
+  }).length
 }
 
 creeps.pickCreepName = (role:string) => {

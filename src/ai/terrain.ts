@@ -22,11 +22,14 @@ terrain.findUnexploredRooms = (roomName:string) => {
 terrain.findClaimableRooms = () => {
   const rooms = []
 
+/*
   for (const [name, data] of Object.entries(Memory.externalRooms)) {
     if (data.controller && data.controller.owner === '') {
 
     }
   }
+
+*/
 
   return rooms
 }
