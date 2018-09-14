@@ -3,7 +3,6 @@ import blessed from './blessed'
 import constants from './constants'
 import logger from './logger'
 import misc from './misc'
-import {censusCreeps} from './spawner'
 
 const telemetry = {} as any
 
@@ -30,8 +29,7 @@ telemetry.logGameState = (roomName:string) => {
     room_name: roomName,
     energy_available: room.energyAvailable,
     energy_capacity_available: room.energyCapacityAvailable,
-    creep_count: Object.keys(Game.creeps).length,
-    role_counts: censusCreeps(room)
+    creep_count: Object.keys(Game.creeps).length
   })
 }
 

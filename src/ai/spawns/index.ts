@@ -4,28 +4,41 @@ import terrain from '../terrain'
 import structures from '../structures'
 import constants from '../constants'
 import telemetry from '../telemetry'
-import {RoleLabel} from '../types'
+import blessed from '../blessed'
+import {RoleLabel, SpawnOrder} from '../types'
 
 const creepRequired = {} as {[str: string]:Function}
 
-creepRequired.harvester = (roomName:string):boolean => {
+creepRequired.harvester = (roomName:string):SpawnOrder => {
   const counts = {
     young: creeps.countYoungCreeps('harvester'),
     source: terrain.findSources(roomName).length
   }
 
-  return counts.young < counts.source
+  return {
+    role: 'harvester',
+    expected: counts.source,
+    youngCount: counts.young,
+    isRequired: counts.young < counts.source
+  }
 }
 
-creepRequired.upgrader = (roomName:string):boolean => {
+creepRequired.upgrader = (roomName:string):SpawnOrder => {
   const counts = {
     young: creeps.countYoungCreeps('upgrader')
   }
 
-  return counts.young < 3
+  const expected = 3
+
+  return {
+    role: 'upgrader',
+    expected,
+    youngCount: counts.young,
+    isRequired: counts.young < 3
+  }
 }
 
-creepRequired.transferer = (roomName:string):boolean => {
+creepRequired.transferer = (roomName:string):SpawnOrder => {
   const counts = {
     young: creeps.countYoungCreeps('upgrader'),
     containers: structures.container.findAll(roomName),
@@ -33,10 +46,15 @@ creepRequired.transferer = (roomName:string):boolean => {
   }
 
   const expected = 1 + Math.floor(counts.containers.length + (counts.towers.length / 2))
-  return counts.young < expected
+  return {
+    role: 'transferer',
+    expected,
+    youngCount: counts.young,
+    isRequired: counts.young < expected
+  }
 }
 
-creepRequired.builder = (roomName:string):boolean => {
+creepRequired.builder = (roomName:string):SpawnOrder => {
   const room = Game.rooms[roomName]
   const counts = {
     young: creeps.countYoungCreeps('builder')
@@ -55,16 +73,28 @@ creepRequired.builder = (roomName:string):boolean => {
     Math.ceil(siteCount / SITE_TO_BUILDER_RATIO),
     Math.ceil(totalRequiredEnergy / ENERGY_TO_BUILDER_RATIO))
 
-  return counts.young < expected
+  return {
+    role: 'builder',
+    expected,
+    youngCount: counts.young,
+    isRequired: counts.young < expected
+  }
 }
 
-creepRequired.scribe = (roomName:string):boolean => {
+creepRequired.scribe = (roomName:string):SpawnOrder => {
   const room = Game.rooms[roomName]
   const counts = {
     young: creeps.countYoungCreeps('builder')
   }
 
-  return counts.young === 0 && room.controller.sign.text !== constants.sign
+  const isRequired = counts.young === 0 && room.controller.sign.text !== constants.sign
+
+  return {
+    role: 'scribe',
+    youngCount: counts.young,
+    expected: isRequired ? 1: 0,
+    isRequired
+  }
 }
 
 const spawns = {} as {[str: string]:Function}
@@ -77,31 +107,41 @@ const priorities = [
   'scribe'
 ] as Array<RoleLabel>
 
-const createCreep = (roomName:string, spawn:StructureSpawn, role:RoleLabel) => {
+const createCreep = (roomName:string, spawn:StructureSpawn, spawnOrder:SpawnOrder) => {
   const room = Game.rooms[roomName]
 
   const roomCapacity = room.energyAvailable
-  const parts = creeps[role].body(roomCapacity)
+
+  const parts = creeps[spawnOrder.role].body(roomCapacity)
   const creepCost = creeps.getCost(parts)
 
   if (room.energyAvailable < creepCost) {
     return
   }
 
-  const creepCode = spawn.createCreep(parts, creeps.pickCreepName(role), {
-    role,
+  const creepCode = spawn.createCreep(parts, creeps.pickCreepName(spawnOrder.role), {
+    role: spawnOrder.role,
     spawnRoom: spawn.room.name
   })
+}
 
-  // -- telemetry for spawn.
+const reportProgress = (roomName:string, spawn:StructureSpawn, spawnOrder:SpawnOrder):void => {
+  if (Game.time % 5 !== 0) {
+    return
+  }
 
+  const room = Game.rooms[roomName]
+  const message = `[ ${room.energyAvailable} / 10000 towards ${spawnOrder.role} (${spawnOrder.youngCount} of ${spawnOrder.expected}) ]`
+
+  console.log(blessed.blue(blessed.right(message)))
 }
 
 const spawner = (roomName:string, spawn:StructureSpawn):void => {
   for (const role of priorities) {
-    const shouldBuild = creepRequired[role](roomName)
-    if (shouldBuild) {
-      createCreep(roomName, spawn, role)
+    const spawnOrder = creepRequired[role](roomName)
+    if (spawnOrder.isRequired) {
+      reportProgress(roomName, spawn, spawnOrder)
+      createCreep(roomName, spawn, spawnOrder)
       break
     }
   }

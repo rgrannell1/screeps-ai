@@ -2,7 +2,6 @@
 import constants from './constants'
 import misc from './misc'
 import planner from './planner'
-import {spawner} from './spawner'
 import spawns from './spawns/index'
 import structures from './structures'
 import telemetry from './telemetry'
@@ -75,10 +74,7 @@ const loop = () => {
       }, 5)
 
       for (const spawnName of Object.keys(Game.spawns)) {
-        const spawn = Game.spawns[spawnName]
-        spawner(room, spawn)
-
-        spawns.spawner(roomName, spawn)
+        spawns.spawner(roomName, Game.spawns[spawnName])
       }
 
       runTowers(roomName)
