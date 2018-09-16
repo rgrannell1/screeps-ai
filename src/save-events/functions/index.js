@@ -1,4 +1,5 @@
 
+const uuidv4 = require('uuid/v4')
 const admin = require('firebase-admin')
 const functions = require('firebase-functions')
 const {ScreepsAPI} = require('screeps-api')
@@ -18,7 +19,10 @@ function writeResults (db, res, writeable) {
     throw new Error('non-array writeable provided')
   }
 
-  db.push(writeable).then(() => {
+  const setteable = {}
+  writeable.forEach(datum => setteable[uuidv4()] = datum)
+
+  db.set(setteable).then(() => {
     res.send(`Wrote ${writeable.length} results`)
   })
 }
