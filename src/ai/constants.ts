@@ -87,7 +87,7 @@ constants.events = {
 }
 
 constants.limits = {
-  events: 1e3,
+  events: 1e6,
   endOfYouth: 200
 }
 

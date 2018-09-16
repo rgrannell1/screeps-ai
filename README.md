@@ -15,6 +15,7 @@ yarn # or npm install
 node pulpfile.js build [--watch]
 node pulpfile.js console
 node pulpfile.js deploy-function
+node pulpfile.js index-events
 node pulpfile.js lint
 node pulpfile.js upload
 ```

@@ -1,6 +1,5 @@
 
 import misc from '../misc'
-import middleware from './middleware'
 import blessed from '../blessed'
 import creeps from '../creeps'
 import terrain from '../terrain'

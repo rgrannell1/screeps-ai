@@ -64,9 +64,7 @@ const loop = () => {
     for (const roomName of Object.keys(Game.rooms)) {
       const room = Game.rooms[roomName]
 
-      misc.timer(() => {
-        telemetry.logGameState(roomName)
-      }, 10)
+      telemetry.logGameState(roomName)
 
       misc.timer(() => {
         planner.run(roomName)
