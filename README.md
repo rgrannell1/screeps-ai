@@ -15,6 +15,7 @@ yarn # or npm install
 node pulpfile.js build [--watch]
 node pulpfile.js console
 node pulpfile.js deploy-function
+node pulpfile.js download-events
 node pulpfile.js index-events
 node pulpfile.js lint
 node pulpfile.js upload
@@ -35,6 +36,8 @@ node pulpfile.js upload
 - **Ring-roads**: Build a ring-road between spawns, sources, and containers
 - **Source-containers**: Build a container by each source
 - **Towers**: Place several defensive / repair towers near the controller
+
+## Visualisations
 
 ## License
 

@@ -15,17 +15,20 @@ admin.initializeApp(config)
 async function main () {
   const database = admin.database().ref('events')
   const lk = new loki(path.join(__dirname, '../../data/screeps-events.json'))
-  const lkEvents = lk.addCollection('events')
 
-  const snapshot = await database.once('value')
-  const events = snapshot.val()
+  lk.loadDatabase({}, async () => {
+    const lkEvents = lk.getCollection('events')
 
-  Object.entries(events).forEach(([id, data]) => {
-    lkEvents.insert(Object.assign({}, data, {id}))
+    const snapshot = await database.once('value')
+    const events = snapshot.val()
+
+    Object.entries(events).forEach(([id, data]) => {
+      lkEvents.insert(Object.assign({}, data, {id}))
+    })
+
+    lk.saveDatabase()
+    process.exit(0)
   })
-
-  lk.saveDatabase()
-  process.exit(0)
 }
 
 module.exports = main

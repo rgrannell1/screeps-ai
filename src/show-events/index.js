@@ -11,28 +11,39 @@ elasticsearch.setEventMapping = async function () {
     aliases: {},
     settings: {},
     mappings: {
-      _default_: {
-        properties: {
-          id: {
-            type: 'keyword'
-          },
-          label: {
-            type: 'keyword'
-          },
-          time: {
-            type: 'date',
-            format: 'epoch_millis'
-          },
-          data: {
-            type: 'object',
-            properties: {
+      _default_: {}
+    }
+  }
 
+  mapping.mapping._default_.properties = {
+    id: {
+      type: 'keyword'
+    },
+    label: {
+      type: 'keyword'
+    },
+    time: {
+      type: 'date',
+      format: 'epoch_millis'
+    },
+    data: {
+      type: 'object',
+      properties: {
+        meta: {
+          type: 'object',
+          properties: {
+            code: {
+              type: 'keyword'
+            },
+            creep_name: {
+              type: 'keyword'
             }
           }
         }
       }
     }
   }
+
 
   return request.put(`http://localhost:9200/_template/events`, {
     json: mapping

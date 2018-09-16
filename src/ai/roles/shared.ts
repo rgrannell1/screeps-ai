@@ -51,8 +51,8 @@ shared.chargeCreep = (sinks:string[], creep:Creep):void => {
   /*
   logger.data('creep move status', 'creep_move', {
     code: telemetry.moveCode(moveCode),
-    creepName: creep.name,
-    roomName: creep.room.name
+    creep_name: creep.name,
+    room_name: creep.room.name
   })
   */
 
@@ -62,8 +62,8 @@ shared.chargeCreep = (sinks:string[], creep:Creep):void => {
 
   logger.data('creep withdraw status', 'creep_withdraw', {
     code: telemetry.withdrawCode(chargeCode),
-    creepName: creep.name,
-    roomName: creep.room.name
+    creep_name: creep.name,
+    room_name: creep.room.name
   })
   */
 }
@@ -82,8 +82,8 @@ shared.chargeTarget = (sinkPriorities:Array<Priority>, creep:any):void => {
   /*
   logger.data('creep move status', 'creep_move', {
     code: telemetry.moveCode(moveCode),
-    creepName: creep.name,
-    roomName: creep.room.name
+    creep_name: creep.name,
+    room_name: creep.room.name
   })
   */
 
@@ -129,8 +129,8 @@ shared.upgradeController = (creep:Creep) => {
   /*
   logger.data('creep move status', 'creep_move', {
     code: telemetry.moveCode(moveCode),
-    creepName: creep.name,
-    roomName: creep.room.name
+    creep_name: creep.name,
+    room_name: creep.room.name
   })
   */
   const upgradeCode = creep.upgradeController(controller)
@@ -144,8 +144,8 @@ shared.harvestSource = (creep:Creep):void => {
   /*
   logger.data('creep move status', 'creep_move', {
     code: telemetry.moveCode(moveCode),
-    creepName: creep.name,
-    roomName: creep.room.name
+    creep_name: creep.name,
+    room_name: creep.room.name
   })
   */
 
