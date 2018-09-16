@@ -3,7 +3,9 @@ const loki = require('lokijs')
 const path = require('path')
 const request = require('request-promise-native')
 
-async function setMapping () {
+const elasticsearch = {}
+
+elasticsearch.setEventMapping = async function () {
   const mapping = {
     template: 'events',
     aliases: {},
@@ -44,7 +46,7 @@ async function main (emitter, event) {
     const lkEvents = lk.getCollection('events')
     const results = lkEvents.find()
 
-    await setMapping()
+    await elasticsearch.setEventMapping()
     emitter.emit(event, `writing ${results.length} events to ElasticSearch.`)
 
     for (const doc of results) {

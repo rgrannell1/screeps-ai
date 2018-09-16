@@ -12,7 +12,7 @@ command.cli = `
 Usage:
   script index-events
 Description:
-  index-events
+  Upload events from LokiJs file to an ElasticSearch server
 `
 
 command.task = async (args, emitter) => {
