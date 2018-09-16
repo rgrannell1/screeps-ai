@@ -1,18 +1,18 @@
 
 const path = require('path')
 const pulp = require('@rgrannell/pulp')
-const client = require('firebase-tools')
+const showEvents = require('../../src/show-events/index.js')
 
 const command = {
-  name: 'deploy-function',
+  name: 'index-events',
   dependencies: []
 }
 
 command.cli = `
 Usage:
-  script deploy-function
+  script index-events
 Description:
-  deploy-function
+  index-events
 `
 
 command.task = async (args, emitter) => {
@@ -20,10 +20,7 @@ command.task = async (args, emitter) => {
 
   emitter.emit(pulp.events.subTaskProgress, `starting to deploy "${fpath}"`)
 
-  await client.deploy({
-    project: 'screeps-ai',
-    cwd: fpath
-  })
+  await showEvents(emitter, pulp.events.subTaskProgress)
 
   emitter.emit(pulp.events.subTaskProgress, `finished deploying "${fpath}"!`)
 }

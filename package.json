@@ -10,6 +10,7 @@
     "@rgrannell/pulp": "8.2.0",
     "@types/screeps": "2.4.1",
     "chai": "4.1.2",
+    "chai-json-schema": "1.5.0",
     "cjs-to-es6": "1.1.1",
     "eslint-config-screeps": "1.1.1",
     "eslint-config-standard": "11.0.0",

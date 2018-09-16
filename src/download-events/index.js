@@ -25,6 +25,7 @@ async function main () {
   })
 
   lk.saveDatabase()
+  process.exit(0)
 }
 
 main()
