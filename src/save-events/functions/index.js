@@ -4,17 +4,21 @@ const functions = require('firebase-functions')
 const {ScreepsAPI} = require('screeps-api')
 const constants = require('./constants')
 
-function processEvents (events) {
+function processEvents (memory) {
+  const events = memory.data.events
+
   if (!events) {
-    console.log('memory.events missing.')
+    console.log(`memory.events missing from ${Object.keys(memory.data)}`)
   }
   return Promise.resolve(events)
 }
 
 function writeResults (db, res, writeable) {
-  const content = {}
+  if (!Array.isArray(writeable)) {
+    throw new Error('non-array writeable provided')
+  }
 
-  db.push(content).then(() => {
+  db.push(writeable).then(() => {
     res.send(`Wrote ${writeable.length} results`)
   })
 }
@@ -26,13 +30,13 @@ function storeEvents (db, res) {
 
   api.memory.get(undefined, constants.shard)
     .then(memory => {
-      return processEvents(memory.events)
+      return processEvents(memory)
     })
     .then(data => {
       return writeResults(db, res, data)
     })
     .then(
-      err => console.log(error),
+      err => console.log(err),
       () => api.memory.set('events', [])
     )
 }

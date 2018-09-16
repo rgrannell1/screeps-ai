@@ -1,6 +1,8 @@
 
-const constants = {
-  shard: 'shard2'
-}
+const credentials = require('./credentials')
 
-Object.assign(constants, require('credentials'))
+const constants = Object.assign({
+  shard: 'shard2'
+}, credentials)
+
+module.exports = constants
