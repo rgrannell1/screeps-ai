@@ -9,3 +9,6 @@ yarn-error.log
 .screeps.yaml
 .screeps-multimeter.history
 screeps-multimeter.json
+
+src/save-events/credentials.js
+src/save-events/functions/node_modules/

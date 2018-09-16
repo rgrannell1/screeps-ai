@@ -45,7 +45,7 @@ creepRequired.transferer = (roomName:string):SpawnOrder => {
     towers: structures.tower.findAll(roomName)
   }
 
-  const expected = 1 + Math.floor(counts.containers.length + (counts.towers.length / 2))
+  const expected = 1 + Math.floor(counts.containers.length + (counts.towers.length / 4))
   return {
     role: 'transferer',
     expected,
@@ -131,7 +131,12 @@ const reportProgress = (roomName:string, spawn:StructureSpawn, spawnOrder:SpawnO
   }
 
   const room = Game.rooms[roomName]
-  const message = `[ ${room.energyAvailable} / 10000 towards ${spawnOrder.role} (${spawnOrder.youngCount} of ${spawnOrder.expected}) ]`
+  const roomCapacity = room.energyAvailable
+
+  const parts = creeps[spawnOrder.role].body(roomCapacity)
+  const creepCost = creeps.getCost(parts)
+
+  const message = `[ ${room.energyAvailable} / ${creepCost} towards ${spawnOrder.role} (${spawnOrder.youngCount} of ${spawnOrder.expected}) ]`
 
   console.log(blessed.blue(blessed.right(message)))
 }

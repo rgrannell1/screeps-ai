@@ -88,7 +88,7 @@ constants.events = {
 
 constants.limits = {
   events: 1e3,
-  endOfYouth: 300
+  endOfYouth: 200
 }
 
 export default constants
