@@ -21,6 +21,17 @@ node pulpfile.js lint
 node pulpfile.js upload
 ```
 
+## Files & Folders
+
+- `build/commands`: a list of commands used by pulp, this project's build-system.
+- `data`: contains data pulled from `screeps`.
+- `dist`: code uploaded to screeps.
+- `readme`: readme assets.
+- `src/ai`: files used for screeps directly.
+- `src/download-events`: download events from RealTime Database to a local Loki database.
+- `src/save-events`: a Google Function that pulls data from Screeps into a RealTime Database.
+- `src/show-events`: runs ElasticSearch / Kibana by `docker-compose.yml`, and pulls information into ElasticSearch.
+
 ## Roles
 
 - **builder**: Seeks charge & builds nearby construction-sites.

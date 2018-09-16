@@ -15,7 +15,7 @@ elasticsearch.setEventMapping = async function () {
     }
   }
 
-  mapping.mapping._default_.properties = {
+  mapping.mappings._default_.properties = {
     id: {
       type: 'keyword'
     },
