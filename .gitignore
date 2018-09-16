@@ -14,3 +14,5 @@ src/save-events/functions/credentials.js
 src/save-events/functions/node_modules/
 
 src/download-events/node_modules/
+
+src/show-events/node_modules/
