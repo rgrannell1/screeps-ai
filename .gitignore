@@ -10,5 +10,5 @@ yarn-error.log
 .screeps-multimeter.history
 screeps-multimeter.json
 
-src/save-events/credentials.js
+src/save-events/functions/credentials.js
 src/save-events/functions/node_modules/
