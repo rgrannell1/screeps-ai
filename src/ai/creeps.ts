@@ -50,7 +50,8 @@ creeps.findTargetEnemy = (creepName:string) => {
 const createBodyPlan = (initial, extension, capacity) => {
   const currentCost = creeps.getCost(initial)
 
-  const upperLimit = Math.max(300, capacity / 2)
+  const ADJUSTMENT_FACTOR = 1
+  const upperLimit = Math.max(300, ADJUSTMENT_FACTOR * capacity)
 
   let parts = initial
   while (true) {

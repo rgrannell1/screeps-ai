@@ -28,19 +28,34 @@ creepRequired.upgrader = (roomName:string):SpawnOrder => {
     young: creeps.countYoungCreeps('upgrader')
   }
 
-  const expected = 3
+  const expected = 2
 
   return {
     role: 'upgrader',
     expected,
     youngCount: counts.young,
-    isRequired: counts.young < 3
+    isRequired: counts.young < expected
+  }
+}
+
+creepRequired.repairer = (roomName:string):SpawnOrder => {
+  const counts = {
+    young: creeps.countYoungCreeps('repairer')
+  }
+
+  const expected = 1
+
+  return {
+    role: 'repairer',
+    expected,
+    youngCount: counts.young,
+    isRequired: counts.young < expected
   }
 }
 
 creepRequired.transferer = (roomName:string):SpawnOrder => {
   const counts = {
-    young: creeps.countYoungCreeps('upgrader'),
+    young: creeps.countYoungCreeps('transferer'),
     containers: structures.container.findAll(roomName),
     towers: structures.tower.findAll(roomName)
   }
@@ -84,7 +99,7 @@ creepRequired.builder = (roomName:string):SpawnOrder => {
 creepRequired.scribe = (roomName:string):SpawnOrder => {
   const room = Game.rooms[roomName]
   const counts = {
-    young: creeps.countYoungCreeps('builder')
+    young: creeps.countYoungCreeps('scribe')
   }
 
   const isRequired = counts.young === 0 && room.controller.sign.text !== constants.sign
@@ -99,10 +114,12 @@ creepRequired.scribe = (roomName:string):SpawnOrder => {
 
 const spawns = {} as {[str: string]:Function}
 
+// -- todo; reorder.
 const priorities = [
   'upgrader',
   'harvester',
   'transferer',
+  'repairer',
   'builder',
   'scribe'
 ] as Array<RoleLabel>

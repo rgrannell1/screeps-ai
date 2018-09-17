@@ -43,9 +43,13 @@ shared.chargeCreep = (sinks:string[], creep:Creep):void => {
   const source = structures.findEnergySource(creep.room.name, sinks)
 
   if (!source) {
+    if (creep.memory.previousChargeSource) {
+      creep.moveTo(creep.memory.previousChargeSource.pos)
+    }
     return
   }
 
+  creep.memory.previousChargeSource = source.value
   const moveCode = creep.moveTo(source.value.pos)
 
   /*
@@ -90,6 +94,23 @@ shared.chargeTarget = (sinkPriorities:Array<Priority>, creep:any):void => {
   const transferCode = creep.transfer(target.value, RESOURCE_ENERGY)
 }
 
+shared.repairTarget = (creep:Creep) => {
+  creep.memory.state = 'repair_target'
+  const damaged = structures.findDamagedStructure(creep.room.name, [
+    STRUCTURE_CONTAINER,
+    STRUCTURE_ROAD,
+    STRUCTURE_WALL,
+    STRUCTURE_RAMPART
+  ])
+
+  if (!damaged) {
+    return
+  }
+
+  const moveCode = creep.moveTo(damaged.pos)
+  const repairCode = creep.repair(damaged)
+}
+
 shared.buildSite = (creep:Creep) => {
   creep.memory.state = 'build_site'
 
@@ -108,8 +129,6 @@ shared.buildSite = (creep:Creep) => {
 
   const moveCode = creep.moveTo(site.pos)
   const buildCode = creep.build(site)
-
-  console.log([moveCode, buildCode])
 }
 
 shared.killCreep = (creep:Creep) => {

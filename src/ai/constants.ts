@@ -58,7 +58,7 @@ constants.roles = {
     }
   },
   repairer: {
-    priority: 5,
+    priority: 4,
     icon: 'R',
     plans: {
       standard: [CARRY, CARRY, WORK, MOVE, MOVE]
@@ -87,7 +87,7 @@ constants.events = {
 }
 
 constants.limits = {
-  events: 1e6,
+  events: 8000,
   endOfYouth: 200
 }
 

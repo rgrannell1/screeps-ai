@@ -14,7 +14,7 @@ const run = (roomName:string) => {
       }
     })
 
-    const canRepair = tower.energy > 0.5 * tower.energyCapacity
+    const canRepair = tower.energy > 0.85 * tower.energyCapacity
 
     if (nearbyHostile) {
       misc.match(tower.attack(nearbyHostile), {

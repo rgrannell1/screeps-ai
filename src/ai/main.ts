@@ -41,12 +41,6 @@ const identifyCreeps = () => {
   }
 }
 
-const quantifyResources = (roomName:string) => {
-  for (const source of terrain.findSources(roomName)) {
-    const quality = terrain.getSourceQuality(source)
-  }
-}
-
 profiler.enable()
 
 declare global {
@@ -55,11 +49,23 @@ declare global {
   }
 }
 
+const state = {
+  run: false
+}
+
+const onStart = () => {
+  logger.data('code_updated', 'code_updated', {})
+  state.run = true
+}
+
 const loop = () => {
   profiler.wrap(() => {
-
     evictCreepCache()
     applyRoles()
+
+    if (!state.run) {
+      onStart()
+    }
 
     for (const roomName of Object.keys(Game.rooms)) {
       const room = Game.rooms[roomName]
