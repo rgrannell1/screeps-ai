@@ -5,7 +5,7 @@ const showEvents = require('../../src/show-events/index.js')
 
 const command = {
   name: 'index-events',
-  dependencies: []
+  dependencies: ['save-events', 'download-events']
 }
 
 command.cli = `

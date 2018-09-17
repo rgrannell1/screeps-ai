@@ -11,10 +11,11 @@ const config = {
   storageBucket: "bucket.appspot.com"
 }
 
-admin.initializeApp(config)
+const app = admin.initializeApp(config)
 
 async function main () {
-  const database = admin.database().ref('events')
+  const db = admin.database()
+  const ref = db.ref('events')
   const fpath = path.join(__dirname, '../../data/screeps-events.json')
 
   try {
@@ -24,7 +25,7 @@ async function main () {
   const lk = new loki(fpath)
 
   const lkEvents = lk.addCollection('events')
-  const snapshot = await database.once('value')
+  const snapshot = await ref.once('value')
   const events = snapshot.val()
 
   Object.entries(events).forEach(([id, data]) => {
@@ -32,9 +33,12 @@ async function main () {
   })
 
   lk.saveDatabase()
-  setTimeout(() => {
-    process.exit(0)
-  }, 2000)
+  await app.delete()
+
+  // -- because loki is terrible.
+  return new Promise(resolve => {
+    setTimeout(resolve, 500)
+  })
 }
 
 module.exports = main

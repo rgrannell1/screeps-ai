@@ -17,7 +17,7 @@ telemetry.emit = (label:string, data:object) => {
     time: Date.now()
   })
 
-  if (Memory.events.length > 100 * 1000) {
+  if (Memory.events.length > constants.limits.events) {
     console.log('too full!')
     Memory.events = []
   }
@@ -27,11 +27,19 @@ telemetry.logGameState = (roomName:string) => {
   const room = Game.rooms[roomName]
   const towers = structures.tower.findAll(roomName)
   const containers = structures.container.findAll(roomName)
+  const controller = Game.rooms[roomName].controller
 
   logger.data('room_state', 'room_state', {
     room_name: roomName,
     energy_available: room.energyAvailable,
     energy_capacity_available: room.energyCapacityAvailable,
+    rcl: {
+      level: controller.level,
+      progress: controller.progress
+    },
+    gcl: {
+      level: Game.gcl.level
+    },
     towers: {
       available: towers.reduce((sum, current) => sum + current.energy, 0),
       capacity: towers.reduce((sum, current) => sum + current.energyCapacity, 0)
