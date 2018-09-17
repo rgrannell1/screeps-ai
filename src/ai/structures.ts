@@ -77,12 +77,12 @@ structures.container.place = (pos, metadata) => {
   addPlan(pos, {...metadata, structure: STRUCTURE_CONTAINER})
 }
 
-structures.container.findAll = roomName => {
+structures.container.findAll = (roomName:string):Array<StructureContainer> => {
   return Game.rooms[roomName].find(FIND_STRUCTURES, {
     filter (item) {
       return item.structureType === STRUCTURE_CONTAINER
     }
-  })
+  }) as Array<StructureContainer>
 }
 
 structures.container.findChargeable = roomName => {
@@ -113,12 +113,12 @@ structures.tower.place = (pos, metadata) => {
   addPlan(pos, {...metadata, structure: STRUCTURE_TOWER})
 }
 
-structures.tower.findAll = roomName => {
+structures.tower.findAll = (roomName:string):Array<StructureTower> => {
   return Game.rooms[roomName].find(FIND_MY_STRUCTURES, {
     filter (item) {
       return item.structureType === STRUCTURE_TOWER
     }
-  })
+  }) as Array<StructureTower>
 }
 
 structures.highway.place = ({room, source, target}, metadata) => {

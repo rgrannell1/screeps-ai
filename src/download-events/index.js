@@ -32,6 +32,9 @@ async function main () {
   })
 
   lk.saveDatabase()
+  setTimeout(() => {
+    process.exit(0)
+  }, 2000)
 }
 
 module.exports = main

@@ -18,7 +18,7 @@ creeps.countYoungCreeps = (role:RoleLabel) => {
   }).length
 }
 
-creeps.pickCreepName = (role:string) => {
+creeps.pickCreepName = (role:string):string => {
   if (!Memory.roles) {
     Memory.roles = {}
   }

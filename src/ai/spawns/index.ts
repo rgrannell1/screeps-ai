@@ -19,6 +19,7 @@ creepRequired.harvester = (roomName:string):SpawnOrder => {
     role: 'harvester',
     expected: counts.source,
     youngCount: counts.young,
+    sufficientCount: 1,
     isRequired: counts.young < counts.source
   }
 }
@@ -28,12 +29,13 @@ creepRequired.upgrader = (roomName:string):SpawnOrder => {
     young: creeps.countYoungCreeps('upgrader')
   }
 
-  const expected = 2
+  const expected = 3
 
   return {
     role: 'upgrader',
     expected,
     youngCount: counts.young,
+    sufficientCount: 3,
     isRequired: counts.young < expected
   }
 }
@@ -49,6 +51,7 @@ creepRequired.repairer = (roomName:string):SpawnOrder => {
     role: 'repairer',
     expected,
     youngCount: counts.young,
+    sufficientCount: 1,
     isRequired: counts.young < expected
   }
 }
@@ -65,6 +68,7 @@ creepRequired.transferer = (roomName:string):SpawnOrder => {
     role: 'transferer',
     expected,
     youngCount: counts.young,
+    sufficientCount: 1,
     isRequired: counts.young < expected
   }
 }
@@ -92,6 +96,7 @@ creepRequired.builder = (roomName:string):SpawnOrder => {
     role: 'builder',
     expected,
     youngCount: counts.young,
+    sufficientCount: 1,
     isRequired: counts.young < expected
   }
 }
@@ -107,6 +112,7 @@ creepRequired.scribe = (roomName:string):SpawnOrder => {
   return {
     role: 'scribe',
     youngCount: counts.young,
+    sufficientCount: 1,
     expected: isRequired ? 1: 0,
     isRequired
   }
@@ -161,7 +167,7 @@ const reportProgress = (roomName:string, spawn:StructureSpawn, spawnOrder:SpawnO
 const spawner = (roomName:string, spawn:StructureSpawn):void => {
   const missingRole = priorities.find(role => {
     const spawnOrder = creepRequired[role](roomName)
-    return spawnOrder.isRequired && spawnOrder.youngCount === 0
+    return spawnOrder.isRequired && spawnOrder.youngCount < spawnOrder.sufficientCount
   })
 
   let queued = missingRole

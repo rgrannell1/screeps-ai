@@ -2,8 +2,7 @@
   "compilerOptions": {
     "outDir": "./tsdist",
     "allowJs": true,
-    "target": "es2017",
-    "noImplicitAny": true
+    "target": "es2017"
   },
   "include": [
     "./src/**/*"

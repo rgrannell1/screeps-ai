@@ -1,6 +1,7 @@
 
 import blessed from './blessed'
 import constants from './constants'
+import structures from './structures'
 import logger from './logger'
 import misc from './misc'
 
@@ -24,11 +25,21 @@ telemetry.emit = (label:string, data:object) => {
 
 telemetry.logGameState = (roomName:string) => {
   const room = Game.rooms[roomName]
+  const towers = structures.tower.findAll(roomName)
+  const containers = structures.container.findAll(roomName)
 
   logger.data('room_state', 'room_state', {
     room_name: roomName,
     energy_available: room.energyAvailable,
     energy_capacity_available: room.energyCapacityAvailable,
+    towers: {
+      available: towers.reduce((sum, current) => sum + current.energy, 0),
+      capacity: towers.reduce((sum, current) => sum + current.energyCapacity, 0)
+    },
+    containers: {
+      available: containers.reduce((sum, current) => sum + current.store.energy, 0),
+      capacity: containers.reduce((sum, current) => sum + current.store.energyCapacity, 0)
+    },
     creep_count: Object.keys(Game.creeps).length
   })
 }

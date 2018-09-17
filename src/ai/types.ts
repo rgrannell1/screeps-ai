@@ -18,5 +18,6 @@ export interface SpawnOrder {
   readonly isRequired: boolean,
   readonly expected: number,
   readonly youngCount: number,
+  readonly sufficientCount: number,
   readonly role: string
 }

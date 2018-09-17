@@ -22,6 +22,9 @@ elasticsearch.setEventMapping = async function () {
     label: {
       type: 'keyword'
     },
+    run_id: {
+      type: 'keyword'
+    },
     time: {
       type: 'date',
       format: 'epoch_millis'
