@@ -35,7 +35,7 @@ const exported = {
 } as any
 
 Object.keys(format).forEach(method => {
-  exported.log[method] = (...args) => {
+  exported.log[method] = (...args:string[]) => {
     console.log(format[method](args))
   }
 })

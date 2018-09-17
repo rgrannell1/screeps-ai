@@ -4,7 +4,7 @@ import {Priority, RoleLabel} from './types'
 
 const creeps = {} as any
 
-creeps.exists = (roleName, roomName, count = 1) => {
+creeps.exists = (roleName:string, roomName:string, count:number = 1) => {
   const room = Game.rooms[roomName]
 
   return room.find(FIND_CREEPS).filter(creep => {
@@ -47,7 +47,7 @@ creeps.findTargetEnemy = (creepName:string) => {
   return nearbyHostile
 }
 
-const createBodyPlan = (initial, extension, capacity) => {
+const createBodyPlan = (initial:string[], extension:string[], capacity:number) => {
   const currentCost = creeps.getCost(initial)
 
   const ADJUSTMENT_FACTOR = 1
@@ -71,53 +71,53 @@ creeps.roles = {}
 
 creeps.harvester = {}
 
-creeps.harvester.body = (capacity:number) => {
+creeps.harvester.body = (capacity:number):string[] => {
   return createBodyPlan([CARRY, CARRY, WORK, MOVE], [WORK, CARRY, MOVE], capacity)
 }
 
 creeps.upgrader = {}
 
-creeps.upgrader.body = (capacity:number) => {
+creeps.upgrader.body = (capacity:number):string[] => {
   return createBodyPlan([CARRY, CARRY, WORK, MOVE, MOVE], [WORK, CARRY, MOVE], capacity)
 }
 
 creeps.defender = {}
 
-creeps.defender.body = (capacity:number) => {
+creeps.defender.body = (capacity:number):string[] => {
   return [ATTACK, ATTACK, MOVE, MOVE, TOUGH, TOUGH]
 }
 
 creeps.transferer = {}
 
-creeps.transferer.body = (capacity:number) => {
+creeps.transferer.body = (capacity:number):string[] => {
   return createBodyPlan([CARRY, CARRY, WORK, MOVE, MOVE], [CARRY, CARRY, MOVE], capacity)
 }
 
 creeps.builder = {}
 
-creeps.builder.body = (capacity:number) => {
+creeps.builder.body = (capacity:number):string[] => {
   return createBodyPlan([CARRY, CARRY, WORK, MOVE, MOVE], [CARRY, CARRY, MOVE], capacity)
 }
 
 creeps.repairer = {}
 
-creeps.repairer.body = (capacity:number) => {
+creeps.repairer.body = (capacity:number):string[] => {
   return createBodyPlan([CARRY, CARRY, WORK, MOVE, MOVE], [CARRY, CARRY, MOVE], capacity)
 }
 
 creeps.scribe = {}
 
-creeps.scribe.body = (capacity:number) => {
+creeps.scribe.body = (capacity:number):string[] => {
   return [WORK, MOVE, MOVE]
 }
 
 creeps.claimer = {}
 
-creeps.claimer.body = (capacity:number) => {
+creeps.claimer.body = (capacity:number):string[] => {
   return [MOVE, TOUGH, TOUGH, TOUGH]
 }
 
-const hasPriority = (transferers, priority) => {
+const hasPriority = (transferers:Array<any>, priority:string):boolean => {
   return transferers.some(([_, data]) => data.memory.sinkPriority === priority)
 }
 
@@ -157,7 +157,7 @@ creeps.chooseEnergySink = (creep:Creep, priorityLists:Array<Priority>):Priority 
 }
 
 
-creeps.findExitPath = (creep:Creep, roomName) => {
+creeps.findExitPath = (creep:Creep, roomName:string):any => {
   const exitDir = creep.room.findExitTo(roomName)
   return creep.pos.findClosestByRange(<any>exitDir)
 }

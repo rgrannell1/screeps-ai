@@ -3,7 +3,7 @@ import constants from './constants'
 
 const misc = {} as any
 
-misc.match = (value, opts) => {
+misc.match = (value:any, opts:any):any => {
   if (opts.hasOwnProperty(value)) {
     return opts[value](value)
   }
@@ -12,7 +12,7 @@ misc.match = (value, opts) => {
   }
 }
 
-misc.timer = (fn:Function, timer: number) => {
+misc.timer = (fn:Function, timer: number):void => {
   if (Game.time % timer === 0) {
     fn()
   }

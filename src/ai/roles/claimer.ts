@@ -19,7 +19,6 @@ const run = (creep:Creep):void => {
   }
 
   shared.findUnexploredRooms(creep)
-
 }
 
 const harvester = <Role>{run}
