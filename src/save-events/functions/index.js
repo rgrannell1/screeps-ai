@@ -45,8 +45,9 @@ function storeEvents (db, res) {
     )
 }
 
+admin.initializeApp()
+
 exports.saveEvents = functions.https.onRequest((req, res) => {
-  admin.initializeApp()
   const db = admin.database().ref('events')
 
   storeEvents(db, res)

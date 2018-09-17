@@ -142,13 +142,28 @@ const reportProgress = (roomName:string, spawn:StructureSpawn, spawnOrder:SpawnO
 }
 
 const spawner = (roomName:string, spawn:StructureSpawn):void => {
-  for (const role of priorities) {
+  const missingRole = priorities.find(role => {
     const spawnOrder = creepRequired[role](roomName)
-    if (spawnOrder.isRequired) {
-      reportProgress(roomName, spawn, spawnOrder)
-      createCreep(roomName, spawn, spawnOrder)
-      break
+    return spawnOrder.isRequired && spawnOrder.youngCount === 0
+  })
+
+  let queued = missingRole
+    ? creepRequired[missingRole](roomName)
+    : null
+
+  if (!queued) {
+    for (const role of priorities) {
+      const spawnOrder = creepRequired[role](roomName)
+      if (spawnOrder.isRequired) {
+        queued = spawnOrder
+        break
+      }
     }
+  }
+
+  if (queued) {
+    reportProgress(roomName, spawn, queued)
+    createCreep(roomName, spawn, queued)
   }
 }
 

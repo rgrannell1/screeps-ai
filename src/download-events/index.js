@@ -1,4 +1,5 @@
 
+const fs = require('fs').promises
 const loki = require('lokijs')
 const path = require('path')
 const admin = require('firebase-admin')
@@ -14,21 +15,23 @@ admin.initializeApp(config)
 
 async function main () {
   const database = admin.database().ref('events')
-  const lk = new loki(path.join(__dirname, '../../data/screeps-events.json'))
+  const fpath = path.join(__dirname, '../../data/screeps-events.json')
 
-  lk.loadDatabase({}, async () => {
-    const lkEvents = lk.getCollection('events')
+  try {
+    await fs.unlink(fpath)
+  } catch (err) {}
 
-    const snapshot = await database.once('value')
-    const events = snapshot.val()
+  const lk = new loki(fpath)
 
-    Object.entries(events).forEach(([id, data]) => {
-      lkEvents.insert(Object.assign({}, data, {id}))
-    })
+  const lkEvents = lk.addCollection('events')
+  const snapshot = await database.once('value')
+  const events = snapshot.val()
 
-    lk.saveDatabase()
-    process.exit(0)
+  Object.entries(events).forEach(([id, data]) => {
+    lkEvents.insert(Object.assign({}, data, {id}))
   })
+
+  lk.saveDatabase()
 }
 
 module.exports = main

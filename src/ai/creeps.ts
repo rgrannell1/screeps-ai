@@ -50,11 +50,13 @@ creeps.findTargetEnemy = (creepName:string) => {
 const createBodyPlan = (initial, extension, capacity) => {
   const currentCost = creeps.getCost(initial)
 
+  const upperLimit = Math.max(300, capacity / 2)
+
   let parts = initial
   while (true) {
     let proposed = extension
 
-    if (creeps.getCost(parts.concat(proposed)) < capacity) {
+    if (creeps.getCost(parts.concat(proposed)) < upperLimit) {
       parts = parts.concat(proposed)
     } else {
       break
