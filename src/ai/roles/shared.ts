@@ -44,12 +44,18 @@ shared.chargeCreep = (sinks:string[], creep:Creep):void => {
 
   if (!source) {
     if (creep.memory.previousChargeSource) {
-      creep.moveTo(creep.memory.previousChargeSource.pos)
+      const oldSource = Game.getObjectById(creep.memory.previousChargeSource)
+
+      if (oldSource) {
+        creep.moveTo(oldSource.pos)
+      } else {
+        delete creep.memory.previousChargeSource
+      }
     }
     return
   }
 
-  creep.memory.previousChargeSource = source.value
+  creep.memory.previousChargeSource = source.value.id
   const moveCode = creep.moveTo(source.value.pos)
 
   /*

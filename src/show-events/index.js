@@ -47,10 +47,7 @@ elasticsearch.setEventMapping = async function () {
     }
   }
 
-
-  return request.put(`http://localhost:9200/_template/events`, {
-    json: mapping
-  })
+  return request.put(`http://localhost:9200/_template/events`, {json: mapping})
 }
 
 async function main (emitter, event) {

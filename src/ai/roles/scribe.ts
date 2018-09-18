@@ -10,7 +10,7 @@ import {Role} from '../types'
 const run = (creep:Creep):void => {
   const controller = terrain.findController(creep.room.name)
   const isSigned = controller && controller.sign && controller.sign.text === constants.sign
-  if (controller) {
+  if (isSigned) {
     shared.killCreep(creep)
   } else {
     shared.signController(creep, controller, constants.sign)

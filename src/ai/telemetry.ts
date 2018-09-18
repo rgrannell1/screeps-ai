@@ -2,6 +2,7 @@
 import blessed from './blessed'
 import constants from './constants'
 import structures from './structures'
+import creeps from './creeps'
 import logger from './logger'
 import misc from './misc'
 
@@ -29,7 +30,7 @@ telemetry.logGameState = (roomName:string) => {
   const containers = structures.container.findAll(roomName)
   const controller = Game.rooms[roomName].controller
 
-  logger.data('room_state', 'room_state', {
+  const roomState = {
     room_name: roomName,
     energy_available: room.energyAvailable,
     energy_capacity_available: room.energyCapacityAvailable,
@@ -53,7 +54,15 @@ telemetry.logGameState = (roomName:string) => {
       capacity: containers.reduce((sum, current) => sum + current.store.energyCapacity, 0)
     },
     creep_count: Object.keys(Game.creeps).length
-  })
+  } as any
+
+  roomState.creep_body_costs = Object.values(Game.creeps)
+    .reduce((sum, creep) => {
+      const parts = creep.body.map(part => part.type)
+      return sum + creeps.getCost(parts)
+    }, 0)
+
+  logger.data('room_state', 'room_state', roomState)
 }
 
 

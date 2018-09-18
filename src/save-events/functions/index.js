@@ -20,17 +20,23 @@ function writeResults (db, res, writeable) {
   }
 
   const setteable = {}
-  writeable.forEach(datum => setteable[uuidv4()] = datum)
+  writeable.forEach(datum => {
+    setteable[uuidv4()] = datum
+  })
 
   return db.set(setteable).then(() => {
     const from = writeable.reduce((acc, current) => Math.min(acc, current.time), Infinity)
     const to = writeable.reduce((acc, current) => Math.max(acc, current.time), -Infinity)
+    const count = writeable.length
 
-    res.send(JSON.stringify({
-      count: writeable.length,
-      from: new Date(from).toLocaleString(),
-      to: new Date(to).toLocaleString()
-    }, null, 2))
+    const response = {count, characters: 0}
+    if (writeable.length > 0) {
+      response.from = new Date(from).toLocaleString()
+      response.to = new Date(to).toLocaleString()
+      response.characters = JSON.stringify(writeable).length
+    }
+
+    res.send(JSON.stringify(response, null, 2))
   })
 }
 
@@ -39,9 +45,7 @@ function clearEvents (api) {
 }
 
 function storeEvents (db, res) {
-  const api = new ScreepsAPI({
-    token: constants.env.token
-  })
+  const api = new ScreepsAPI({token: constants.env.token})
 
   return api.memory.get(undefined, constants.shard)
     .then(memory => {

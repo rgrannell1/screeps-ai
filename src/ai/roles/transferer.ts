@@ -9,12 +9,12 @@ import shared from './shared'
 
 const sinkPriorities = [
   {
-    label: 'spawns',
-    priorities: [STRUCTURE_SPAWN, STRUCTURE_EXTENSION, STRUCTURE_TOWER, STRUCTURE_STORAGE]
-  },
-  {
     label: 'extensions',
     priorities: [STRUCTURE_EXTENSION, STRUCTURE_TOWER, STRUCTURE_SPAWN, STRUCTURE_STORAGE]
+  },
+  {
+    label: 'spawns',
+    priorities: [STRUCTURE_SPAWN, STRUCTURE_EXTENSION, STRUCTURE_TOWER, STRUCTURE_STORAGE]
   },
   {
     label: 'towers',
@@ -35,7 +35,7 @@ const run = (creep:Creep):void => {
 
   if (creep.carry.energy === 0) {
     creep.memory.isActive = false
-  } else if (creep.carry.energy === creep.carryCapacity) {
+  } else {
     creep.memory.isActive = true
   }
 }

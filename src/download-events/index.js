@@ -28,6 +28,10 @@ async function main () {
   const snapshot = await ref.once('value')
   const events = snapshot.val()
 
+  if (!events) {
+    return
+  }
+
   Object.entries(events).forEach(([id, data]) => {
     lkEvents.insert(Object.assign({}, data, {id}))
   })
