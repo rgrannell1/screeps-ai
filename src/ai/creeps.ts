@@ -72,19 +72,13 @@ creeps.roles = {}
 creeps.harvester = {}
 
 creeps.harvester.body = (capacity:number):string[] => {
-  return createBodyPlan([CARRY, CARRY, WORK, MOVE], [WORK, CARRY, MOVE], capacity)
+  return createBodyPlan([CARRY, MOVE, MOVE, WORK], [WORK], capacity)
 }
 
 creeps.upgrader = {}
 
 creeps.upgrader.body = (capacity:number):string[] => {
   return createBodyPlan([CARRY, CARRY, WORK, MOVE, MOVE], [WORK, CARRY, MOVE], capacity)
-}
-
-creeps.defender = {}
-
-creeps.defender.body = (capacity:number):string[] => {
-  return [ATTACK, ATTACK, MOVE, MOVE, TOUGH, TOUGH]
 }
 
 creeps.transferer = {}

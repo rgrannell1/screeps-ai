@@ -22,9 +22,20 @@ function writeResults (db, res, writeable) {
   const setteable = {}
   writeable.forEach(datum => setteable[uuidv4()] = datum)
 
-  db.set(setteable).then(() => {
-    res.send(`Wrote ${writeable.length} results`)
+  return db.set(setteable).then(() => {
+    const from = writeable.reduce((acc, current) => Math.min(acc, current.time), Infinity)
+    const to = writeable.reduce((acc, current) => Math.max(acc, current.time), -Infinity)
+
+    res.send(JSON.stringify({
+      count: writeable.length,
+      from: new Date(from).toLocaleString(),
+      to: new Date(to).toLocaleString()
+    }, null, 2))
   })
+}
+
+function clearEvents (api) {
+  return api.memory.set('events', [], constants.shard)
 }
 
 function storeEvents (db, res) {
@@ -32,7 +43,7 @@ function storeEvents (db, res) {
     token: constants.env.token
   })
 
-  api.memory.get(undefined, constants.shard)
+  return api.memory.get(undefined, constants.shard)
     .then(memory => {
       return processEvents(memory)
     })
@@ -40,8 +51,13 @@ function storeEvents (db, res) {
       return writeResults(db, res, data)
     })
     .then(
-      err => console.log(err),
-      () => api.memory.set('events', [])
+      err => {
+        console.error(err)
+        return clearEvents(api)
+      },
+      () => {
+        return clearEvents(api)
+      }
     )
 }
 
@@ -51,4 +67,7 @@ exports.saveEvents = functions.https.onRequest((req, res) => {
   const db = admin.database().ref('events')
 
   storeEvents(db, res)
+    .catch(err => {
+      console.error(err)
+    })
 })

@@ -15,8 +15,11 @@ const sourceContainers = (roomName:string) => {
     }
 
     const candidatePositions = terrain
-      .getBorder(source.pos, 2, roomName)
+      .getBorder(source.pos, 1, roomName)
       .filter(tile => terrain.is.plain)
+
+    console.log(JSON.stringify(candidatePositions, null, 2))
+    console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
 
     const [chosen] = candidatePositions
     const pos = new RoomPosition(chosen.x, chosen.y, roomName)

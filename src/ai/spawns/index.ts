@@ -88,7 +88,7 @@ creepRequired.builder = (roomName:string):SpawnOrder => {
     .reduce((sum, site) => sum + (site.progressTotal - site.progress), 0) || 0
 
   const expected = Math.max(
-    1,
+    0,
     Math.ceil(siteCount / SITE_TO_BUILDER_RATIO),
     Math.ceil(totalRequiredEnergy / ENERGY_TO_BUILDER_RATIO))
 
@@ -96,7 +96,7 @@ creepRequired.builder = (roomName:string):SpawnOrder => {
     role: 'builder',
     expected,
     youngCount: counts.young,
-    sufficientCount: 1,
+    sufficientCount: 0,
     isRequired: counts.young < expected
   }
 }
