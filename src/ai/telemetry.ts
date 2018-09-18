@@ -37,10 +37,15 @@ telemetry.logGameState = (roomName:string) => {
     creep_energy: Object.values(Game.creeps).reduce((acc, creep) => acc + creep.carry.energy, 0),
     rcl: {
       level: controller.level,
-      progress: controller.progress
+      progress: controller.progress,
+      progress_total: controller.progressTotal,
+      progress_total_pct: controller.progress / controller.progressTotal
     },
     gcl: {
-      level: Game.gcl.level
+      level: Game.gcl.level,
+      progress: Game.gcl.progress,
+      progress_total: Game.gcl.progressTotal,
+      progress_total_pct: Game.gcl.progress / Game.gcl.progressTotal,
     },
     cpu: {
       limit: Game.cpu.getUsed()

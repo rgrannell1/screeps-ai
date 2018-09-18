@@ -142,6 +142,7 @@ shared.killCreep = (creep:Creep) => {
 }
 
 shared.signController = (creep:Creep, controller:StructureController, sign:string) => {
+  creep.moveTo(controller.pos)
   creep.signController(controller, sign)
 }
 
