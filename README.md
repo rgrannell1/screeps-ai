@@ -50,6 +50,10 @@ node pulpfile.js upload
 
 ## Visualisations
 
+This AI hooks into Kibana through an pull-based event-queue read from Google Functions into a Loki database. This instances tracks room & game level, energy storage, expenditure, and the room-upgrade derivative.
+
+![Example](readme/kibana.png)
+
 ## License
 
 Copyright (c) 2018 Ryan Grannell

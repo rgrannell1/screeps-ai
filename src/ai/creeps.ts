@@ -12,6 +12,19 @@ creeps.exists = (roleName:string, roomName:string, count:number = 1) => {
   }).length >= count
 }
 
+/*
+  F = 2 * (W * K - M)
+
+  Where:
+      F = initial fatigue value
+      W = creep weight (Number of body parts, excluding MOVE and empty CARRY parts)
+      K = terrain factor (0.5x for road, 1x for plain, 5x for swamp)
+      M = number of MOVE parts
+*/
+creeps.estimateRequiredMoveParts = (parts:string[]):number => {
+  return Math.ceil(parts.length / 2)
+}
+
 creeps.countYoungCreeps = (role:RoleLabel) => {
   return Object.values(Game.creeps).filter(creep => {
     return creep.memory.role === role && creep.ticksToLive > constants.limits.endOfYouth
@@ -47,6 +60,7 @@ creeps.findTargetEnemy = (creepName:string) => {
   return nearbyHostile
 }
 
+// -- todo needs refactoring.
 const createBodyPlan = (initial:string[], extension:string[], capacity:number) => {
   const currentCost = creeps.getCost(initial)
 
@@ -64,7 +78,7 @@ const createBodyPlan = (initial:string[], extension:string[], capacity:number) =
     }
   }
 
-  return parts
+  return parts.sort()
 }
 
 creeps.roles = {}
@@ -84,7 +98,8 @@ creeps.upgrader.body = (capacity:number):string[] => {
 creeps.transferer = {}
 
 creeps.transferer.body = (capacity:number):string[] => {
-  return createBodyPlan([CARRY, CARRY, WORK, MOVE, MOVE], [CARRY, CARRY, MOVE], capacity)
+  // -- four carries for container.
+  return createBodyPlan([CARRY, CARRY, MOVE, MOVE], [CARRY, CARRY, MOVE], capacity)
 }
 
 creeps.builder = {}
