@@ -100,6 +100,34 @@ shared.chargeTarget = (sinkPriorities:Array<Priority>, creep:any):void => {
   const transferCode = creep.transfer(target.value, RESOURCE_ENERGY)
 }
 
+shared.chargeLocalTarget = (sinkPriorities:Array<Priority>, creep:any):void => {
+  creep.memory.state = 'charge_local_target'
+
+  if (creep.room.name !== creep.memory.initialRoom) {
+    creep.moveTo(creep.pos.findClosestByRange(creep.room.findExitTo(creep.memory.initialRoom)))
+    return
+  }
+
+  const priorities = creeps.chooseEnergySink(creep, sinkPriorities)
+  const target = structures.findEnergySink(creep.room.name, priorities.priorities)
+
+  if (!target) {
+    console.log(`no empty targets found for ${priorities}`)
+    return
+  }
+
+  const moveCode = creep.moveTo(target.value.pos)
+  /*
+  logger.data('creep move status', 'creep_move', {
+    code: telemetry.moveCode(moveCode),
+    creep_name: creep.name,
+    room_name: creep.room.name
+  })
+  */
+
+  const transferCode = creep.transfer(target.value, RESOURCE_ENERGY)
+}
+
 shared.repairTarget = (creep:Creep) => {
   creep.memory.state = 'repair_target'
   const damaged = structures.findDamagedStructure(creep.room.name, [
@@ -166,6 +194,27 @@ shared.harvestSource = (creep:Creep):void => {
   creep.memory.state = 'harvest_source'
   const [source] = terrain.findSources(creep.room.name)
 
+  const moveCode = creep.moveTo(source.pos)
+  /*
+  logger.data('creep move status', 'creep_move', {
+    code: telemetry.moveCode(moveCode),
+    creep_name: creep.name,
+    room_name: creep.room.name
+  })
+  */
+
+  const chargeCode = creep.harvest(source)
+}
+
+shared.harvestDistantSource = (creep:Creep):void => {
+  creep.memory.state = 'harvest_source'
+
+  if (creep.room.name !== creep.memory.externalRoom) {
+    creep.moveTo(creep.pos.findClosestByRange(creep.room.findExitTo(creep.memory.externalRoom)))
+    return
+  }
+
+  const [source] = terrain.findSources(creep.room.name)
   const moveCode = creep.moveTo(source.pos)
   /*
   logger.data('creep move status', 'creep_move', {

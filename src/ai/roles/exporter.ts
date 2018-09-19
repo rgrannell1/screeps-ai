@@ -17,11 +17,15 @@ const run = (creep:Creep):void => {
   if (!creep.memory.initialRoom) {
      creep.memory.initialRoom = creep.room.name
   }
+  if (!creep.memory.externalRoom) {
+    // -- todo
+    creep.memory.externalRoom = 'W41N31'
+  }
 
   if (!creep.memory.isActive) {
     shared.harvestDistantSource(creep)
   } else if (creep.memory.isActive) {
-    shared.chargeTarget(sinkPriorities, creep)
+    shared.chargeLocalTarget(sinkPriorities, creep)
   }
 
   if (creep.carry.energy === 0) {

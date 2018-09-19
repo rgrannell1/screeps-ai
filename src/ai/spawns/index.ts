@@ -9,6 +9,21 @@ import {RoleLabel, SpawnOrder} from '../types'
 
 const creepRequired = {} as {[str: string]:Function}
 
+creepRequired.exporter = (roomName:string):SpawnOrder => {
+  const counts = {
+    young: creeps.countYoungCreeps('exporter'),
+    source: terrain.findSources(roomName).length
+  }
+
+  return {
+    role: 'exporter',
+    expected: 3,
+    youngCount: counts.young,
+    sufficientCount: 3,
+    isRequired: counts.young < counts.source
+  }
+}
+
 creepRequired.harvester = (roomName:string):SpawnOrder => {
   const counts = {
     young: creeps.countYoungCreeps('harvester'),
@@ -125,6 +140,7 @@ const priorities = [
   'upgrader',
   'harvester',
   'transferer',
+  'exporter',
   'repairer',
   'builder',
   'scribe'

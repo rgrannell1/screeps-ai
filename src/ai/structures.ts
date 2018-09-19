@@ -28,14 +28,14 @@ const addPlan = (pos, plan) => {
   Memory.plans.push({pos, plan})
 }
 
-structures.placePlans = (roomName) => {
+structures.placePlans = () => {
   if (!Memory.plans) {
     Memory.plans = []
   }
 
   Memory.plans.forEach(plan => {
     try {
-      const pos = new RoomPosition(plan.pos.x, plan.pos.y, roomName)
+      const pos = new RoomPosition(plan.pos.x, plan.pos.y, plan.pos.roomName)
       pos.createConstructionSite(plan.plan.structure)
     } catch (err) {
       throw new Error(`invalid plan ${JSON.stringify(plan)}: ${err.message}`)

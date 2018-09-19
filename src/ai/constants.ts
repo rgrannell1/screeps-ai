@@ -29,6 +29,13 @@ constants.roles = {
       standard: [CARRY, CARRY, WORK, MOVE]
     }
   },
+  exporter: {
+    priority: 1,
+    icon: 'E',
+    plans: {
+      standard: [CARRY, CARRY, WORK, MOVE, MOVE]
+    }
+  },
   upgrader: {
     priority: 1,
     icon: 'U',

@@ -8,8 +8,12 @@ import shared from './shared'
 import {Role, Priority} from '../types'
 
 const run = (creep:Creep):void => {
-  if (!Memory.externalRooms) {
-    Memory.externalRooms = {}
+  if (!creep.memory.initialRoom) {
+     creep.memory.initialRoom = creep.room.name
+  }
+  if (!creep.memory.externalRoom) {
+    // -- todo
+    creep.memory.externalRoom = 'W41N31'
   }
 
   if (true) {
