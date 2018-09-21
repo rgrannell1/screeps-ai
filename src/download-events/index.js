@@ -1,6 +1,6 @@
 
 const fs = require('fs').promises
-const loki = require('lokijs')
+const sqlite = require('sqlite')
 const path = require('path')
 const admin = require('firebase-admin')
 
@@ -13,18 +13,23 @@ const config = {
 
 const app = admin.initializeApp(config)
 
+const sql = {}
+
+sql.createTable = 'CREATE TABLE IF NOT EXISTS events (id TEXT PRIMARY KEY, content BLOB NOT NULL);'
+sql.insertEntry = 'INSERT INTO events(id, content) VALUES(?, ?)'
+
 async function main () {
   const db = admin.database()
   const ref = db.ref('events')
-  const fpath = path.join(__dirname, '../../data/screeps-events.json')
+  const fpath = path.join(__dirname, '../../data/screeps-events.sqlite')
 
   try {
     await fs.unlink(fpath)
   } catch (err) {}
 
-  const lk = new loki(fpath)
+  const sqlDb = await sqlite.open(fpath, {Promise})
+  await sqlDb.run(sql.createTable)
 
-  const lkEvents = lk.addCollection('events')
   const snapshot = await ref.once('value')
   const events = snapshot.val()
 
@@ -32,17 +37,17 @@ async function main () {
     return
   }
 
-  Object.entries(events).forEach(([id, data]) => {
-    lkEvents.insert(Object.assign({}, data, {id}))
+  Object.entries(events).forEach(async ([id, data]) => {
+    try {
+      const content = Object.assign({}, data, {id})
+      await sqlDb.run(sql.insertEntry, [id, JSON.stringify(content, null, 2)])
+    } catch (err) {
+      console.log(err)
+      console.log('***')
+    }
   })
 
-  lk.saveDatabase()
   await app.delete()
-
-  // -- because loki is terrible.
-  return new Promise(resolve => {
-    setTimeout(resolve, 500)
-  })
 }
 
 module.exports = main

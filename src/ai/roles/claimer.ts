@@ -16,13 +16,7 @@ const run = (creep:Creep):void => {
     creep.memory.externalRoom = 'W41N31'
   }
 
-  if (true) {
-    terrain.findClaimableRooms()
-  } else {
-
-  }
-
-  shared.findUnexploredRooms(creep)
+  shared.claimRoom(creep)
 }
 
 const harvester = <Role>{run}

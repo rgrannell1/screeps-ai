@@ -10,6 +10,7 @@ import terrain from './terrain'
 import logger from './logger'
 import tower from './tower'
 import roles from './roles/index'
+import Geometry from './modules/geometry'
 import * as profiler from 'screeps-profiler'
 
 const evictCreepCache = () => {
@@ -67,6 +68,7 @@ const loop = () => {
     if (!state.run) {
       onStart()
     }
+
 
     for (const roomName of Object.keys(Game.rooms)) {
       const room = Game.rooms[roomName]

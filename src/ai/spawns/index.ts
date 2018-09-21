@@ -15,12 +15,32 @@ creepRequired.exporter = (roomName:string):SpawnOrder => {
     source: terrain.findSources(roomName).length
   }
 
+  const expected = 5
+
   return {
     role: 'exporter',
-    expected: 3,
+    expected,
     youngCount: counts.young,
-    sufficientCount: 3,
+    sufficientCount: 2,
     isRequired: counts.young < counts.source
+  }
+}
+
+creepRequired.claimer = (roomName:string):SpawnOrder => {
+  const counts = {
+    young: creeps.countYoungCreeps('claimer')
+  }
+
+  const expected = !Game.rooms.hasOwnProperty('W41N31') || !Game.rooms.W41N31.controller.owner
+    ? 1
+    : 0
+
+  return {
+    role: 'claimer',
+    expected,
+    youngCount: counts.young,
+    sufficientCount: expected,
+    isRequired: counts.young < expected
   }
 }
 
@@ -141,6 +161,7 @@ const priorities = [
   'harvester',
   'transferer',
   'exporter',
+  'claimer',
   'repairer',
   'builder',
   'scribe'

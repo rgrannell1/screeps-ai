@@ -1,5 +1,5 @@
 
-const loki = require('lokijs')
+const sqlite = require('sqlite')
 const path = require('path')
 const request = require('request-promise-native')
 
@@ -51,19 +51,18 @@ elasticsearch.setEventMapping = async function () {
 }
 
 async function main (emitter, event) {
-  const lk = new loki(path.join(__dirname, '../../data/screeps-events.json'))
+  const fpath = path.join(__dirname, '../../data/screeps-events.sqlite')
+  const sqlDb = await sqlite.open(fpath)
 
-  lk.loadDatabase({}, async () => {
-    const lkEvents = lk.getCollection('events')
-    const results = lkEvents.find()
+  const results = await sqlDb.all('SELECT * FROM events', [])
 
-    await elasticsearch.setEventMapping()
-    emitter.emit(event, `writing ${results.length} events to ElasticSearch.`)
+  await elasticsearch.setEventMapping()
+  emitter.emit(event, `writing ${results.length} events to ElasticSearch.`)
 
-    for (const doc of results) {
-      await request.post(`http://localhost:9200/events/_doc/${doc.id}`, {json: doc})
-    }
-  })
+  for (const doc of results) {
+    await request.post(`http://localhost:9200/events/_doc/${doc.id}`, {json: JSON.parse(doc.content)})
+  }
+
 }
 
 module.exports = main

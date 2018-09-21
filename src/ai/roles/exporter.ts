@@ -8,6 +8,10 @@ import {Role, Priority} from '../types'
 
 const sinkPriorities = [
   {
+    label: 'extensions',
+    priorities: [STRUCTURE_EXTENSION, STRUCTURE_TOWER, STRUCTURE_SPAWN, STRUCTURE_STORAGE]
+  },
+  {
     label: 'container',
     priorities: [STRUCTURE_CONTAINER, STRUCTURE_SPAWN, STRUCTURE_EXTENSION, STRUCTURE_STORAGE, STRUCTURE_TOWER]
   }
@@ -23,7 +27,7 @@ const run = (creep:Creep):void => {
   }
 
   if (!creep.memory.isActive) {
-    shared.harvestDistantSource(creep)
+    shared.harvestSource(creep)
   } else if (creep.memory.isActive) {
     shared.chargeLocalTarget(sinkPriorities, creep)
   }

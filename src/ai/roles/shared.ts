@@ -148,14 +148,17 @@ shared.repairTarget = (creep:Creep) => {
 shared.buildSite = (creep:Creep) => {
   creep.memory.state = 'build_site'
 
-  const site = structures.findSite(creep.room.name, [
+  const buildeable = [
     STRUCTURE_CONTAINER,
     STRUCTURE_EXTENSION,
     STRUCTURE_TOWER,
     STRUCTURE_STORAGE,
     STRUCTURE_ROAD,
     STRUCTURE_RAMPART
-  ])
+  ]
+
+  let site
+  site = structures.findSite(creep.room.name, buildeable)
 
   if (!site) {
     return
@@ -192,6 +195,12 @@ shared.upgradeController = (creep:Creep) => {
 
 shared.harvestSource = (creep:Creep):void => {
   creep.memory.state = 'harvest_source'
+
+  if (creep.memory.externalRoom && creep.room.name !== creep.memory.externalRoom) {
+    creep.moveTo(creep.pos.findClosestByRange(creep.room.findExitTo(creep.memory.externalRoom)))
+    return
+  }
+
   const [source] = terrain.findSources(creep.room.name)
 
   const moveCode = creep.moveTo(source.pos)
@@ -206,25 +215,16 @@ shared.harvestSource = (creep:Creep):void => {
   const chargeCode = creep.harvest(source)
 }
 
-shared.harvestDistantSource = (creep:Creep):void => {
-  creep.memory.state = 'harvest_source'
+shared.claimRoom = (creep:Creep):void => {
+  creep.memory.state = 'claim_room'
 
-  if (creep.room.name !== creep.memory.externalRoom) {
+  if (creep.memory.externalRoom && creep.room.name !== creep.memory.externalRoom) {
     creep.moveTo(creep.pos.findClosestByRange(creep.room.findExitTo(creep.memory.externalRoom)))
     return
   }
 
-  const [source] = terrain.findSources(creep.room.name)
-  const moveCode = creep.moveTo(source.pos)
-  /*
-  logger.data('creep move status', 'creep_move', {
-    code: telemetry.moveCode(moveCode),
-    creep_name: creep.name,
-    room_name: creep.room.name
-  })
-  */
-
-  const chargeCode = creep.harvest(source)
+  creep.moveTo(creep.room.controller)
+  creep.claimController(creep.room.controller)
 }
 
 export default shared

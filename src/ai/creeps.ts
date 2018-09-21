@@ -92,7 +92,7 @@ creeps.harvester.body = (capacity:number):string[] => {
 creeps.exporter = {}
 
 creeps.exporter.body = (capacity:number):string[] => {
-  return createBodyPlan([CARRY, MOVE, MOVE, WORK], [WORK, CARRY, MOVE], capacity)
+  return [CARRY, CARRY, CARRY, MOVE, MOVE, WORK]
 }
 
 creeps.upgrader = {}
@@ -129,7 +129,7 @@ creeps.scribe.body = (capacity:number):string[] => {
 creeps.claimer = {}
 
 creeps.claimer.body = (capacity:number):string[] => {
-  return [MOVE, TOUGH, TOUGH, TOUGH]
+  return [MOVE, CLAIM]
 }
 
 const hasPriority = (transferers:Array<any>, priority:string):boolean => {

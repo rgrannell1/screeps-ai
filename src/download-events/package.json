@@ -8,6 +8,7 @@
     "firebase-admin": "6.0.0",
     "firebase-export": "0.0.2",
     "loki": "0.13.0",
-    "lokijs": "1.5.5"
+    "lokijs": "1.5.5",
+    "sqlite": "3.0.0"
   }
 }
