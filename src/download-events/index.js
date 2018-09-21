@@ -23,10 +23,6 @@ async function main () {
   const ref = db.ref('events')
   const fpath = path.join(__dirname, '../../data/screeps-events.sqlite')
 
-  try {
-    await fs.unlink(fpath)
-  } catch (err) {}
-
   const sqlDb = await sqlite.open(fpath, {Promise})
   await sqlDb.run(sql.createTable)
 
@@ -38,15 +34,11 @@ async function main () {
   }
 
   Object.entries(events).forEach(async ([id, data]) => {
-    try {
-      const content = Object.assign({}, data, {id})
-      await sqlDb.run(sql.insertEntry, [id, JSON.stringify(content, null, 2)])
-    } catch (err) {
-      console.log(err)
-      console.log('***')
-    }
+    const content = Object.assign({}, data, {id})
+    await sqlDb.run(sql.insertEntry, [id, JSON.stringify(content, null, 2)])
   })
 
+  sqlDb.close()
   await app.delete()
 }
 
