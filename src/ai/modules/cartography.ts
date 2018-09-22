@@ -18,8 +18,10 @@ Cartography.recordRoom = (roomName:string) => {
       sourceCount: terrain.findSources(roomName).length,
       mineralCount: terrain.findMinerals(roomName).length,
       tenant: {
-        hasOwner: !!controller.owner,
-        isMine: controller.owner && controller.owner.username === constants.username,
+        hasOwner: !!(controller && controller.owner),
+        isMine: controller && controller.owner
+          ? controller.owner && controller.owner.username === constants.username
+          : false,
         hostileCreepCount: terrain.findHostiles(roomName).length
       },
       time: Game.time

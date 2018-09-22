@@ -167,7 +167,7 @@ creepRequired.scribe = (roomName:string):SpawnOrder => {
     young: creeps.countYoungCreeps('scribe')
   }
 
-  const isRequired = counts.young === 0 && room.controller.sign.text !== constants.sign
+  const isRequired = counts.young === 0 && room.controller && room.controller.sign.text !== constants.sign
 
   return {
     role: 'scribe',
