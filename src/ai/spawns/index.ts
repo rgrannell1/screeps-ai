@@ -26,6 +26,22 @@ creepRequired.exporter = (roomName:string):SpawnOrder => {
   }
 }
 
+creepRequired.scout = (roomName:string):SpawnOrder => {
+  const counts = {
+    young: creeps.countYoungCreeps('scout')
+  }
+
+  const expected = 1
+
+  return {
+    role: 'scout',
+    expected,
+    youngCount: counts.young,
+    sufficientCount: expected,
+    isRequired: counts.young < expected
+  }
+}
+
 creepRequired.claimer = (roomName:string):SpawnOrder => {
   const counts = {
     young: creeps.countYoungCreeps('claimer')
@@ -170,6 +186,7 @@ const priorities = [
   'claimer',
   'repairer',
   'builder',
+  'scout',
   'scribe'
 ] as Array<RoleLabel>
 

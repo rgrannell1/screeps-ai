@@ -41,7 +41,7 @@ shared.renewCreep = (creep:Creep):void => {
 shared.chargeCreep = (sinks:string[], creep:Creep):void => {
   creep.memory.state = 'charge_creep'
 
-  const energy = creep.pos.findInRange(FIND_DROPPED_RESOURCES, 10).filter(value => {
+  const energy = creep.pos.findInRange(FIND_DROPPED_RESOURCES, 30).filter(value => {
     return value.resourceType === 'energy'
   })
 

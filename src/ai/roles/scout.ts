@@ -15,10 +15,17 @@ const run = (creep:Creep):void => {
   }
   if (!creep.memory.externalRoom) {
     // -- todo find some alternative room
-    creep.memory.externalRoom = 'W41N31'
+    const nearby = Cartography.findUnchartedNeighbours(creep.room.name)
+    creep.memory.externalRoom = nearby
   }
 
-  // -- todo find
+  if (creep.room.name !== creep.memory.externalRoom) {
+    creep.moveTo(creep.pos.findClosestByRange(creep.room.findExitTo(creep.memory.externalRoom)))
+    return
+  } else {
+    creep.say('Just a Scout!')
+    creep.suicide()
+  }
 }
 
 const harvester = <Role>{run}
