@@ -5,6 +5,7 @@ import structures from '../structures'
 import constants from '../constants'
 import telemetry from '../telemetry'
 import blessed from '../blessed'
+import Cartography from '../modules/cartography'
 import {RoleLabel, SpawnOrder} from '../types'
 
 const creepRequired = {} as {[str: string]:Function}
@@ -31,7 +32,9 @@ creepRequired.scout = (roomName:string):SpawnOrder => {
     young: creeps.countYoungCreeps('scout')
   }
 
-  const expected = 1
+  const expected = Cartography.findUnchartedNeighbours(roomName).length === 0
+    ? 0
+    : 1
 
   return {
     role: 'scout',
