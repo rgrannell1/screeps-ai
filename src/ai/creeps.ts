@@ -89,6 +89,12 @@ creeps.harvester.body = (capacity:number):string[] => {
   return createBodyPlan([CARRY, MOVE, MOVE, WORK], [WORK], capacity)
 }
 
+creeps.scout = {}
+
+creeps.scout.body = (capacity:number):string[] => {
+  return [MOVE]
+}
+
 creeps.exporter = {}
 
 creeps.exporter.body = (capacity:number):string[] => {

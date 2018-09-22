@@ -28,12 +28,20 @@ Cartography.recordRoom = (roomName:string) => {
 }
 
 Cartography.findNeighbours = (roomName:string) => {
+  if (!Memory.cartography) {
+    Memory.cartography = {}
+  }
+
   return Object.values(Game.map.describeExits(roomName))
 }
 
 Cartography.findUnchartedNeighbours = (roomName:string) => {
-  return Object.values(Game.map.describeExits(roomName)).filter(name => {
-    return Memory.cartograph.hasOwnProperty(name)
+  if (!Memory.cartography) {
+    Memory.cartography = {}
+  }
+
+  return Cartography.findNeighbours(roomName).filter(name => {
+    return !Memory.cartography.hasOwnProperty(name)
   })
 }
 

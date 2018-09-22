@@ -13,15 +13,15 @@ const run = (creep:Creep):void => {
   if (!creep.memory.initialRoom) {
      creep.memory.initialRoom = creep.room.name
   }
+
   if (!creep.memory.externalRoom) {
     // -- todo find some alternative room
     const nearby = Cartography.findUnchartedNeighbours(creep.room.name)
-    creep.memory.externalRoom = nearby
+    creep.memory.externalRoom = nearby[0]
   }
 
   if (creep.room.name !== creep.memory.externalRoom) {
     creep.moveTo(creep.pos.findClosestByRange(creep.room.findExitTo(creep.memory.externalRoom)))
-    return
   } else {
     creep.say('Just a Scout!')
     creep.suicide()

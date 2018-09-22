@@ -22,68 +22,35 @@ constants.costs = {
 }
 
 constants.roles = {
+  scout: {
+    icon: 'S'
+  },
   harvester: {
-    priority: 0,
-    icon: 'H',
-    plans: {
-      standard: [CARRY, CARRY, WORK, MOVE]
-    }
+    icon: 'H'
   },
   exporter: {
-    priority: 1,
-    icon: 'E',
-    plans: {
-      standard: [CARRY, CARRY, WORK, MOVE, MOVE]
-    }
+    icon: 'E'
   },
   upgrader: {
-    priority: 1,
-    icon: 'U',
-    plans: {
-      standard: [CARRY, CARRY, WORK, MOVE, MOVE]
-    }
+    icon: 'U'
   },
   defender: {
-    priority: 2,
-    icon: 'D',
-    plans: {
-      standard: [ATTACK, ATTACK, MOVE, MOVE, TOUGH, TOUGH]
-    }
+    icon: 'D'
   },
   transferer: {
-    priority: 3,
-    icon: 'T',
-    plans: {
-      standard: [CARRY, CARRY, WORK, MOVE, MOVE]
-    }
+    icon: 'T'
   },
   builder: {
-    priority: 4,
-    icon: 'B',
-    plans: {
-      standard: [CARRY, CARRY, WORK, MOVE, MOVE]
-    }
+    icon: 'B'
   },
   repairer: {
-    priority: 4,
-    icon: 'R',
-    plans: {
-      standard: [CARRY, CARRY, WORK, MOVE, MOVE]
-    }
+    icon: 'R'
   },
   scribe: {
-    priority: 6,
-    icon: 'S',
-    plans: {
-      standard: [WORK, MOVE, MOVE]
-    }
+    icon: 'S'
   },
   claimer: {
-    priority: 4,
-    icon: 'C',
-    plans: {
-      standard: [CLAIM, MOVE, MOVE]
-    }
+    icon: 'C'
   }
 }
 
