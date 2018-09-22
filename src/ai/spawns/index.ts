@@ -114,8 +114,8 @@ creepRequired.builder = (roomName:string):SpawnOrder => {
     young: creeps.countYoungCreeps('builder')
   }
 
-  const SITE_TO_BUILDER_RATIO = 20
-  const ENERGY_TO_BUILDER_RATIO = 2000
+  const SITE_TO_BUILDER_RATIO = 15
+  const ENERGY_TO_BUILDER_RATIO = 50000
 
   const sites = room.find(FIND_CONSTRUCTION_SITES)
   const siteCount = sites.length
@@ -128,7 +128,9 @@ creepRequired.builder = (roomName:string):SpawnOrder => {
     expected = Math.max(
       0,
       Math.ceil(siteCount / SITE_TO_BUILDER_RATIO),
-      Math.ceil(totalRequiredEnergy / ENERGY_TO_BUILDER_RATIO))
+      Math.ceil(totalRequiredEnergy / ENERGY_TO_BUILDER_RATIO)
+    )
+    expected = Math.min(expected, 3)
   }
 
   return {

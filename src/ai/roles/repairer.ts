@@ -7,8 +7,12 @@ import constants from '../constants'
 import terrain from '../terrain'
 import {Role, Priority} from '../types'
 import shared from './shared'
+import Cartography from '../modules/cartography'
+
 
 const run = (creep:Creep):void => {
+  Cartography.recordRoom(creep.room.name)
+
   const priorities = [STRUCTURE_STORAGE, STRUCTURE_CONTAINER]
 
   if (!creep.memory.isActive) {

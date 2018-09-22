@@ -2,14 +2,10 @@
 import misc from '../misc'
 import blessed from '../blessed'
 import creeps from '../creeps'
-import terrain from '../terrain'
 import structures from '../structures'
 import shared from './shared'
-import Cartography from '../modules/cartography'
 import {Role, Priority} from '../types'
-
-
-
+import Cartography from '../modules/cartography'
 
 const run = (creep:Creep):void => {
   Cartography.recordRoom(creep.room.name)
@@ -18,11 +14,11 @@ const run = (creep:Creep):void => {
      creep.memory.initialRoom = creep.room.name
   }
   if (!creep.memory.externalRoom) {
-    // -- todo
+    // -- todo find some alternative room
     creep.memory.externalRoom = 'W41N31'
   }
 
-  shared.claimRoom(creep)
+  // -- todo find
 }
 
 const harvester = <Role>{run}

@@ -7,6 +7,8 @@ import constants from '../constants'
 import terrain from '../terrain'
 import {Role, Priority} from '../types'
 import shared from './shared'
+import Cartography from '../modules/cartography'
+
 
 const sinkPriorities = [
   {
@@ -28,6 +30,8 @@ const sinkPriorities = [
 ] as Array<Priority>
 
 const run = (creep:Creep):void => {
+  Cartography.recordRoom(creep.room.name)
+
   if (!creep.memory.isActive) {
     shared.chargeCreep([STRUCTURE_CONTAINER], creep)
   } else if (creep.memory.isActive) {

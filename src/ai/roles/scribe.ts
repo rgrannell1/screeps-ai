@@ -6,8 +6,12 @@ import terrain from '../terrain'
 import constants from '../constants'
 import shared from './shared'
 import {Role} from '../types'
+import Cartography from '../modules/cartography'
+
 
 const run = (creep:Creep):void => {
+  Cartography.recordRoom(creep.room.name)
+
   const controller = terrain.findController(creep.room.name)
   const isSigned = controller && controller.sign && controller.sign.text === constants.sign
   if (isSigned) {

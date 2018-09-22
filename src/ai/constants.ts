@@ -93,9 +93,12 @@ constants.events = {
   tickWarning: 'tick_warning'
 }
 
+constants.username = 'gooseThief'
+
 constants.limits = {
   events: 8000,
-  endOfYouth: 200
+  endOfYouth: 200,
+  roomRecordInvalidTicks: 100
 }
 
 export default constants

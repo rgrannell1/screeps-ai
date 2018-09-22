@@ -7,8 +7,12 @@ import structures from '../structures'
 import constants from '../constants'
 import shared from './shared'
 import {Role} from '../types'
+import Cartography from '../modules/cartography'
+
 
 const run = (creep:Creep):void => {
+  Cartography.recordRoom(creep.room.name)
+
   const priorities = [STRUCTURE_STORAGE, STRUCTURE_CONTAINER]
   const hasSource = !!structures.findEnergySource(creep.room.name, priorities)
 

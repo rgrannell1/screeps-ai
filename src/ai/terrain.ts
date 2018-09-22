@@ -181,11 +181,20 @@ terrain.getExitTiles = roomName => {
   })
 }
 
+terrain.findHostiles = (roomName:string):Array<Creep> => {
+  const room = Game.rooms[roomName]
+  return room.find(FIND_HOSTILE_CREEPS)
+}
+
 terrain.findSources = (roomName:string):Array<Source> => {
   const room = Game.rooms[roomName]
   return room.find(FIND_SOURCES)
 }
 
+terrain.findMinerals = (roomName:string):Array<Mineral> => {
+  const room = Game.rooms[roomName]
+  return room.find(FIND_MINERALS)
+}
 
 terrain.getSourceQuality = source => {
   const surrounding = terrain.getBorder(source.pos, 1, source.room.name)

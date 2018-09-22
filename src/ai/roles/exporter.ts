@@ -5,6 +5,8 @@ import creeps from '../creeps'
 import structures from '../structures'
 import shared from './shared'
 import {Role, Priority} from '../types'
+import Cartography from '../modules/cartography'
+
 
 const sinkPriorities = [
   {
@@ -18,6 +20,8 @@ const sinkPriorities = [
 ] as Array<Priority>
 
 const run = (creep:Creep):void => {
+  Cartography.recordRoom(creep.room.name)
+
   if (!creep.memory.initialRoom) {
      creep.memory.initialRoom = creep.room.name
   }

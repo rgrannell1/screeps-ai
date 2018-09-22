@@ -40,6 +40,17 @@ shared.renewCreep = (creep:Creep):void => {
 
 shared.chargeCreep = (sinks:string[], creep:Creep):void => {
   creep.memory.state = 'charge_creep'
+
+  const energy = creep.pos.findInRange(FIND_DROPPED_RESOURCES, 10).filter(value => {
+    return value.resourceType === 'energy'
+  })
+
+  if (energy) {
+    creep.moveTo(energy[0])
+    creep.pickup(energy[0])
+    return
+  }
+
   const source = structures.findEnergySource(creep.room.name, sinks)
 
   if (!source) {
@@ -58,6 +69,8 @@ shared.chargeCreep = (sinks:string[], creep:Creep):void => {
 
   creep.memory.previousChargeSource = source.value.id
   const moveCode = creep.moveTo(source.value.pos)
+
+  // -- todo prioritise tombstones and all
 
   const chargeCode = creep.withdraw(source.value, RESOURCE_ENERGY)
 }

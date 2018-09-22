@@ -6,6 +6,8 @@ import structures from '../structures'
 import constants from '../constants'
 import shared from './shared'
 import {Role, Priority} from '../types'
+import Cartography from '../modules/cartography'
+
 
 const sinkPriorities = [
   {
@@ -15,6 +17,8 @@ const sinkPriorities = [
 ] as Array<Priority>
 
 const run = (creep:Creep):void => {
+  Cartography.recordRoom(creep.room.name)
+
   if (!creep.memory.isActive) {
     shared.harvestSource(creep)
   } else if (creep.memory.isActive) {
