@@ -122,16 +122,20 @@ creepRequired.builder = (roomName:string):SpawnOrder => {
   const totalRequiredEnergy = sites
     .reduce((sum, site) => sum + (site.progressTotal - site.progress), 0) || 0
 
-  const expected = Math.max(
-    0,
-    Math.ceil(siteCount / SITE_TO_BUILDER_RATIO),
-    Math.ceil(totalRequiredEnergy / ENERGY_TO_BUILDER_RATIO))
+  let expected = 0
+
+  if (sites) {
+    expected = Math.max(
+      0,
+      Math.ceil(siteCount / SITE_TO_BUILDER_RATIO),
+      Math.ceil(totalRequiredEnergy / ENERGY_TO_BUILDER_RATIO))
+  }
 
   return {
     role: 'builder',
     expected,
     youngCount: counts.young,
-    sufficientCount: 0,
+    sufficientCount: 1,
     isRequired: counts.young < expected
   }
 }

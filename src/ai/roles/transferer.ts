@@ -3,6 +3,7 @@ import misc from '../misc'
 import blessed from '../blessed'
 import creeps from '../creeps'
 import structures from '../structures'
+import constants from '../constants'
 import terrain from '../terrain'
 import {Role, Priority} from '../types'
 import shared from './shared'
@@ -34,7 +35,12 @@ const run = (creep:Creep):void => {
   }
 
   if (creep.carry.energy === 0) {
-    creep.memory.isActive = false
+    if (creep.ticksToLive < (constants.limits.endOfYouth / 2)) {
+      shared.reclaimCreep(creep)
+    } else {
+      // kill if dead and near spawn
+      creep.memory.isActive = false
+    }
   } else {
     creep.memory.isActive = true
   }

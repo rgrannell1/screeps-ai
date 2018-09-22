@@ -43,6 +43,7 @@ shared.chargeCreep = (sinks:string[], creep:Creep):void => {
   const source = structures.findEnergySource(creep.room.name, sinks)
 
   if (!source) {
+    // -- navigate to the previous charge source, to speed up next cycle's charging.
     if (creep.memory.previousChargeSource) {
       const oldSource = Game.getObjectById(creep.memory.previousChargeSource)
 
@@ -58,24 +59,7 @@ shared.chargeCreep = (sinks:string[], creep:Creep):void => {
   creep.memory.previousChargeSource = source.value.id
   const moveCode = creep.moveTo(source.value.pos)
 
-  /*
-  logger.data('creep move status', 'creep_move', {
-    code: telemetry.moveCode(moveCode),
-    creep_name: creep.name,
-    room_name: creep.room.name
-  })
-  */
-
   const chargeCode = creep.withdraw(source.value, RESOURCE_ENERGY)
-
-  /*
-
-  logger.data('creep withdraw status', 'creep_withdraw', {
-    code: telemetry.withdrawCode(chargeCode),
-    creep_name: creep.name,
-    room_name: creep.room.name
-  })
-  */
 }
 
 shared.chargeTarget = (sinkPriorities:Array<Priority>, creep:any):void => {
@@ -225,6 +209,13 @@ shared.claimRoom = (creep:Creep):void => {
 
   creep.moveTo(creep.room.controller)
   creep.claimController(creep.room.controller)
+}
+
+shared.reclaimCreep = (creep:Creep):void => {
+  const [spawn] = terrain.findSpawns(creep.room.name)
+
+  creep.moveTo(spawn.pos)
+  spawn.recycleCreep(creep)
 }
 
 export default shared
