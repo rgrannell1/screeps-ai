@@ -30,48 +30,56 @@ Geometry.translate = (parts:Plan, point:Point):Plan => {
   })
 }
 
-Geometry.map = (roomName:string):Array<LookForAtAreaResultWithPos<Terrain, "terrain"> => {
+Geometry.map = (roomName:string) => {
   return Game.rooms[roomName].lookForAtArea(LOOK_TERRAIN, 0, 0, 49, 49, true)
 }
 
-Geometry.yieldLandBlocks = function* (roomName:string, dims:Point, pred:Function):Bounds {
-  const tiles = []
+function isMatchingLandBlock (tiles, ith:number, jth:number, dims:Point) {
+  return misc.indicesTo(ith, ith + dims.x).every(x => {
+    return misc.indicesTo(jth, jth + dims.y).every(y => tiles[x][y].isMatch)
+  })
+}
 
+Geometry.yieldLandBlocks = function* (pred:Function, roomName:string, dims:Point):Bounds {
   // -- check if things match
-  for (let x = 0; x < 50; x++) {
-    let row = []
-    for (let y = 0; y < 50; y++) {
+
+  const tiles = misc.indicesTo(0, 49).map(x => {
+    return misc.indicesTo(0, 49).map(y => {
       const pos = new RoomPosition(x, y, roomName)
-      row.push({
+      return {
         pos,
         isMatch: pred(pos)
-      })
-    }
-    tiles.push(row)
-  }
+      }
+     })
+  })
 
-  for (let ith = 0; ith < (49 - dims.x); ith++) {
-    for (let jth = 0; jth < (49 - dims.y); jth++) {
+  for (const ith of misc.indicesTo(0, 49 - dims.x)) {
+    for (const jth of misc.indicesTo(0, 49 - dims.x)) {
 
-      // -- check if all intervening blocks match.
-      const isMatchingBlock = misc.indicesTo(ith, ith + dims.x).every(x => {
-        return misc.indicesTo(jth, jth + dims.y).every(y => {
-          return tiles[x][y].isMatch
-        })
-      })
-
-      // -- yield matching blocks
-      if (isMatchingBlock) {
-        yield {
+       // -- simplifiy
+      if (isMatchingLandBlock(tiles, ith, jth, dims)) {
+        let result = {
           x0: ith,
           x1: ith + dims.x,
           y0: jth,
           y1: jth + dims.y,
         }
+        yield result
       }
+
     }
   }
 }
+
+Geometry.yieldEmptyBlocks = Geometry.yieldLandBlocks.bind(null, pos => {
+  const observation = pos.look()
+
+  if (observation.length !== 1) {
+    return false
+  }
+
+  return observation[0].terrain === 'plain'
+})
 
 Geometry.expandBounds = (roomName:string, bounds:Bounds):RoomPosition[] => {
   const tiles = []

@@ -1,6 +1,4 @@
 
-import {} from '../types'
-
 const deprecate = {} as any
 
 deprecate.deprecate = () => {

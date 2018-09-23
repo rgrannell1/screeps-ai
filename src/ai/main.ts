@@ -76,22 +76,14 @@ const loop = () => {
       const room = Game.rooms[roomName]
 
       if (!state.it) {
-        state.it = Geometry.yieldLandBlocks(roomName, {x: 5, y:5}, pos => {
-          const atLocation = pos.look()
-          const isPlain = atLocation.length === 1 && atLocation[0].terrain === 'plain'
-          return isPlain
-        })
+        state.it = Geometry.yieldEmptyBlocks(roomName, {x: 1, y:1})
       }
 
-
-      let xxx = state.it.next().value
-      if (xxx) {
-        interactive.drawPositions(
-          roomName,
-          Geometry.expandBounds(roomName, xxx)
-        )
+      let squared = state.it.next().value
+      if (squared) {
+        //console.log(JSON.stringify(squared))
+        interactive.drawPositions(roomName, Geometry.expandBounds(roomName, squared))
       }
-      //interactive.drawPlans('W42N31')
 
       misc.timer(() => {
         telemetry.logGameState(roomName)
