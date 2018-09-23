@@ -41,6 +41,12 @@ interactive.drawPlans = (roomName:string) => {
   interactive.clearDrawnPlans()
 }
 
+interactive.drawPositions = (roomName:string, positions:RoomPosition[]) => {
+  positions.forEach(pos => {
+    new RoomVisual(roomName).rect(pos.x, pos.y, 1, 1)
+  })
+}
+
 interactive.clearDrawnPlans = (roomName:string) => {
   new RoomVisual(roomName).clear()
 }

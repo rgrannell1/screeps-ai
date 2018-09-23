@@ -22,6 +22,12 @@ export type Point = {
   x: number,
   y: number
 }
+export type Bounds = {
+  readonly x0: number,
+  readonly x1: number,
+  readonly y0: number,
+  readonly y1: number
+}
 
 export type RoleLabel = 'builder'| 'claimer'| 'harvester'| 'scribe'| 'transferer'| 'upgrader'
 
@@ -31,4 +37,10 @@ export interface SpawnOrder {
   readonly youngCount: number,
   readonly sufficientCount: number,
   readonly role: string
+}
+
+export interface BuildingPlan {
+  readonly label: string,
+  readonly positions: RoomPosition[],
+  readonly structure: StructureConstant
 }

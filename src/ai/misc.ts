@@ -18,4 +18,14 @@ misc.timer = (fn:Function, timer: number):void => {
   }
 }
 
+misc.indicesTo = (from, to) => {
+  const indices = []
+
+  for (let ith = from; ith <= to; ith++) {
+    indices.push(ith)
+  }
+
+  return indices
+}
+
 export default misc

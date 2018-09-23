@@ -189,7 +189,8 @@ creeps.findExitPath = (creep:Creep, roomName:string):any => {
 }
 
 creeps.carrying = (creep:Creep):number => {
-  return Object.values(creep.carry).reduce((acc, current) => acc + current, 0)
+  const stored = Object.values(creep.carry) as number[]
+  return stored.reduce((acc, current) => acc + current, 0)
 }
 
 export default creeps
