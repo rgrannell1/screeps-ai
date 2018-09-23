@@ -31,19 +31,19 @@ interactive.drawPlans = (roomName:string) => {
       text += plan.plan.structure + ' '
     }
 
+
     new RoomVisual(roomName).circle(plan.pos.x, plan.pos.y)
     new RoomVisual(roomName).text(text, plan.pos.x, plan.pos.y, {
       font: '10px'
     })
   })
+
+  interactive.clearDrawnPlans()
 }
 
 interactive.drawPositions = (roomName:string, positions:RoomPosition[]) => {
   positions.forEach(pos => {
-    const {x, y} = pos
-    new RoomVisual(roomName).rect(x - 0.5, y - 0.5, 1, 1, {
-      fill: '#008080'
-    })
+    new RoomVisual(roomName).rect(pos.x, pos.y, 1, 1)
   })
 }
 
