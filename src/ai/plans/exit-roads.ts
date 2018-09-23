@@ -34,6 +34,7 @@ const exitRoads = (roomName:string) => {
     } else if (targetDirection.exit === FIND_EXIT_LEFT) {
       exitTile = exits.find(exit => exit.x === 0)
     }
+
     structures.highway.place({
       room,
       source: controller.pos,

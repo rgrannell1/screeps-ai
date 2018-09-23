@@ -78,6 +78,30 @@ creepRequired.harvester = (roomName:string):SpawnOrder => {
   }
 }
 
+creepRequired.miner = (roomName:string):SpawnOrder => {
+  const counts = {
+    young: creeps.countYoungCreeps('miner'),
+    minerals: terrain.findMinerals(roomName).length
+  }
+
+  const roomLevel = Game.rooms[roomName].controller.level
+
+  // check if extractors present
+
+  const expected = roomLevel >= 6 && counts.minerals > 0
+    ? counts.minerals
+    : 0
+
+  return {
+    role: 'miner',
+    expected: counts.minerals,
+    youngCount: counts.young,
+    sufficientCount: 1,
+    isRequired: counts.young < counts.minerals
+  }
+}
+
+
 creepRequired.upgrader = (roomName:string):SpawnOrder => {
   const counts = {
     young: creeps.countYoungCreeps('upgrader')
@@ -190,6 +214,7 @@ const priorities = [
   'repairer',
   'builder',
   'scout',
+  'miner',
   'scribe'
 ] as Array<RoleLabel>
 

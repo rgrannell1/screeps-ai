@@ -76,7 +76,7 @@ const loop = () => {
     for (const roomName of Object.keys(Game.rooms)) {
       const room = Game.rooms[roomName]
 
-      interactive.drawPlans('W42N31')
+      //interactive.drawPlans('W42N31')
 
       misc.timer(() => {
         telemetry.logGameState(roomName)

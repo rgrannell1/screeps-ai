@@ -135,7 +135,7 @@ structures.highway.place = ({room, source, target}, metadata) => {
 
   for (const {x, y} of roadPath) {
     const pos = new RoomPosition(x, y, room.name)
-    if (terrain.is.plain(pos)) {
+    if (!terrain.is.wall(pos)) {
       addPlan(pos, {...metadata, structure: STRUCTURE_ROAD})
     }
   }

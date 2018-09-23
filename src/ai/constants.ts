@@ -29,6 +29,9 @@ constants.roles = {
   harvester: {
     icon: 'H'
   },
+  miner: {
+    icon: 'M'
+  },
   exporter: {
     icon: 'E'
   },

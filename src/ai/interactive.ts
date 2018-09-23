@@ -33,7 +33,9 @@ interactive.drawPlans = (roomName:string) => {
 
 
     new RoomVisual(roomName).circle(plan.pos.x, plan.pos.y)
-    new RoomVisual(roomName).text(text, plan.pos.x, plan.pos.y)
+    new RoomVisual(roomName).text(text, plan.pos.x, plan.pos.y, {
+      font: '10px'
+    })
   })
 
   interactive.clearDrawnPlans()

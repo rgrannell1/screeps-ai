@@ -89,6 +89,12 @@ creeps.harvester.body = (capacity:number):string[] => {
   return createBodyPlan([CARRY, MOVE, MOVE, WORK], [WORK], capacity)
 }
 
+creeps.miner = {}
+
+creeps.miner.body = (capacity:number):string[] => {
+  return createBodyPlan([CARRY, MOVE, MOVE, WORK], [WORK], capacity)
+}
+
 creeps.scout = {}
 
 creeps.scout.body = (capacity:number):string[] => {
@@ -177,10 +183,13 @@ creeps.chooseEnergySink = (creep:Creep, priorityLists:Array<Priority>):Priority 
   return priorities
 }
 
-
 creeps.findExitPath = (creep:Creep, roomName:string):any => {
   const exitDir = creep.room.findExitTo(roomName)
   return creep.pos.findClosestByRange(<any>exitDir)
+}
+
+creeps.carrying = (creep:Creep):number => {
+  return Object.values(creep.carry).reduce((acc, current) => acc + current, 0)
 }
 
 export default creeps

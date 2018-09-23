@@ -74,6 +74,10 @@ shared.chargeTarget = (sinkPriorities:Array<Priority>, creep:any):void => {
   */
 
   const transferCode = creep.transfer(target.value, RESOURCE_ENERGY)
+
+  if((RESOURCE_UTRIUM in creep.room.storage.store)) {
+    creep.transfer(target.value, RESOURCE_UTRIUM)
+  }
 }
 
 shared.chargeLocalTarget = (sinkPriorities:Array<Priority>, creep:any):void => {
@@ -189,6 +193,20 @@ shared.harvestSource = (creep:Creep):void => {
   */
 
   const chargeCode = creep.harvest(source)
+}
+
+shared.harvestMinerals = (creep:Creep):void => {
+  creep.memory.state = 'harvest_minerals'
+
+  if (creep.memory.externalRoom && creep.room.name !== creep.memory.externalRoom) {
+    creep.moveTo(creep.pos.findClosestByRange(creep.room.findExitTo(creep.memory.externalRoom)))
+    return
+  }
+
+  const [minerals] = terrain.findMinerals(creep.room.name)
+
+  const moveCode = creep.moveTo(minerals.pos)
+  const chargeCode = creep.harvest(minerals)
 }
 
 shared.claimRoom = (creep:Creep):void => {
