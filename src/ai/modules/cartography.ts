@@ -47,4 +47,41 @@ Cartography.findUnchartedNeighbours = (roomName:string) => {
   })
 }
 
+Cartography.classify = (roomName:string) => {
+  if (!Memory.cartography) {
+    throw new Error('no sites present')
+  }
+
+  const observations = Memory.cartography[roomName]
+
+  const summary = {
+    roomName,
+    sourceCount: observations.sourceCount,
+    mineralCount: observations.mineralCount,
+  } as any
+
+  if (!observations) {
+    summary.type = 'unknown'
+    return summary
+  }
+
+  const hasOwner = observations.tenant.hasOwner
+  const isMine = observations.tenant.isMine
+  const containsHostiles = observations.tenant.hostileCreepCount > 0
+
+  if (hasOwner && !isMine || !isMine && containsHostiles) {
+    summary.safety = 'hostile'
+  } else if (!hasOwner && !containsHostiles) {
+    summary.safety = 'neutral'
+  } else if (isMine) {
+    summary.safety = 'friendly'
+  }
+
+  return summary
+}
+
+Cartography.isSafe = (roomName:string) => {
+  return Cartography.classify(roomName).safety !== 'hostile'
+}
+
 export default Cartography

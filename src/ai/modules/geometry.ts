@@ -42,9 +42,6 @@ Geometry.listBlocks = function* (roomName:string) {
     }
     tiles.push(row)
   }
-
-
-
 }
 
 export default Geometry

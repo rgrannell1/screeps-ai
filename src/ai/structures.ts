@@ -10,7 +10,8 @@ const structures = {
   extensions: {},
   tower: {},
   highway: {},
-  is: {}
+  is: {},
+  extractor: {}
 } as any
 
 const addPlan = (pos, plan) => {
@@ -68,6 +69,11 @@ structures.walls.findAll = roomName => {
     }
   })
 }
+
+structures.extractor.place = (pos, metadata) => {
+  addPlan(pos, {...metadata, structure: STRUCTURE_EXTRACTOR})
+}
+
 
 structures.container.hasEnergy = container => {
 

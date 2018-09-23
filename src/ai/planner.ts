@@ -18,7 +18,8 @@ planner.run = (roomName:string):void => {
     plans.exitRoads(roomName)
   }
 
-  if (roomLevel >= 4) {
+  if (roomLevel >= 6) {
+    plans.extractors(roomName)
     plans.miningRoads(roomName)
   }
 }

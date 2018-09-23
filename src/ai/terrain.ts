@@ -7,32 +7,6 @@ const lookAtPos = (pos:RoomPosition) => {
   })
 }
 
-terrain.findUnexploredRooms = (roomName:string) => {
-  const nearby = Game.map.describeExits(roomName)
-
-  if (!Memory.externalRooms) {
-    Memory.externalRooms = {}
-  }
-
-  return Object.values(nearby).filter((neighbour:string) => {
-    return !Memory.externalRooms.hasOwnProperty(neighbour)
-  })
-}
-
-terrain.findClaimableRooms = () => {
-  const rooms = []
-
-/*
-  for (const [name, data] of Object.entries(Memory.externalRooms)) {
-    if (data.controller && data.controller.owner === '') {
-
-    }
-  }
-
-*/
-
-  return rooms
-}
 
 terrain.is = {}
 
@@ -203,11 +177,6 @@ terrain.getSourceQuality = source => {
   return surrounding.filter(tile => {
     return !terrain.is.wall(tile)
   }).length
-}
-
-terrain.findMinerals = roomName => {
-  const room = Game.rooms[roomName]
-  return room.find(FIND_MINERALS)
 }
 
 terrain.findClosestSource = pos => {

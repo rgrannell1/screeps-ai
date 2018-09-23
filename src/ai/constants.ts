@@ -5,7 +5,8 @@ constants.labels = {
   exitRoads: 'exit_roads',
   miningRoads: 'mining_roads',
   ringRoads: 'ring_roads',
-  extensionBlockOne: 'extension_block_one'
+  extensionBlockOne: 'extension_block_one',
+  extractors: 'extractors'
 }
 
 constants.sign = 'No uncaught exceptions in three days.'

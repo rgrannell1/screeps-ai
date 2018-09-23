@@ -2,6 +2,7 @@
 import constants from '../constants'
 import terrain from '../terrain'
 import structures from '../structures'
+import Cartography from '../modules/cartography'
 
 const exitRoads = (roomName:string) => {
   const room = Game.rooms[roomName]
@@ -10,23 +11,30 @@ const exitRoads = (roomName:string) => {
     return
   }
 
-  const exits = terrain.getExitTiles(roomName)
-  const state = {
-    groups: []
-  }
+  const neighbours = Cartography.findNeighbours(roomName)
+  const classifications = neighbours.map(Cartography.classify)
+  const targets = classifications.filter(data => {
+    return data.safety !== 'hostile' && (data.sourceCount > 0 || data.mineralCount > 0)
+  })
 
-  const targets = [
-    exits.find(exit => exit.x === 0),
-    exits.find(exit => exit.x === 49),
-    exits.find(exit => exit.y === 0),
-    exits.find(exit => exit.y === 49)
-  ].filter(exit => typeof exit !== 'undefined')
-
-  const metadata = {label: constants.labels.exitRoads}
   const controller = terrain.findController(roomName)
+  const metadata = {label: constants.labels.exitRoads}
 
   for (const target of targets) {
-    structures.highway.place({room, source: controller.pos, target}, metadata)
+    const [targetDirection] = Game.map.findRoute(roomName, target.roomName)
+    const exits = terrain.getExitTiles(roomName)
+
+    let exitTile
+    if (targetDirection.exit === FIND_EXIT_TOP) {
+      exitTile = exits.find(exit => exit.y === 0)
+    } else if (targetDirection.exit === FIND_EXIT_RIGHT) {
+      exitTile = exits.find(exit => exit.x === 49)
+    } else if (targetDirection.exit === FIND_EXIT_BOTTOM) {
+      exitTile = exits.find(exit => exit.y === 49)
+    } else if (targetDirection.exit === FIND_EXIT_LEFT) {
+      exitTile = exits.find(exit => exit.x === 0)
+    }
+    structures.highway.place({room, source: controller.pos, target: exitTile}, metadata)
   }
 }
 

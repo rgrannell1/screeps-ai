@@ -7,6 +7,7 @@ import miningRoads from './mining-roads'
 import exitRoads from './exit-roads'
 import spawnExtensions from './spawn-extensions'
 import towers from './towers'
+import extractors from './extractors'
 
 const plans = {
   ringRoads,
@@ -15,6 +16,7 @@ const plans = {
   exitRoads,
   spawnExtensions,
   towers,
+  extractors
 }
 
 export default plans

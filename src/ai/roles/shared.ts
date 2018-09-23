@@ -8,27 +8,6 @@ import {Priority} from '../types'
 
 const shared = {} as any
 
-shared.findUnexploredRooms = (creep:Creep):void => {
-  const nearby = terrain.findUnexploredRooms(creep.room.name)
-
-  if (!nearby) {
-    return
-  }
-  const target = nearby[0]
-  const exit = creeps.findExitPath(creep, target)
-
-  creep.moveTo(exit)
-
-  return
-
-  if (creep.room.name !== creep.memory.spawnRoom && target) {
-    Memory.externalRooms[target] = {
-      controller: creep.room.controller,
-      user: creep.room.controller ? creep.room.controller.owner : null
-    }
-  }
-}
-
 shared.renewCreep = (creep:Creep):void => {
   creep.memory.state = 'renew_creep'
   const [spawn] = terrain.findSpawns(creep.room.name)
@@ -41,15 +20,15 @@ shared.renewCreep = (creep:Creep):void => {
 shared.chargeCreep = (sinks:string[], creep:Creep):void => {
   creep.memory.state = 'charge_creep'
 
-  const energy = creep.pos.findInRange(FIND_DROPPED_RESOURCES, 30).filter(value => {
+  const energy = creep.pos.findInRange(FIND_DROPPED_RESOURCES, 25).filter(value => {
     return value.resourceType === 'energy'
   })
 
-  if (energy) {
-    creep.moveTo(energy[0])
-    creep.pickup(energy[0])
-    return
-  }
+//  if (energy) {
+//    creep.moveTo(energy[0])
+//    creep.pickup(energy[0])
+//    return
+//  }
 
   const source = structures.findEnergySource(creep.room.name, sinks)
 
