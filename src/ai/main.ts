@@ -10,8 +10,11 @@ import terrain from './terrain'
 import logger from './logger'
 import tower from './tower'
 import roles from './roles/index'
+import interative from './interactive'
 import Geometry from './modules/geometry'
 import * as profiler from 'screeps-profiler'
+
+global.interactive = interactive
 
 const evictCreepCache = () => {
   for (const name in Memory.creeps) {
@@ -72,6 +75,8 @@ const loop = () => {
 
     for (const roomName of Object.keys(Game.rooms)) {
       const room = Game.rooms[roomName]
+
+      interactive.drawPlans('W42N31')
 
       misc.timer(() => {
         telemetry.logGameState(roomName)

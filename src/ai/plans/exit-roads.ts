@@ -20,9 +20,9 @@ const exitRoads = (roomName:string) => {
   const controller = terrain.findController(roomName)
   const metadata = {label: constants.labels.exitRoads}
 
+  const exits = terrain.getExitTiles(roomName)
   for (const target of targets) {
     const [targetDirection] = Game.map.findRoute(roomName, target.roomName)
-    const exits = terrain.getExitTiles(roomName)
 
     let exitTile
     if (targetDirection.exit === FIND_EXIT_TOP) {
@@ -34,7 +34,11 @@ const exitRoads = (roomName:string) => {
     } else if (targetDirection.exit === FIND_EXIT_LEFT) {
       exitTile = exits.find(exit => exit.x === 0)
     }
-    structures.highway.place({room, source: controller.pos, target: exitTile}, metadata)
+    structures.highway.place({
+      room,
+      source: controller.pos,
+      target: exitTile
+    }, metadata)
   }
 }
 

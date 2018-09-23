@@ -10,5 +10,37 @@ interactive.clearFlags = () => {
   Object.values(Game.flags).forEach(flag => flag.remove())
 }
 
+interactive.drawPlans = (roomName:string) => {
+  const room = Game.rooms[roomName]
+
+  if (!Memory.plans) {
+    return
+  }
+
+  Memory.plans
+    .filter(data => {
+      return data.pos.roomName === roomName
+    })
+    .forEach(plan => {
+
+    let text = ''
+    if (plan.plan.label) {
+      text += plan.plan.label + ' '
+    }
+    if (plan.plan.structure) {
+      text += plan.plan.structure + ' '
+    }
+
+
+    new RoomVisual(roomName).circle(plan.pos.x, plan.pos.y)
+    new RoomVisual(roomName).text(text, plan.pos.x, plan.pos.y)
+  })
+
+  interactive.clearDrawnPlans()
+}
+
+interactive.clearDrawnPlans = (roomName:string) => {
+  new RoomVisual(roomName).clear()
+}
+
 export default interactive
-global.interactive = interactive

@@ -128,14 +128,9 @@ structures.tower.findAll = (roomName:string):Array<StructureTower> => {
 }
 
 structures.highway.place = ({room, source, target}, metadata) => {
-  if (!source) throw new Error('source missing')
-  if (!target) throw new Error('target missing')
-  if (!metadata) throw new Error('metadata missing')
-  if (!metadata.label) throw new Error('metadata.label missing')
-
   const roadPath = room.findPath(source, target, {
     ignoreCreeps: true,
-    ignoreRoads: true
+    ignoreRoads: false
   })
 
   for (const {x, y} of roadPath) {
