@@ -65,18 +65,10 @@ shared.chargeTarget = (sinkPriorities:Array<Priority>, creep:any):void => {
   }
 
   const moveCode = creep.moveTo(target.value.pos)
-  /*
-  logger.data('creep move status', 'creep_move', {
-    code: telemetry.moveCode(moveCode),
-    creep_name: creep.name,
-    room_name: creep.room.name
-  })
-  */
-
   const transferCode = creep.transfer(target.value, RESOURCE_ENERGY)
 
-  if((RESOURCE_UTRIUM in creep.room.storage.store)) {
-    creep.transfer(target.value, RESOURCE_UTRIUM)
+  for (const resource of Object.keys(creep.carry)) {
+    creep.transfer(target.value, resource)
   }
 }
 

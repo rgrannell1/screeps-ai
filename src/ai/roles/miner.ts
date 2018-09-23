@@ -25,13 +25,15 @@ const run = (creep:Creep):void => {
     shared.chargeTarget(sinkPriorities, creep)
   }
 
-  if (creep.carry.energy === 0) {
+  const carried = creeps.carrying(creep)
+
+  if (carried === 0) {
     if (creep.ticksToLive < (constants.limits.endOfYouth / 2)) {
       shared.reclaimCreep(creep)
     } else {
       creep.memory.isActive = false
     }
-  } else if (creeps.carrying(creep) === creep.carryCapacity) {
+  } else if (carried === creep.carryCapacity) {
     creep.memory.isActive = true
   }
 }
