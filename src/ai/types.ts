@@ -44,3 +44,5 @@ export interface BuildingPlan {
   readonly positions: RoomPosition[],
   readonly structure: StructureConstant
 }
+
+export type Computation<T> = IterableIterator<T>

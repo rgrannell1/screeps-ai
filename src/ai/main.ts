@@ -12,6 +12,7 @@ import tower from './tower'
 import roles from './roles/index'
 import interative from './interactive'
 import Geometry from './modules/geometry'
+import Compute from './modules/compute'
 import * as profiler from 'screeps-profiler'
 
 global.interactive = interactive
@@ -55,13 +56,31 @@ declare global {
 }
 
 const state = {
-  run: false
+  run: false,
+  resultAcc: []
 }
 
 const onStart = () => {
   logger.data('code_updated', 'code_updated', {})
   state.run = true
 }
+
+function takeIterValues (store, batch:number) {
+  for (let ith = 0; ith < batch; ith++) {
+    let yielded = state.result.next()
+
+    if (yielded.done) {
+      return true
+    } else {
+      store.push(yielded.value)
+    }
+  }
+
+  // -- make a noop after a few runs
+
+  return false
+}
+let ITH=0
 
 const loop = () => {
   profiler.wrap(() => {
@@ -75,22 +94,24 @@ const loop = () => {
     for (const roomName of Object.keys(Game.rooms)) {
       const room = Game.rooms[roomName]
 
-      if (!state.it) {
-        state.it = Geometry.yieldLandBlocks(roomName, {x: 5, y:5}, pos => {
-          const atLocation = pos.look()
-          const isPlain = atLocation.length === 1 && atLocation[0].terrain === 'plain'
-          return isPlain
-        })
+      if (roomNme === 'W42N31') {
+        if (!state.result) {
+          state.result = Geometry.yieldEmptyBlocks(roomName, {
+            x: 3,
+            y: 3
+          })
+        }
+
+        if (takeIterValues(state.resultAcc, 400)) {
+          ITH++
+          let result = state.resultAcc[ITH]
+
+          if (result) {
+            interactive.drawPositions(roomName, Geometry.expandBounds(roomName, result))
+          }
+        }
       }
 
-
-      let xxx = state.it.next().value
-      if (xxx) {
-        interactive.drawPositions(
-          roomName,
-          Geometry.expandBounds(roomName, xxx)
-        )
-      }
       //interactive.drawPlans('W42N31')
 
       misc.timer(() => {

@@ -1,6 +1,7 @@
 
 import misc from '../misc'
-import {Plan, Point, Template} from '../types'
+import {Plan, Point, Template, Bounds} from '../types'
+import terrain from '../terrain'
 
 const Geometry = {} as any
 
@@ -34,21 +35,41 @@ Geometry.map = (roomName:string):Array<LookForAtAreaResultWithPos<Terrain, "terr
   return Game.rooms[roomName].lookForAtArea(LOOK_TERRAIN, 0, 0, 49, 49, true)
 }
 
-Geometry.yieldLandBlocks = function* (roomName:string, dims:Point, pred:Function):Bounds {
+Geometry.roomPositionMap = (roomName:string) => {
   const tiles = []
 
-  // -- check if things match
   for (let x = 0; x < 50; x++) {
     let row = []
     for (let y = 0; y < 50; y++) {
-      const pos = new RoomPosition(x, y, roomName)
-      row.push({
-        pos,
-        isMatch: pred(pos)
-      })
+      row.push(new RoomPosition(x, y, roomName))
     }
     tiles.push(row)
   }
+
+  return tiles
+}
+
+Geometry.terrainMap = (roomName:string) => {
+  const terrainMask = new Room.Terrain(roomName)
+  const tiles = []
+
+  for (let x = 0; x < 50; x++) {
+    let row = []
+    for (let y = 0; y < 50; y++) {
+      row.push(terrain.get(x, y))
+    }
+    tiles.push(row)
+  }
+
+  return tiles
+}
+
+Geometry.yieldLandBlocks = function* (filter:Function, roomName:string, dims:Point):IterableIterator<Bounds> {
+  const tiles = Geometry.roomPositionMap(roomName).map(row => {
+    return row.map(pos => {
+      return {pos, isMatch: filter(pos)}
+    })
+  })
 
   for (let ith = 0; ith < (49 - dims.x); ith++) {
     for (let jth = 0; jth < (49 - dims.y); jth++) {
@@ -72,6 +93,8 @@ Geometry.yieldLandBlocks = function* (roomName:string, dims:Point, pred:Function
     }
   }
 }
+
+Geometry.yieldEmptyBlocks = Geometry.yieldLandBlocks.bind(null, terrain.is.plain)
 
 Geometry.expandBounds = (roomName:string, bounds:Bounds):RoomPosition[] => {
   const tiles = []

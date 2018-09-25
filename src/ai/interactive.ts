@@ -1,5 +1,7 @@
 
-const interactive = {} as any
+const interactive = {
+  visualise: {}
+} as any
 
 interactive.clearPlans = () => {
   Memory.plans = []
@@ -49,6 +51,10 @@ interactive.drawPositions = (roomName:string, positions:RoomPosition[]) => {
 
 interactive.clearDrawnPlans = (roomName:string) => {
   new RoomVisual(roomName).clear()
+}
+
+interactive.visualise.container = (pos:RoomPosition) => {
+
 }
 
 export default interactive
