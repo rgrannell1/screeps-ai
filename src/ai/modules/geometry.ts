@@ -108,4 +108,31 @@ Geometry.expandBounds = (roomName:string, bounds:Bounds):RoomPosition[] => {
   return tiles
 }
 
+Geometry.boundDistance = (pos:RoomPosition, bounds:Bounds):number => {
+  const corners = [
+    new RoomPosition(bounds.x0, bounds.y0, pos.roomName),
+    new RoomPosition(bounds.x0, bounds.y1, pos.roomName),
+    new RoomPosition(bounds.x1, bounds.y0, pos.roomName),
+    new RoomPosition(bounds.x1, bounds.y1, pos.roomName)
+  ]
+
+  const pointDistances = corners
+    .map(corner => {
+      const xDiff = pos.x - corner.x
+      const yDiff = pos.y - corner.y
+
+      return {
+        pos,
+        corner,
+        bounds,
+        distance: Math.sqrt(Math.pow(xDiff, 2) + Math.pow(yDiff, 2))
+      }
+    })
+    .sort((data0, data1) => {
+      return data1.distance - data0.distance
+    })
+
+  return pointDistances[0]
+}
+
 export default Geometry

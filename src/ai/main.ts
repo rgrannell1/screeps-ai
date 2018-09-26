@@ -15,8 +15,6 @@ import Geometry from './modules/geometry'
 import Compute from './modules/compute'
 import * as profiler from 'screeps-profiler'
 
-global.interactive = interactive
-
 const evictCreepCache = () => {
   for (const name in Memory.creeps) {
     if (!Game.creeps.hasOwnProperty(name)) {
@@ -65,23 +63,6 @@ const onStart = () => {
   state.run = true
 }
 
-function takeIterValues (store, batch:number) {
-  for (let ith = 0; ith < batch; ith++) {
-    let yielded = state.result.next()
-
-    if (yielded.done) {
-      return true
-    } else {
-      store.push(yielded.value)
-    }
-  }
-
-  // -- make a noop after a few runs
-
-  return false
-}
-let ITH=0
-
 const loop = () => {
   profiler.wrap(() => {
     evictCreepCache()
@@ -93,24 +74,6 @@ const loop = () => {
 
     for (const roomName of Object.keys(Game.rooms)) {
       const room = Game.rooms[roomName]
-
-      if (roomNme === 'W42N31') {
-        if (!state.result) {
-          state.result = Geometry.yieldEmptyBlocks(roomName, {
-            x: 3,
-            y: 3
-          })
-        }
-
-        if (takeIterValues(state.resultAcc, 400)) {
-          ITH++
-          let result = state.resultAcc[ITH]
-
-          if (result) {
-            interactive.drawPositions(roomName, Geometry.expandBounds(roomName, result))
-          }
-        }
-      }
 
       //interactive.drawPlans('W42N31')
 
