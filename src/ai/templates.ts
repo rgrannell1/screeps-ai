@@ -1,4 +1,12 @@
 
 const templates = {} as any
 
+templates.extensions = () => {
+  return [
+    [STRUCTURE_ROAD, STRUCTURE_EXTENSION, STRUCTURE_EXTENSION],
+    [STRUCTURE_EXTENSION, STRUCTURE_ROAD, STRUCTURE_EXTENSION],
+    [STRUCTURE_EXTENSION, STRUCTURE_EXTENSION, STRUCTURE_EXTENSION],
+  ]
+}
+
 export default templates

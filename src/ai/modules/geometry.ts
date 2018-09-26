@@ -20,6 +20,10 @@ Geometry.plan = (template:Template, pos:RoomPosition):Plan => {
   })
 }
 
+Geometry.rotatePlan = (plan:Plan):Plan => {
+
+}
+
 Geometry.translate = (parts:Plan, point:Point):Plan => {
   return parts.map(row => {
     return row.map(({type, pos}) => {
