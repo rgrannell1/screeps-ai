@@ -50,16 +50,20 @@ structures.placePlans = () => {
 }
 
 structures.any.place = (pos, structure, metadata) => {
+  deprecate.deprecate()
   addPlan(pos, {...metadata, structure})
 }
 
 structures.roads = {}
 
 structures.roads.place = (pos, metadata) => {
+  deprecate.deprecate()
   addPlan(pos, {...metadata, structure: STRUCTURE_ROAD})
 }
 
 structures.roads.findAll = roomName => {
+  deprecate.deprecate()
+
   return Game.rooms[roomName].find(FIND_STRUCTURES, {
     filter (item) {
       return item.structureType === STRUCTURE_ROAD

@@ -10,8 +10,9 @@ Geometry.template = (template:Template):Template => {
 }
 
 Geometry.plan = (template:Template, pos:RoomPosition):Plan[] => {
-  const sites = []
+  const sites:Plan[] = []
 
+  // -- todo fix typeerror
   template.forEach((row, ith) => {
     return row.forEach((type, jth) => {
       sites.push({
@@ -35,10 +36,6 @@ Geometry.translate = (parts:Plan, point:Point):Plan => {
   })
 }
 
-Geometry.map = (roomName:string):Array<LookForAtAreaResultWithPos<Terrain, "terrain"> => {
-  return Game.rooms[roomName].lookForAtArea(LOOK_TERRAIN, 0, 0, 49, 49, true)
-}
-
 Geometry.roomPositionMap = (roomName:string) => {
   const tiles = []
 
@@ -53,7 +50,7 @@ Geometry.roomPositionMap = (roomName:string) => {
   return tiles
 }
 
-Geometry.terrainMap = (roomName:string) => {
+Geometry.terrainMap = (roomName:string):number[][] => {
   const terrainMask = new Room.Terrain(roomName)
   const tiles = []
 
@@ -109,7 +106,10 @@ Geometry.yieldEmptyZonedPlots = Geometry.yieldPlots.bind(null, (pos:RoomPosition
     }
   })
 
-  return terrain.is.plain(pos) && !Geometry.includesPosition(pos, zones)
+  const isPlain = terrain.is.plain(pos)
+  const notReserved = !Geometry.includesPosition(pos, zones)
+
+  return isPlain && notReserved
 })
 
 Geometry.expandBounds = (roomName:string, bounds:Bounds):RoomPosition[] => {

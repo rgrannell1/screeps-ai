@@ -27,9 +27,14 @@ Architecture.placePlans = () => {
 
   for (const [roomName, plans] of Object.entries(Memory.buildingPlans)) {
     for (const plan of Object.values(plans)) {
-      for (const site of plan.sites) {
-        const pos = site.pos
-        pos.createConstructionSite(site.type)
+      const room = Game.rooms[plan.roomName]
+
+      try {
+        for (const site of plan.sites) {
+          room.createConstructionSite(site.pos, site.type)
+        }
+      } catch (err) {
+        console.log(`failed to place construction-site:\n${JSON.stringify(plan, null, 2)}\n${err.message}`)
       }
     }
   }
