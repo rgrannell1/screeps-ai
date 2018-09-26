@@ -16,6 +16,7 @@ planner.run = (roomName:string):void => {
 
   if (roomLevel >= 3) {
     plans.exitRoads(roomName)
+    plans.spawnExtensions(roomName)
   }
 
   if (roomLevel >= 6) {

@@ -1,6 +1,7 @@
 
 import misc from './misc'
 import terrain from './terrain'
+import deprecate from './deprecation'
 
 const structures = {
   any: {},
@@ -15,6 +16,8 @@ const structures = {
 } as any
 
 const addPlan = (pos, plan) => {
+  deprecate.deprecate()
+
   if (!Memory.plans) {
     Memory.plans = []
   }
@@ -30,6 +33,8 @@ const addPlan = (pos, plan) => {
 }
 
 structures.placePlans = () => {
+  deprecate.deprecate()
+
   if (!Memory.plans) {
     Memory.plans = []
   }

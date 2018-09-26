@@ -9,19 +9,19 @@ Geometry.template = (template:Template):Template => {
   return template
 }
 
-Geometry.plan = (template:Template, pos:RoomPosition):Plan => {
-  return template.map((row, ith) => {
-    return row.map((type, jth) => {
-      return {
+Geometry.plan = (template:Template, pos:RoomPosition):Plan[] => {
+  const sites = []
+
+  template.forEach((row, ith) => {
+    return row.forEach((type, jth) => {
+      sites.push({
         type,
         pos: new RoomPosition(pos.x + ith, pos.y + jth, pos.roomName)
-      }
+      })
     })
   })
-}
 
-Geometry.rotatePlan = (plan:Plan):Plan => {
-
+  return sites
 }
 
 Geometry.translate = (parts:Plan, point:Point):Plan => {
@@ -68,7 +68,7 @@ Geometry.terrainMap = (roomName:string) => {
   return tiles
 }
 
-Geometry.yieldLandBlocks = function* (filter:Function, roomName:string, dims:Point):IterableIterator<Bounds> {
+Geometry.yieldPlots = function* (filter:Function, roomName:string, dims:Point):IterableIterator<Bounds> {
   const tiles = Geometry.roomPositionMap(roomName).map(row => {
     return row.map(pos => {
       return {pos, isMatch: filter(pos)}
@@ -98,7 +98,19 @@ Geometry.yieldLandBlocks = function* (filter:Function, roomName:string, dims:Poi
   }
 }
 
-Geometry.yieldEmptyBlocks = Geometry.yieldLandBlocks.bind(null, terrain.is.plain)
+Geometry.yieldEmptyPlots = Geometry.yieldPlots.bind(null, terrain.is.plain)
+
+Geometry.yieldEmptyZonedPlots = Geometry.yieldPlots.bind(null, (pos:RoomPosition) => {
+  let zones = []
+
+  Object.values(Game.spawns).map(spawn => {
+    if (spawn.room.name === pos.roomName) {
+      zones = zones.concat(Geometry.border(spawn.pos, 2))
+    }
+  })
+
+  return terrain.is.plain(pos) && !Geometry.includesPosition(pos, zones)
+})
 
 Geometry.expandBounds = (roomName:string, bounds:Bounds):RoomPosition[] => {
   const tiles = []
@@ -120,23 +132,31 @@ Geometry.boundDistance = (pos:RoomPosition, bounds:Bounds):number => {
     new RoomPosition(bounds.x1, bounds.y1, pos.roomName)
   ]
 
-  const pointDistances = corners
-    .map(corner => {
-      const xDiff = pos.x - corner.x
-      const yDiff = pos.y - corner.y
+  const pointDistances = corners.map(corner => {
+    const xDiff = pos.x - corner.x
+    const yDiff = pos.y - corner.y
 
-      return {
-        pos,
-        corner,
-        bounds,
-        distance: Math.sqrt(Math.pow(xDiff, 2) + Math.pow(yDiff, 2))
-      }
-    })
-    .sort((data0, data1) => {
-      return data1.distance - data0.distance
-    })
+    return Math.sqrt(Math.pow(xDiff, 2) + Math.pow(yDiff, 2))
+  })
 
-  return pointDistances[0]
+  return Math.min(...pointDistances)
+}
+
+Geometry.border = (pos:RoomPosition, radius:number):RoomPosition[] => {
+  const bounds = {
+    x0: Math.max(0, pos.x - radius),
+    x1: Math.min(pos.x + radius, 49),
+    y0: Math.max(0, pos.y - radius),
+    y1: Math.min(pos.y + radius, 49)
+  }
+
+  return Geometry.expandBounds(pos.roomName, bounds)
+}
+
+Geometry.includesPosition = (pos:RoomPosition, range:RoomPosition[]):boolean => {
+  return range.some(candidate => {
+    return candidate.x === pos.x && candidate.y === pos.y && candidate.roomName === pos.roomName
+  })
 }
 
 export default Geometry

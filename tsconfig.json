@@ -2,6 +2,12 @@
   "compilerOptions": {
     "outDir": "./tsdist",
     "allowJs": true,
+    "alwaysStrict": true,
+    "forceConsistentCasingInFileNames": true,
+    "keyofStringsOnly": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedParameters": true,
+    "strictNullChecks": true,
     "target": "es2017"
   },
   "include": [

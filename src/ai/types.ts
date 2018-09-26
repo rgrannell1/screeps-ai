@@ -39,10 +39,15 @@ export interface SpawnOrder {
   readonly role: string
 }
 
+export interface Site {
+  readonly pos: RoomPosition,
+  readonly type: StructureConstant
+}
+
 export interface BuildingPlan {
   readonly label: string,
-  readonly positions: RoomPosition[],
-  readonly structure: StructureConstant
+  readonly roomName: string,
+  readonly sites: Array<Site>,
 }
 
 export type Computation<T> = IterableIterator<T>

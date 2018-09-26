@@ -3,13 +3,15 @@ import {} from '../types'
 
 const deprecate = {} as any
 
-deprecate.deprecate = () => {
-  try {
-    throw new Error('')
-  } catch (err) {
-    console.log(`this function is deprecated\n: ${err.stack}`)
-  }
+deprecate.deprecate = (name:string) => {
+  let err = new Error()
+  Error.captureStackTrace(err)
+
+  let stacks = err.stack.split('\n').slice(2)
+  const fn = stacks[0].slice(3)
+
+  console.log(`deprecated ${stacks[0]}`)
 }
 
-export default deprecate
+export default (deprecate)
 
