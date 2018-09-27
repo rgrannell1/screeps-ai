@@ -58,6 +58,7 @@ function placeExtensionBlock (roomName:string, count:number, areasWithDistances:
     Architecture.addPlan({roomName, label: `extensions_link_${count}`, sites: roadSites})
     Architecture.addPlan({roomName, label: `extensions_${count}`, sites})
 
+    Architecture.showPlans()
     Architecture.placePlans()
 
   } catch (err) {
@@ -90,8 +91,10 @@ const zoneExtensionBlock = (roomName:string, count:number):void => {
     startEmptyZoneComputation(roomName, areasRefCompute, state[areasRef])
 
     const areasWithDistances = Compute.evaluate(state[areasRefCompute], state[sortAccRef], 300)
-    if (areasWithDistances) {
+    if (areasWithDistances && areasWithDistances.length > 0) {
       placeExtensionBlock(roomName, count, areasWithDistances)
+    } else {
+      console.log('deferred')
     }
   }
 }
@@ -99,12 +102,41 @@ const zoneExtensionBlock = (roomName:string, count:number):void => {
 const spawnExtensions = (roomName:string):void => {
   const room = Game.rooms[roomName]
 
+  if (!room.controller) {
+    return
+  }
+
+  const level = room.controller.level
+
   if (roomName !== 'W42N31') {
     return
   }
 
-  zoneExtensionBlock(roomName, 0)
-  zoneExtensionBlock(roomName, 1)
+  // -- CONTROLLER_STRUCTURES
+
+  if (level >= 2) {
+    zoneExtensionBlock(roomName, 0)
+  }
+
+  if (level >= 3) {
+    zoneExtensionBlock(roomName, 1)
+  }
+
+  if (level >= 4) {
+    zoneExtensionBlock(roomName, 2)
+  }
+
+  if (level >= 5) {
+    zoneExtensionBlock(roomName, 3)
+  }
+
+  if (level >= 6) {
+    zoneExtensionBlock(roomName, 4)
+  }
+
+  if (level >= 7) {
+    zoneExtensionBlock(roomName, 5)
+  }
 }
 
 export default spawnExtensions
