@@ -13,24 +13,6 @@ const state = {
   sortAcc: []
 } as any
 
-function iterTake (iter, store, batch:number):Array<any> {
-  for (let ith = 0; ith < batch; ith++) {
-    let yielded = iter.next()
-
-    if (yielded.done) {
-      return store
-    } else {
-      store.push(yielded.value)
-    }
-  }
-}
-
-const iterMap = function * (iter, fn) {
-  for (let elem of iter) {
-    yield fn(elem)
-  }
-}
-
 let tileCount = 0
 
 const sourceContainers = (roomName:string):void => {

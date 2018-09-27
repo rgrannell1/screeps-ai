@@ -18,19 +18,15 @@ type posBoundDistance = {
   readonly distance: number
 }
 
-function startEmptyZoneComputation (roomName:string, emptyAreas):void {
+function startEmptyZoneComputation (roomName:string, ref:string, emptyAreas):void {
   const controller = terrain.findController(roomName)
 
-  if (!state.distanceToControllerResult) {
-    state.distanceToControllerResult = Compute.map(emptyAreas, (area:Bounds):posBoundDistance => {
-      try {
-        return {
-          pos: controller.pos,
-          bounds: area,
-          distance: Geometry.boundDistance(controller.pos, area)
-        }
-      } catch (err) {
-        throw new Error(err.message + '\n' + JSON.stringify(area))
+  if (!state[ref]) {
+    state[ref] = Compute.map(emptyAreas, (area:Bounds):posBoundDistance => {
+      return {
+        pos: controller.pos,
+        bounds: area,
+        distance: Geometry.boundDistance(controller.pos, area)
       }
     })
   }
@@ -65,32 +61,35 @@ function placeExtensionBlock (roomName:string, count:number, areasWithDistances:
     Architecture.placePlans()
 
   } catch (err) {
-    console.log(JSON.stringify(minDist, null, 2))
+    console.log(`failed to place plans with minDist:${JSON.stringify(minDist, null, 2)}`)
     throw err
   }
 }
 
 const zoneExtensionBlock = (roomName:string, count:number):void => {
-  if (!state.result) {
-    state.result = Geometry.yieldEmptyZonedPlots(roomName, {x: 3, y: 3})
+  if (!state.emptyZonedPlotsCompute) {
+    state.emptyZonedPlotsCompute = Geometry.yieldEmptyZonedPlots(roomName, {x: 3, y: 3})
   }
 
-  const resultAccRef = `result_acc_${count}`
-  if (!state[resultAccRef]) {
-    state[resultAccRef] = []
+  const areasRef = `area_result_acc_${count}`
+  const areasRefCompute = `area_result_acc_compute_${count}`
+
+  if (!state[areasRef]) {
+    state[areasRef] = []
   }
 
-  const sortAccRef = `result_acc_${count}`
+  const sortAccRef = `sort_result_acc_${count}`
+  const sortAccComputeRef = `sort_result_acc_compute_${count}`
   if (!state[sortAccRef]) {
     state[sortAccRef] = []
   }
 
-  const emptyAreas = Compute.evaluate(state.result, state[resultAccRef], 400)
+  const emptyAreas = Compute.evaluate(state.emptyZonedPlotsCompute, state[areasRef], 400)
 
   if (emptyAreas) {
-    startEmptyZoneComputation(roomName, emptyAreas)
+    startEmptyZoneComputation(roomName, areasRefCompute, state[areasRef])
 
-    const areasWithDistances = Compute.evaluate(state.distanceToControllerResult, state[sortAccRef], 300)
+    const areasWithDistances = Compute.evaluate(state[areasRefCompute], state[sortAccRef], 300)
     if (areasWithDistances) {
       placeExtensionBlock(roomName, count, areasWithDistances)
     }

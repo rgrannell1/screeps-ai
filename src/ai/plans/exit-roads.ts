@@ -22,7 +22,8 @@ const exitRoads = (roomName:string) => {
 
   const exits = terrain.getExitTiles(roomName)
   for (const target of targets) {
-    const [targetDirection] = Game.map.findRoute(roomName, target.roomName)
+    const route = Game.map.findRoute(roomName, target.roomName)
+    const [targetDirection] = route
 
     let exitTile
     if (targetDirection.exit === FIND_EXIT_TOP) {

@@ -7,6 +7,10 @@ const ringRoads = (roomName:string) => {
   const sources = room.find(FIND_SOURCES)
   const spawns = Game.spawns
 
+  if (!room.controller) {
+    return
+  }
+
   if (structures.planExists(constants.labels.ringRoads)) {
     return
   }

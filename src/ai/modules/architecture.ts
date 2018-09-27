@@ -31,7 +31,9 @@ Architecture.placePlans = () => {
 
       try {
         for (const site of plan.sites) {
-          room.createConstructionSite(site.pos, site.type)
+          const code = room.createConstructionSite(site.pos, site.type)
+
+          console.log(`code ${code}`)
         }
       } catch (err) {
         console.log(`failed to place construction-site:\n${JSON.stringify(plan, null, 2)}\n${err.message}`)
