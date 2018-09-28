@@ -67,10 +67,6 @@ function placeExtensionBlock (roomName:string, count:number, areasWithDistances:
 }
 
 const zoneExtensionBlock = (roomName:string, count:number):void => {
-  if (!state.emptyZonedPlotsCompute) {
-    state.emptyZonedPlotsCompute = Geometry.yieldEmptyZonedPlots(roomName, {x: 3, y: 3})
-  }
-
   const areasRef = `area_result_acc_${count}`
   const areasRefCompute = `area_result_acc_compute_${count}`
 
@@ -84,12 +80,18 @@ const zoneExtensionBlock = (roomName:string, count:number):void => {
     state[sortAccRef] = []
   }
 
-  const emptyAreas = Compute.evaluate(state.emptyZonedPlotsCompute, state[areasRef], 100)
+  const emptyPlotRef = `empty_plot_${count}`
+
+  if (!state[emptyPlotRef]) {
+    state[emptyPlotRef] = Geometry.yieldEmptyZonedPlots(roomName, {x: 3, y: 3})
+  }
+
+  const emptyAreas = Compute.evaluate(state[emptyPlotRef], state[areasRef], 50)
 
   if (emptyAreas) {
     startEmptyZoneComputation(roomName, areasRefCompute, state[areasRef])
 
-    const areasWithDistances = Compute.evaluate(state[areasRefCompute], state[sortAccRef], 100)
+    const areasWithDistances = Compute.evaluate(state[areasRefCompute], state[sortAccRef], 50)
     if (areasWithDistances && areasWithDistances.length > 0) {
       placeExtensionBlock(roomName, count, areasWithDistances)
     }

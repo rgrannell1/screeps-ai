@@ -72,7 +72,7 @@ const loop = () => {
   for (const roomName of Object.keys(Game.rooms)) {
     const room = Game.rooms[roomName]
 
-    // Architecture.showPlans()
+    Architecture.showPlans()
 
     misc.timer(() => {
       telemetry.logGameState(roomName)
