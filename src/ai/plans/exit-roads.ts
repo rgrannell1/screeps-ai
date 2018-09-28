@@ -4,14 +4,14 @@ import terrain from '../terrain'
 import structures from '../structures'
 import Cartography from '../modules/cartography'
 
-const exitRoads = (roomName:string) => {
+const exitRoads = (roomName:string):void => {
   const room = Game.rooms[roomName]
 
   if (structures.planExists(constants.labels.exitRoads)) {
     return
   }
 
-  const neighbours = Cartography.findNeighbours(roomName)
+  const neighbours:string[] = Cartography.findNeighbours(roomName)
   const classifications = neighbours.map(Cartography.classify)
   const targets = classifications.filter(data => {
     return data.safety !== 'hostile' && (data.sourceCount > 0 || data.mineralCount > 0)

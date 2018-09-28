@@ -68,7 +68,9 @@ function placeExtensionBlock (roomName:string, count:number, areasWithDistances:
 
 const zoneExtensionBlock = (roomName:string, count:number):void => {
   const areasRef = `area_result_acc_${count}`
-  const areasRefCompute = `area_result_acc_compute_${count}`
+
+  // -- use a shared area yielder.
+  const areasRefCompute = `area_result_acc_compute`
 
   if (!state[areasRef]) {
     state[areasRef] = []
@@ -98,29 +100,32 @@ const zoneExtensionBlock = (roomName:string, count:number):void => {
   }
 }
 
+const extensionsByLevel = [
+  0,
+  5,
+  10,
+  20,
+  30,
+  40,
+  50,
+  60
+]
+
+const EXTENSION_COUNT_PER_BLOCK = 9
+
 const spawnExtensions = (roomName:string):void => {
   const room = Game.rooms[roomName]
 
-  if (!room.controller) {
+  if (!room.controller || roomName !== 'W42N31') {
     return
   }
 
   const level = room.controller.level
 
-  if (roomName !== 'W42N31') {
-    return
-  }
+  const extensionsAllowed = extensionsByLevel[Math.min(level, 8)]
+  const requiredBlocks = Math.floor(extensionsAllowed / EXTENSION_COUNT_PER_BLOCK)
 
-  const EXTENSION_COUNT_PER_BLOCK = 9
-  let extensionsAllowed = 0
-
-  const extensionTable = CONTROLLER_STRUCTURES.extension
-
-  for (let ith = 0; ith <= Math.min(level, 8); ith++) {
-    extensionsAllowed += extensionTable[ith]
-  }
-
-  for (let blockId = 0; blockId < Math.floor(extensionsAllowed / EXTENSION_COUNT_PER_BLOCK); blockId++) {
+  for (let blockId = 0; blockId < requiredBlocks; blockId++) {
     zoneExtensionBlock(roomName, blockId)
   }
 }

@@ -31,13 +31,16 @@ interactive.visualise = (roomName:string, structure:StructureConstant, pos:RoomP
 }
 
 interactive.visualise[STRUCTURE_EXTENSION] = (roomName:string, pos:RoomPosition) => {
-  new RoomVisual(roomName).circle(pos.x, pos.y, {fill: 'yellow'})
+  new RoomVisual(roomName).circle(pos.x, pos.y, {
+    fill: 'yellow',
+    opacity: 0.1725
+  })
 }
 
 interactive.visualise[STRUCTURE_ROAD] = (roomName:string, pos:RoomPosition) => {
   new RoomVisual(roomName).rect(pos.x - 0.5, pos.y - 0.5, 0.75, 0.75, {
     fill: 'white',
-    opacity: 0.25
+    opacity: 0.1725
   })
 }
 

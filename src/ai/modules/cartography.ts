@@ -5,7 +5,7 @@ import constants from '../constants'
 
 const Cartography = {} as any
 
-Cartography.recordRoom = (roomName:string) => {
+Cartography.recordRoom = (roomName:string):void => {
   if (!Memory.cartography) {
     Memory.cartography = {}
   }
@@ -29,15 +29,19 @@ Cartography.recordRoom = (roomName:string) => {
   }
 }
 
-Cartography.findNeighbours = (roomName:string) => {
+Cartography.findNeighbours = (roomName:string):string[] => {
   if (!Memory.cartography) {
     Memory.cartography = {}
   }
 
-  return Object.values(Game.map.describeExits(roomName))
+  const exits = Game.map.describeExits(roomName)
+
+  return Array.isArray(exits)
+    ? Object.values(exits)
+    : []
 }
 
-Cartography.findUnchartedNeighbours = (roomName:string) => {
+Cartography.findUnchartedNeighbours = (roomName:string):string[] => {
   if (!Memory.cartography) {
     Memory.cartography = {}
   }
@@ -47,7 +51,7 @@ Cartography.findUnchartedNeighbours = (roomName:string) => {
   })
 }
 
-Cartography.classify = (roomName:string) => {
+Cartography.classify = (roomName:string):object => {
   if (!Memory.cartography) {
     throw new Error('no sites present')
   }
@@ -80,7 +84,7 @@ Cartography.classify = (roomName:string) => {
   return summary
 }
 
-Cartography.isSafe = (roomName:string) => {
+Cartography.isSafe = (roomName:string):boolean => {
   return Cartography.classify(roomName).safety !== 'hostile'
 }
 
