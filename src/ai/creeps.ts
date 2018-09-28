@@ -27,7 +27,11 @@ creeps.estimateRequiredMoveParts = (parts:string[]):number => {
 
 creeps.countYoungCreeps = (role:RoleLabel) => {
   return Object.values(Game.creeps).filter(creep => {
-    return creep.memory && creep.memory.role === role && creep.ticksToLive > constants.limits.endOfYouth
+    const isRole = creep.memory && creep.memory.role === role
+    const isYoung = creep.ticksToLive 
+      ? creep.ticksToLive > constants.limits.endOfYouth
+      : false
+    return isRole && isYoung 
   }).length
 }
 
@@ -153,7 +157,7 @@ creeps.chooseEnergySink = (creep:Creep, priorityLists:Priority[]):Priority => {
     throw new Error('priority lists must be provided')
   }
 
-  let priorities = undefined
+  let priorities 
   if (creep.memory.sinkPriority) {
     priorities = priorityLists.find(list => list.label === creep.memory.sinkPriority)
   } else {

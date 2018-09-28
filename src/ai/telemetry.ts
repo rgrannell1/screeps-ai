@@ -35,12 +35,6 @@ telemetry.logGameState = (roomName:string) => {
     energy_available: room.energyAvailable,
     energy_capacity_available: room.energyCapacityAvailable,
     creep_energy: Object.values(Game.creeps).reduce((acc, creep) => acc + creep.carry.energy, 0),
-    rcl: {
-      level: controller.level,
-      progress: controller.progress,
-      progress_total: controller.progressTotal,
-      progress_total_pct: controller.progress / controller.progressTotal
-    },
     gcl: {
       level: Game.gcl.level,
       progress: Game.gcl.progress,
@@ -60,6 +54,15 @@ telemetry.logGameState = (roomName:string) => {
     },
     creep_count: Object.keys(Game.creeps).length
   } as any
+
+  if (controller) {
+    roomState.rcl = {
+      level: controller.level,
+      progress: controller.progress,
+      progress_total: controller.progressTotal,
+      progress_total_pct: controller.progress / controller.progressTotal
+    }
+  }
 
   roomState.creep_body_costs = Object.values(Game.creeps)
     .reduce((sum, creep) => {

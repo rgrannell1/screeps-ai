@@ -3,6 +3,7 @@ import {BuildingPlan} from '../types'
 import terrain from '../terrain'
 import interactive from '../interactive'
 import constants from '../constants'
+import {Site, Plan} from '../types'
 
 const Architecture = {} as any
 
@@ -22,21 +23,25 @@ Architecture.addPlan = (plan:BuildingPlan) => {
 
 Architecture.placePlans = () => {
   if (!Memory.buildingPlans) {
-    Memory.buildingPlans = {}
+    Memory.buildingPlans = {} as {
+      [K0:string]: {
+        [K1:string]: Plan
+      }
+    }
   }
 
   for (const [roomName, plans] of Object.entries(Memory.buildingPlans)) {
     for (const plan of Object.values(plans)) {
       const room = Game.rooms[plan.roomName]
+      for (const site of plan.sites) {
 
-      try {
-        for (const site of plan.sites) {
-          const code = room.createConstructionSite(site.pos, site.type)
+        const atSite:LookAtResult<LookConstant>[] = site.pos.look()
+        const isWall = atSite.some(val => val.terrain === 'wall')
+        const hasPart = atSite.some(val => val.structure === site.type)
 
-          console.log(`code ${code}`)
+        if (!isWall && !hasPart) {
+          room.createConstructionSite(site.pos, site.type)
         }
-      } catch (err) {
-        console.log(`failed to place construction-site:\n${JSON.stringify(plan, null, 2)}\n${err.message}`)
       }
     }
   }

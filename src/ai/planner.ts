@@ -1,27 +1,33 @@
 
 import plans from './plans/index'
 import terrain from './terrain'
+import Architecture from './modules/architecture'
 
 const planner = {} as any
 
 planner.run = (roomName:string):void => {
+  Architecture.showPlans()
   plans.ringRoads(roomName)
 
-  const roomLevel = Game.rooms[roomName].controller.level
+  const room = Game.rooms[roomName]
 
-  if (roomLevel >= 1) {
-    plans.sourceContainers(roomName)
-    plans.towers(roomName)
-  }
+  if (room && room.controller) {
+    const roomLevel = room.controller.level
 
-  if (roomLevel >= 3) {
-    plans.exitRoads(roomName)
-    plans.spawnExtensions(roomName)
-  }
+    if (roomLevel >= 1) {
+      plans.sourceContainers(roomName)
+      plans.towers(roomName)
+    }
 
-  if (roomLevel >= 6) {
-    plans.extractors(roomName)
-    plans.miningRoads(roomName)
+    if (roomLevel >= 3) {
+      plans.exitRoads(roomName)
+      plans.spawnExtensions(roomName)
+    }
+
+    if (roomLevel >= 6) {
+      plans.extractors(roomName)
+      plans.miningRoads(roomName)
+    }
   }
 }
 

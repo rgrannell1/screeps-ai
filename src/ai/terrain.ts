@@ -75,7 +75,7 @@ terrain.findMatchingBlock = (sum, bounds, pred, roomName) => {
 }
 
 terrain.expandBounds = (bounds, roomName) => {
-  const tiles = []
+  const tiles:RoomPosition[] = []
 
   for (let xPos = bounds.x.lower; xPos < bounds.x.upper; xPos++) {
     for (let yPos = bounds.y.lower; yPos < bounds.y.upper; yPos++) {
@@ -111,7 +111,7 @@ terrain.getBorder = (centre, dist, roomName:string) => {
     }
   }
 
-  const tiles = []
+  const tiles:RoomPosition[] = []
 
   for (const y of [bounds.y.lower, bounds.y.upper]) {
     for (let x = bounds.x.lower; x < bounds.x.upper; x++) {
@@ -134,7 +134,7 @@ terrain.getExitTiles = roomName => {
     y: {lower: 0, upper: 49}
   }
 
-  const tiles = []
+  const tiles:RoomPosition[] = []
 
   for (let x = 0; x <= bounds.x.upper; x++) {
     for (let y = 0; y <= bounds.y.upper; y++) {
@@ -195,8 +195,11 @@ terrain.findRoads = roomName => {
   })
 }
 
-terrain.findController = (roomName:string):StructureController => {
-  return Game.rooms[roomName].controller
+terrain.findController = (roomName:string):StructureController|undefined => {
+  const room = Game.rooms[roomName]
+  if (room) {
+    return room.controller
+  }
 }
 
 terrain.findContainers = roomName => {

@@ -18,8 +18,8 @@ misc.timer = (fn:Function, timer: number):void => {
   }
 }
 
-misc.indicesTo = (from, to) => {
-  const indices = []
+misc.indicesTo = (from:number, to:number):number[] => {
+  const indices:number[] = []
 
   for (let ith = from; ith <= to; ith++) {
     indices.push(ith)
