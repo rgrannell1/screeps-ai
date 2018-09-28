@@ -6,7 +6,6 @@ import Architecture from './modules/architecture'
 const planner = {} as any
 
 planner.run = (roomName:string):void => {
-  Architecture.showPlans()
   plans.ringRoads(roomName)
 
   const room = Game.rooms[roomName]

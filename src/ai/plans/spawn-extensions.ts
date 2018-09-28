@@ -58,7 +58,6 @@ function placeExtensionBlock (roomName:string, count:number, areasWithDistances:
     Architecture.addPlan({roomName, label: `extensions_link_${count}`, sites: roadSites})
     Architecture.addPlan({roomName, label: `extensions_${count}`, sites})
 
-    Architecture.showPlans()
     Architecture.placePlans()
 
   } catch (err) {
@@ -85,16 +84,14 @@ const zoneExtensionBlock = (roomName:string, count:number):void => {
     state[sortAccRef] = []
   }
 
-  const emptyAreas = Compute.evaluate(state.emptyZonedPlotsCompute, state[areasRef], 400)
+  const emptyAreas = Compute.evaluate(state.emptyZonedPlotsCompute, state[areasRef], 100)
 
   if (emptyAreas) {
     startEmptyZoneComputation(roomName, areasRefCompute, state[areasRef])
 
-    const areasWithDistances = Compute.evaluate(state[areasRefCompute], state[sortAccRef], 300)
+    const areasWithDistances = Compute.evaluate(state[areasRefCompute], state[sortAccRef], 100)
     if (areasWithDistances && areasWithDistances.length > 0) {
       placeExtensionBlock(roomName, count, areasWithDistances)
-    } else {
-      console.log('deferred')
     }
   }
 }
@@ -112,30 +109,17 @@ const spawnExtensions = (roomName:string):void => {
     return
   }
 
-  // -- CONTROLLER_STRUCTURES
+  const EXTENSION_COUNT_PER_BLOCK = 9
+  let extensionsAllowed = 0
 
-  if (level >= 2) {
-    zoneExtensionBlock(roomName, 0)
+  const extensionTable = CONTROLLER_STRUCTURES.extension
+
+  for (let ith = 0; ith <= Math.min(level, 8); ith++) {
+    extensionsAllowed += extensionTable[ith]
   }
 
-  if (level >= 3) {
-    zoneExtensionBlock(roomName, 1)
-  }
-
-  if (level >= 4) {
-    zoneExtensionBlock(roomName, 2)
-  }
-
-  if (level >= 5) {
-    zoneExtensionBlock(roomName, 3)
-  }
-
-  if (level >= 6) {
-    zoneExtensionBlock(roomName, 4)
-  }
-
-  if (level >= 7) {
-    zoneExtensionBlock(roomName, 5)
+  for (let blockId = 0; blockId < Math.floor(extensionsAllowed / EXTENSION_COUNT_PER_BLOCK); blockId++) {
+    zoneExtensionBlock(roomName, blockId)
   }
 }
 

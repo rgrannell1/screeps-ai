@@ -19,7 +19,7 @@ command.task = async args => {
   const webpackConfig = path.resolve(`${root}/webpack.config.js`)
   let cmd = path.resolve(`${root}/node_modules/.bin/webpack --config "${webpackConfig}" --mode development`)
 
-  if (args['--watch']) {
+  if (args && args['--watch']) {
     cmd += ' --watch'
   }
 

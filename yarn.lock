@@ -266,6 +266,10 @@
     "@types/node" "*"
     "@types/tough-cookie" "*"
 
+"@types/screeps-profiler@1.2.1":
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/@types/screeps-profiler/-/screeps-profiler-1.2.1.tgz#514a82b4bfc74cdcd58df001d0f8f5680301a774"
+
 "@types/screeps@2.4.1":
   version "2.4.1"
   resolved "https://registry.yarnpkg.com/@types/screeps/-/screeps-2.4.1.tgz#eb5b885be5eb321b60790214f4996519dfe3c661"

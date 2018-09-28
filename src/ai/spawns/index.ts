@@ -273,7 +273,7 @@ const spawner = (roomName:string, spawn:StructureSpawn):void => {
   }
 
   if (queued) {
-    reportProgress(roomName, spawn, queued)
+    //reportProgress(roomName, spawn, queued)
     createCreep(roomName, spawn, queued)
   }
 }

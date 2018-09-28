@@ -3,43 +3,49 @@ import {BuildingPlan} from '../types'
 import terrain from '../terrain'
 import interactive from '../interactive'
 import constants from '../constants'
-import {Site, Plan} from '../types'
+import {Site, Plan, BuildingPlans} from '../types'
 
 const Architecture = {} as any
 
 Architecture.addPlan = (plan:BuildingPlan) => {
+  let buildingPlans:BuildingPlans
+
   if (!Memory.buildingPlans) {
     Memory.buildingPlans = {}
   }
 
-  if (!Memory.buildingPlans[plan.roomName]) {
-    Memory.buildingPlans[plan.roomName] = {}
+  buildingPlans = Memory.buildingPlans
+
+  if (!buildingPlans[plan.roomName]) {
+    buildingPlans[plan.roomName] = {}
   }
 
-  if (!Memory.buildingPlans[plan.roomName][plan.label]) {
-    Memory.buildingPlans[plan.roomName][plan.label] = plan
+  if (!buildingPlans[plan.roomName][plan.label]) {
+    buildingPlans[plan.roomName][plan.label] = plan
   }
 }
 
 Architecture.placePlans = () => {
+  let buildingPlans:BuildingPlans
+
   if (!Memory.buildingPlans) {
-    Memory.buildingPlans = {} as {
-      [K0:string]: {
-        [K1:string]: Plan
-      }
-    }
+    Memory.buildingPlans = {}
   }
 
-  for (const [roomName, plans] of Object.entries(Memory.buildingPlans)) {
+  buildingPlans = Memory.buildingPlans
+
+  for (const [roomName, plans] of Object.entries(buildingPlans)) {
     for (const plan of Object.values(plans)) {
       const room = Game.rooms[plan.roomName]
       for (const site of plan.sites) {
+        const pos:RoomPosition = new RoomPosition(site.pos.x, site.pos.y, site.pos.roomName)
+        const type:StructureConstant = site.type
 
-        const atSite:LookAtResult<LookConstant>[] = site.pos.look()
+        const atSite:LookAtResult<LookConstant>[] = pos.look()
         const isWall = atSite.some(val => val.terrain === 'wall')
-        const hasPart = atSite.some(val => val.structure === site.type)
+        //const hasPart = atSite.some(val => val.structure === type)
 
-        if (!isWall && !hasPart) {
+        if (!isWall) {
           room.createConstructionSite(site.pos, site.type)
         }
       }
@@ -54,7 +60,15 @@ Architecture.showPlan = (plan:BuildingPlan) => {
 }
 
 Architecture.showPlans = () => {
-  for (const [roomName, plans] of Object.entries(Memory.buildingPlans)) {
+  let buildingPlans:BuildingPlans
+
+  if (!Memory.buildingPlans) {
+    Memory.buildingPlans = {}
+  }
+
+  buildingPlans = Memory.buildingPlans
+
+  for (const [roomName, plans] of Object.entries(buildingPlans)) {
     for (const plan of Object.values(plans)) {
       Architecture.showPlan(plan)
     }

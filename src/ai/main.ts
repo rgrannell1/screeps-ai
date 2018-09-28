@@ -10,9 +10,7 @@ import terrain from './terrain'
 import logger from './logger'
 import tower from './tower'
 import roles from './roles/index'
-import interative from './interactive'
-import Geometry from './modules/geometry'
-import Compute from './modules/compute'
+import Architecture from './modules/architecture'
 import * as profiler from 'screeps-profiler'
 
 const evictCreepCache = () => {
@@ -64,36 +62,36 @@ const onStart = () => {
 }
 
 const loop = () => {
-  profiler.wrap(() => {
-    evictCreepCache()
-    applyRoles()
+  evictCreepCache()
+  applyRoles()
 
-    if (!state.run) {
-      onStart()
+  if (!state.run) {
+    onStart()
+  }
+
+  for (const roomName of Object.keys(Game.rooms)) {
+    const room = Game.rooms[roomName]
+
+    // Architecture.showPlans()
+
+    misc.timer(() => {
+      telemetry.logGameState(roomName)
+    }, 10)
+
+    misc.timer(() => {
+      planner.run(roomName)
+      structures.placePlans(roomName)
+    }, 5)
+
+    for (const spawnName of Object.keys(Game.spawns)) {
+      spawns.spawner(roomName, Game.spawns[spawnName])
     }
 
-    for (const roomName of Object.keys(Game.rooms)) {
-      const room = Game.rooms[roomName]
-
-      //interactive.drawPlans('W42N31')
-
-      misc.timer(() => {
-        telemetry.logGameState(roomName)
-      }, 10)
-
-      misc.timer(() => {
-        planner.run(roomName)
-        structures.placePlans(roomName)
-      }, 5)
-
-      for (const spawnName of Object.keys(Game.spawns)) {
-        spawns.spawner(roomName, Game.spawns[spawnName])
-      }
-
-      runTowers(roomName)
-      identifyCreeps()
-    }
-  })
+    runTowers(roomName)
+    identifyCreeps()
+  }
 }
 
-export { loop }
+const wrapped = profiler.wrap.bind(null, loop)
+
+export {loop}

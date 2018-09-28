@@ -50,4 +50,12 @@ export interface BuildingPlan {
   readonly sites: Array<Site>,
 }
 
+export interface RoomPlan {
+  [key:string]:BuildingPlan
+}
+
+export interface BuildingPlans {
+  [key:string]:RoomPlan
+}
+
 export type Computation<T> = IterableIterator<T>

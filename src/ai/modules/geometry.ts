@@ -37,10 +37,10 @@ Geometry.translate = (parts:Plan, point:Point):Plan => {
 }
 
 Geometry.roomPositionMap = (roomName:string) => {
-  const tiles = []
+  const tiles:Array<Array<RoomPosition>> = []
 
   for (let x = 0; x < 50; x++) {
-    let row = []
+    let row:RoomPosition[] = []
     for (let y = 0; y < 50; y++) {
       row.push(new RoomPosition(x, y, roomName))
     }
@@ -52,7 +52,7 @@ Geometry.roomPositionMap = (roomName:string) => {
 
 Geometry.terrainMap = (roomName:string):number[][] => {
   const terrainMask = new Room.Terrain(roomName)
-  const tiles = []
+  const tiles:RoomPosition[] = []
 
   for (let x = 0; x < 50; x++) {
     let row = []
@@ -113,7 +113,7 @@ Geometry.yieldEmptyZonedPlots = Geometry.yieldPlots.bind(null, (pos:RoomPosition
 })
 
 Geometry.expandBounds = (roomName:string, bounds:Bounds):RoomPosition[] => {
-  const tiles = []
+  const tiles:RoomPosition[] = []
 
   for (let ith = bounds.x0; ith < bounds.x1; ith++) {
     for (let jth = bounds.y0; jth < bounds.y1; jth++) {
@@ -125,6 +125,8 @@ Geometry.expandBounds = (roomName:string, bounds:Bounds):RoomPosition[] => {
 }
 
 Geometry.boundDistance = (pos:RoomPosition, bounds:Bounds):number => {
+  const room = Game.rooms[pos.roomName]
+
   const corners = [
     new RoomPosition(bounds.x0, bounds.y0, pos.roomName),
     new RoomPosition(bounds.x0, bounds.y1, pos.roomName),
@@ -133,10 +135,9 @@ Geometry.boundDistance = (pos:RoomPosition, bounds:Bounds):number => {
   ]
 
   const pointDistances = corners.map(corner => {
-    const xDiff = pos.x - corner.x
-    const yDiff = pos.y - corner.y
+    const path = room.findPath(corner, pos)
 
-    return Math.sqrt(Math.pow(xDiff, 2) + Math.pow(yDiff, 2))
+    return path.length === 0 ? Infinity : path.length
   })
 
   return Math.min(...pointDistances)
