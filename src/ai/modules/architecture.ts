@@ -25,6 +25,44 @@ Architecture.addPlan = (plan:BuildingPlan) => {
   }
 }
 
+Architecture.placePlan = (room:Room, site) => {
+  const pos:RoomPosition = new RoomPosition(site.pos.x, site.pos.y, site.pos.roomName)
+  const type:StructureConstant = site.type
+
+  const atSite:LookAtResult<LookConstant>[] = pos.look()
+  const isWall = atSite.some(val => val.terrain === 'wall')
+
+  if (!isWall) {
+    const code = room.createConstructionSite(site.pos.x, site.pos.y, site.type)
+
+    if (code === ERR_INVALID_ARGS) {
+      console.log('invalid arguments ' + JSON.stringify(site, null, 2))
+    }
+
+    return {site, code}
+  }
+}
+
+function groupConstructionResults (results) {
+  const grouped = results.reduce((acc, current) => {
+    if (!current) {
+      return acc
+    }
+
+    if (!acc.codes) {
+      acc.codes = {}
+    }
+    if (!acc.codes.hasOwnProperty(current.code)) {
+      acc.codes[current.code] = []
+    }
+
+    acc.codes[current.code].push(current.site)
+    return acc
+  }, {})
+
+  return grouped
+}
+
 Architecture.placePlans = () => {
   let buildingPlans:BuildingPlans
 
@@ -37,18 +75,8 @@ Architecture.placePlans = () => {
   for (const [roomName, plans] of Object.entries(buildingPlans)) {
     for (const plan of Object.values(plans)) {
       const room = Game.rooms[plan.roomName]
-      for (const site of plan.sites) {
-        const pos:RoomPosition = new RoomPosition(site.pos.x, site.pos.y, site.pos.roomName)
-        const type:StructureConstant = site.type
 
-        const atSite:LookAtResult<LookConstant>[] = pos.look()
-        const isWall = atSite.some(val => val.terrain === 'wall')
-        //const hasPart = atSite.some(val => val.structure === type)
-
-        if (!isWall) {
-          room.createConstructionSite(site.pos, site.type)
-        }
-      }
+      const planResults = plan.sites.map(site => Architecture.placePlan(room, site))
     }
   }
 }

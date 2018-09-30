@@ -22,6 +22,7 @@ function startEmptyZoneComputation (roomName:string, ref:string, emptyAreas):voi
   const controller = terrain.findController(roomName)
 
   if (!state[ref]) {
+    console.log(`${state[ref]} running`)
     state[ref] = Compute.map(emptyAreas, (area:Bounds):posBoundDistance => {
       return {
         pos: controller.pos,

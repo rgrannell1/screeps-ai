@@ -5,6 +5,7 @@ import blessed from '../blessed'
 import creeps from '../creeps'
 import structures from '../structures'
 import constants from '../constants'
+import creeps from '../creeps'
 import shared from './shared'
 import {Role} from '../types'
 import Cartography from '../modules/cartography'
@@ -17,9 +18,11 @@ const run = (creep:Creep):void => {
   const hasSource = !!structures.findEnergySource(creep.room.name, priorities)
 
   if (!creep.memory.isActive) {
+    const noHarvesters = creeps.countYoungCreeps('harvester') === 0
+
     if (hasSource) {
       shared.chargeCreep(priorities, creep)
-    } else {
+    } else if (noHarvesters || true) {
       shared.harvestSource(creep)
     }
   } else if (creep.memory.isActive) {

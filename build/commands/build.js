@@ -4,7 +4,7 @@ const execa = require('execa')
 
 const command = {
   name: 'build',
-  dependencies: []
+  dependencies: ['clean']
 }
 
 command.cli = `

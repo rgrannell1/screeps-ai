@@ -15,9 +15,11 @@ const run = (creep:Creep):void => {
   const hasSource = !!structures.findEnergySource(creep.room.name, priorities)
 
   if (!creep.memory.isActive) {
+    const noHarvesters = creeps.countYoungCreeps('harvester') === 0
+
     if (hasSource) {
       shared.chargeCreep(priorities, creep)
-    } else {
+    } else if (noHarvesters) {
       shared.harvestSource(creep)
     }
   } else if (creep.memory.isActive) {

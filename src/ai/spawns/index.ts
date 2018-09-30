@@ -71,9 +71,9 @@ creepRequired.harvester = (roomName:string):SpawnOrder => {
 
   return {
     role: 'harvester',
-    expected: counts.source,
+    expected: 2 * counts.source,
     youngCount: counts.young,
-    sufficientCount: 1,
+    sufficientCount: 2 * counts.source,
     isRequired: counts.young < counts.source
   }
 }

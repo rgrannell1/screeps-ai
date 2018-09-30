@@ -13,7 +13,7 @@ Usage:
   script download-events
 
 Description:
-  Download events from RealTime database to a LokiJs file
+  Download events from RealTime database to an SQL file
 `
 
 command.task = async (args, emitter) => {
