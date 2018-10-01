@@ -3,7 +3,11 @@ import {Computation} from '../types'
 
 const Compute = {} as any
 
-Compute.evaluate = <T>(comp:Computation<T>, storeRef, by:number):T[] | undefined {
+/*
+## Compute.evaluate
+
+*/
+Compute.evaluate = <T>(comp:Computation<T>, storeRef, by:number):T[] | undefined => {
   for (let ith = 0; ith < by; ith++) {
     let yielded = comp.next()
 
@@ -15,6 +19,10 @@ Compute.evaluate = <T>(comp:Computation<T>, storeRef, by:number):T[] | undefined
   }
 }
 
+/*
+## Compute.map
+
+*/
 Compute.map = function * <T, U>(comp:Computation<T>, fn:Function):Computation<U> {
   for (const yielded of comp) {
     yield fn(yielded)

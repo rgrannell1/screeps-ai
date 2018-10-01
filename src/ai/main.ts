@@ -10,6 +10,7 @@ import terrain from './terrain'
 import logger from './logger'
 import tower from './tower'
 import roles from './roles/index'
+import market from './market/index'
 import Architecture from './modules/architecture'
 import * as profiler from 'screeps-profiler'
 
@@ -74,7 +75,6 @@ const loop = () => {
 
 
     misc.timer(() => {
-      Architecture.showPlans()
       telemetry.logGameState(roomName)
     }, 10)
 

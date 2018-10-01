@@ -19,7 +19,7 @@ const run = (creep:Creep):void => {
 
     if (hasSource) {
       shared.chargeCreep(priorities, creep)
-    } else if (noHarvesters) {
+    } else if (noHarvesters || true) {
       shared.harvestSource(creep)
     }
   } else if (creep.memory.isActive) {

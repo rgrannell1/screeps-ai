@@ -6,7 +6,7 @@
     "forceConsistentCasingInFileNames": true,
     "keyofStringsOnly": true,
     "noFallthroughCasesInSwitch": true,
-    "strictNullChecks": true,
+    "strictNullChecks": false,
     "target": "es2017"
   },
   "include": [

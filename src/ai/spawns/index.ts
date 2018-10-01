@@ -107,13 +107,13 @@ creepRequired.upgrader = (roomName:string):SpawnOrder => {
     young: creeps.countYoungCreeps('upgrader')
   }
 
-  const expected = 3
+  const expected = 2
 
   return {
     role: 'upgrader',
     expected,
     youngCount: counts.young,
-    sufficientCount: 3,
+    sufficientCount: 2,
     isRequired: counts.young < expected
   }
 }
@@ -141,7 +141,7 @@ creepRequired.transferer = (roomName:string):SpawnOrder => {
     towers: structures.tower.findAll(roomName)
   }
 
-  const expected = 1 + Math.floor(counts.containers.length + (counts.towers.length / 4))
+  const expected = Math.floor(counts.containers.length + (counts.towers.length / 4))
   return {
     role: 'transferer',
     expected,

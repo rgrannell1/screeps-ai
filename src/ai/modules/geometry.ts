@@ -55,7 +55,7 @@ Geometry.terrainMap = (roomName:string):number[][] => {
   const tiles:RoomPosition[] = []
 
   for (let x = 0; x < 50; x++) {
-    let row = []
+    let row:number[] = []
     for (let y = 0; y < 50; y++) {
       row.push(terrain.get(x, y))
     }

@@ -2,6 +2,7 @@
 import terrain from '../terrain'
 import structures from '../structures'
 import telemetry from '../telemetry'
+import constants from '../constants'
 import logger from '../logger'
 import creeps from '../creeps'
 import {Priority} from '../types'
@@ -24,11 +25,11 @@ shared.chargeCreep = (sinks:string[], creep:Creep):void => {
     return value.resourceType === 'energy'
   })
 
-//  if (energy) {
-//    creep.moveTo(energy[0])
-//    creep.pickup(energy[0])
-//    return
-//  }
+  if (energy) {
+    creep.moveTo(energy[0])
+    creep.pickup(energy[0])
+    return
+  }
 
   const source = structures.findEnergySource(creep.room.name, sinks)
 
@@ -64,8 +65,11 @@ shared.chargeTarget = (sinkPriorities:Array<Priority>, creep:any):void => {
     return
   }
 
-  const moveCode = creep.moveTo(target.value.pos)
   const transferCode = creep.transfer(target.value, RESOURCE_ENERGY)
+
+  if (transferCode === ERR_NOT_IN_RANGE) {
+    const moveCode = creep.moveTo(target.value.pos)
+  }
 
   for (const resource of Object.keys(creep.carry)) {
     creep.transfer(target.value, resource)
@@ -119,25 +123,17 @@ shared.repairTarget = (creep:Creep) => {
 
 shared.buildSite = (creep:Creep) => {
   creep.memory.state = 'build_site'
-
-  const buildeable = [
-    STRUCTURE_CONTAINER,
-    STRUCTURE_EXTENSION,
-    STRUCTURE_TOWER,
-    STRUCTURE_STORAGE,
-    STRUCTURE_ROAD,
-    STRUCTURE_RAMPART
-  ]
-
-  let site
-  site = structures.findSite(creep.room.name, buildeable)
+  const site = structures.findSite(creep.room.name, constants.buildPriorities)
 
   if (!site) {
     return
   }
 
-  const moveCode = creep.moveTo(site.pos)
   const buildCode = creep.build(site)
+
+  if (buildCode === ERR_NOT_IN_RANGE) {
+    const moveCode = creep.moveTo(site.pos)
+  }
 }
 
 shared.killCreep = (creep:Creep) => {

@@ -165,16 +165,8 @@ structures.is.damaged = site => {
   return site.hits < site.hitsMax
 }
 
-structures.findSite = roomName => {
+structures.findSite = (roomName:string, siteTypes:BuildableStructureConstant[]) => {
   const sites = Game.rooms[roomName].find(FIND_CONSTRUCTION_SITES)
-  const siteTypes = [
-    STRUCTURE_CONTAINER,
-    STRUCTURE_STORAGE,
-    STRUCTURE_EXTENSION,
-    STRUCTURE_TOWER,
-    STRUCTURE_RAMPART,
-    STRUCTURE_ROAD
-  ]
 
   for (const siteType of siteTypes) {
     let candidate = sites.find(site => site.structureType === siteType)
