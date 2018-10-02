@@ -7,6 +7,14 @@ import {Site, Plan, BuildingPlans} from '../types'
 
 const Architecture = {} as any
 
+Architecture.hasPlan = (roomName:string, label:string):boolean => {
+  if (!Memory.buildingPlans) {
+    Memory.buildingPlans = {}
+  }
+
+  return Memory.buildingPlans[roomName].hasOwnProperty(label)
+}
+
 Architecture.addPlan = (plan:BuildingPlan) => {
   let buildingPlans:BuildingPlans
 
@@ -101,6 +109,26 @@ Architecture.showPlans = () => {
       Architecture.showPlan(plan)
     }
   }
+}
+
+Architecture.isTunnel = site => {
+  return site.structureType === STRUCTURE_ROAD && site.progressTotal === 45000
+}
+
+Architecture.findBuildingSite = (roomName:string, siteTypes:BuildableStructureConstant[]):ConstructionSite => {
+  const sites = Game.rooms[roomName].find(FIND_CONSTRUCTION_SITES)
+
+  for (const siteType of siteTypes) {
+    let candidate = sites.find(site => {
+      return site.structureType === siteType && !Architecture.isTunnel(site)
+    })
+
+    if (candidate) {
+      return candidate
+    }
+  }
+
+  return sites[0]
 }
 
 export default Architecture

@@ -1,4 +1,5 @@
 
+import Architecture from '../modules/architecture'
 import terrain from '../terrain'
 import structures from '../structures'
 import telemetry from '../telemetry'
@@ -21,13 +22,14 @@ shared.renewCreep = (creep:Creep):void => {
 shared.chargeCreep = (sinks:string[], creep:Creep):void => {
   creep.memory.state = 'charge_creep'
 
-  const energy = creep.pos.findInRange(FIND_DROPPED_RESOURCES, 25).filter(value => {
-    return value.resourceType === 'energy'
-  })
-
+  const energy = structures.findEnergyDrop(creep.room.name)
   if (energy) {
-    creep.moveTo(energy[0])
-    creep.pickup(energy[0])
+    const pickupCode = creep.pickup(energy)
+
+    if (pickupCode === ERR_NOT_IN_RANGE) {
+      const moveCode = creep.moveTo(energy)
+    }
+
     return
   }
 
@@ -106,24 +108,22 @@ shared.chargeLocalTarget = (sinkPriorities:Array<Priority>, creep:any):void => {
 
 shared.repairTarget = (creep:Creep) => {
   creep.memory.state = 'repair_target'
-  const damaged = structures.findDamagedStructure(creep.room.name, [
-    STRUCTURE_CONTAINER,
-    STRUCTURE_ROAD,
-    STRUCTURE_WALL,
-    STRUCTURE_RAMPART
-  ])
+  const damaged = structures.findDamagedStructure(creep.room.name, constants.repairPriorities)
 
   if (!damaged) {
     return
   }
 
-  const moveCode = creep.moveTo(damaged.pos)
   const repairCode = creep.repair(damaged)
+
+  if (repairCode === ERR_NOT_IN_RANGE) {
+    const moveCode = creep.moveTo(damaged.pos)
+  }
 }
 
 shared.buildSite = (creep:Creep) => {
   creep.memory.state = 'build_site'
-  const site = structures.findSite(creep.room.name, constants.buildPriorities)
+  const site = Architecture.findBuildingSite(creep.room.name, constants.buildPriorities)
 
   if (!site) {
     return
@@ -150,15 +150,11 @@ shared.upgradeController = (creep:Creep) => {
 
   const controller = terrain.findController(creep.room.name)
 
-  const moveCode = creep.moveTo(controller.pos)
-  /*
-  logger.data('creep move status', 'creep_move', {
-    code: telemetry.moveCode(moveCode),
-    creep_name: creep.name,
-    room_name: creep.room.name
-  })
-  */
   const upgradeCode = creep.upgradeController(controller)
+
+  if (upgradeCode === ERR_NOT_IN_RANGE) {
+    const moveCode = creep.moveTo(controller.pos)
+  }
 }
 
 shared.harvestSource = (creep:Creep):void => {
@@ -171,16 +167,11 @@ shared.harvestSource = (creep:Creep):void => {
 
   const [source] = terrain.findSources(creep.room.name)
 
-  const moveCode = creep.moveTo(source.pos)
-  /*
-  logger.data('creep move status', 'creep_move', {
-    code: telemetry.moveCode(moveCode),
-    creep_name: creep.name,
-    room_name: creep.room.name
-  })
-  */
-
   const chargeCode = creep.harvest(source)
+
+  if (chargeCode === ERR_NOT_IN_RANGE) {
+    const moveCode = creep.moveTo(source.pos)
+  }
 }
 
 shared.harvestMinerals = (creep:Creep):void => {
@@ -193,8 +184,11 @@ shared.harvestMinerals = (creep:Creep):void => {
 
   const [minerals] = terrain.findMinerals(creep.room.name)
 
-  const moveCode = creep.moveTo(minerals.pos)
   const chargeCode = creep.harvest(minerals)
+
+  if (chargeCode == ERR_NOT_IN_RANGE) {
+    const moveCode = creep.moveTo(minerals.pos)
+  }
 }
 
 shared.claimRoom = (creep:Creep):void => {

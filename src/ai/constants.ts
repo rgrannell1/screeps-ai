@@ -74,7 +74,6 @@ constants.limits = {
 
 constants.buildPriorities = [
   STRUCTURE_CONTAINER,
-  // STRUCTURE_TERMINAL,
   STRUCTURE_LAB,
   STRUCTURE_LINK,
   STRUCTURE_EXTENSION,
@@ -82,9 +81,17 @@ constants.buildPriorities = [
   STRUCTURE_STORAGE,
   STRUCTURE_RAMPART,
   STRUCTURE_ROAD,
+  STRUCTURE_TERMINAL,
   STRUCTURE_NUKER,
   STRUCTURE_POWER_BANK,
   STRUCTURE_POWER_SPAWN,
+]
+
+constants.repairPriorities = [
+  STRUCTURE_CONTAINER,
+  STRUCTURE_RAMPART,
+  STRUCTURE_ROAD,
+  STRUCTURE_WALL
 ]
 
 export default constants

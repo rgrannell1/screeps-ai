@@ -101,17 +101,7 @@ const zoneExtensionBlock = (roomName:string, count:number):void => {
   }
 }
 
-const extensionsByLevel = [
-  0,
-  5,
-  10,
-  20,
-  30,
-  40,
-  50,
-  60
-]
-
+const extensionsByLevel = [0, 5, 10, 20, 30, 40, 50, 60]
 const EXTENSION_COUNT_PER_BLOCK = 9
 
 const spawnExtensions = (roomName:string):void => {

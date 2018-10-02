@@ -169,7 +169,11 @@ structures.findSite = (roomName:string, siteTypes:BuildableStructureConstant[]) 
   const sites = Game.rooms[roomName].find(FIND_CONSTRUCTION_SITES)
 
   for (const siteType of siteTypes) {
-    let candidate = sites.find(site => site.structureType === siteType)
+    let candidate = sites.find(site => {
+      const isBlackListed = site.structureType === STRUCTURE_ROAD && site.progressTotal === 45000
+      return site.structureType === siteType && !isBlackListed
+    })
+
     if (candidate) {
       return candidate
     }
@@ -189,6 +193,22 @@ const isEnergySource = item => {
     default () {
       return item.energy > 0
     }
+  })
+}
+
+structures.findEnergyDrop = (roomName:string) => {
+  const drops = Game.rooms[roomName].find(FIND_DROPPED_RESOURCES, {
+    filter (item) {
+      return item.resourceType === 'energy'
+    }
+  })
+
+  if (!drops || drops.length === 0) {
+    return
+  }
+
+  return drops.reduce((max, current) => {
+    return max.amount > current.amount ? max : current
   })
 }
 
