@@ -9,7 +9,7 @@ constants.labels = {
   extractors: 'extractors'
 }
 
-constants.sign = 'No uncaught exceptions in three days.'
+constants.sign = 'League of Automated Roombas'
 
 constants.costs = {
   move: 50,

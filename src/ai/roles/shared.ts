@@ -1,10 +1,9 @@
 
-import Architecture from '../modules/architecture'
+import * as Architecture from '../modules/architecture'
 import terrain from '../terrain'
 import structures from '../structures'
 import telemetry from '../telemetry'
 import constants from '../constants'
-import logger from '../logger'
 import creeps from '../creeps'
 import {Priority} from '../types'
 
@@ -22,6 +21,7 @@ shared.renewCreep = (creep:Creep):void => {
 shared.chargeCreep = (sinks:string[], creep:Creep):void => {
   creep.memory.state = 'charge_creep'
 
+  // -- withdraw dropped energy.
   const energy = structures.findEnergyDrop(creep.room.name)
   if (energy) {
     const pickupCode = creep.pickup(energy)
@@ -33,6 +33,22 @@ shared.chargeCreep = (sinks:string[], creep:Creep):void => {
     return
   }
 
+  // -- withdraw from a tombstone.
+  const grave = structures.findTombstone(creep.room.name)
+  if (grave) {
+    const chargeCode = creep.withdraw(grave, RESOURCE_ENERGY)
+
+    if (chargeCode === ERR_NOT_IN_RANGE) {
+      const moveCode = creep.moveTo(grave)
+    }
+
+    return
+  }
+
+  // todo change sink priority
+
+
+  // -- withdraw from a structure
   const source = structures.findEnergySource(creep.room.name, sinks)
 
   if (!source) {
@@ -94,16 +110,11 @@ shared.chargeLocalTarget = (sinkPriorities:Array<Priority>, creep:any):void => {
     return
   }
 
-  const moveCode = creep.moveTo(target.value.pos)
-  /*
-  logger.data('creep move status', 'creep_move', {
-    code: telemetry.moveCode(moveCode),
-    creep_name: creep.name,
-    room_name: creep.room.name
-  })
-  */
-
   const transferCode = creep.transfer(target.value, RESOURCE_ENERGY)
+
+  if (transferCode === ERR_NOT_IN_RANGE) {
+    const moveCode = creep.moveTo(target.value.pos)
+  }
 }
 
 shared.repairTarget = (creep:Creep) => {

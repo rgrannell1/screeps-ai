@@ -1,7 +1,7 @@
 
 import plans from './plans/index'
 import terrain from './terrain'
-import Architecture from './modules/architecture'
+import * as Architecture from './modules/architecture'
 
 const planner = {} as any
 

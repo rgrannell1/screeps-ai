@@ -8,9 +8,6 @@ import shared from './shared'
 import Cartography from '../modules/cartography'
 import {Role, Priority} from '../types'
 
-
-
-
 const run = (creep:Creep):void => {
   Cartography.recordRoom(creep.room.name)
 
@@ -18,8 +15,9 @@ const run = (creep:Creep):void => {
      creep.memory.initialRoom = creep.room.name
   }
   if (!creep.memory.externalRoom) {
-    // -- todo
     creep.memory.externalRoom = 'W41N31'
+
+    // const xxx = Cartography.findNeighbours(creep.room.name)
   }
 
   shared.claimRoom(creep)

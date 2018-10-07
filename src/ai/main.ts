@@ -11,8 +11,10 @@ import logger from './logger'
 import tower from './tower'
 import roles from './roles/index'
 import market from './market/index'
-import Architecture from './modules/architecture'
+import * as Architecture from '../modules/architecture'
 import * as profiler from 'screeps-profiler'
+
+import Cartography from './modules/cartography'
 
 const evictCreepCache = () => {
   for (const name in Memory.creeps) {
@@ -73,10 +75,13 @@ const loop = () => {
   for (const roomName of Object.keys(Game.rooms)) {
     const room = Game.rooms[roomName]
 
+    const burp = Cartography.findBuildeableNeighbours(roomName)
+    console.log(JSON.stringify(burp))
+    console.log('++++++++++++++++++')
 
     misc.timer(() => {
       telemetry.logGameState(roomName)
-    }, 10)
+    }, 50
 
     misc.timer(() => {
       planner.run(roomName)

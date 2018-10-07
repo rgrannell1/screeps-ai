@@ -18,6 +18,7 @@ Cartography.recordRoom = (roomName:string):void => {
       sourceCount: terrain.findSources(roomName).length,
       mineralCount: terrain.findMinerals(roomName).length,
       tenant: {
+        hasController: Game.rooms[roomName].hasOwnProperty('controller'),
         hasOwner: !!(controller && controller.owner),
         isMine: controller && controller.owner
           ? controller.owner && controller.owner.username === constants.username
@@ -30,15 +31,38 @@ Cartography.recordRoom = (roomName:string):void => {
 }
 
 Cartography.findNeighbours = (roomName:string):string[] => {
+  const exits = Game.map.describeExits(roomName)
+
+  return !!exits
+    ? Object.values(exits)
+    : []
+}
+
+Cartography.findBuildeableNeighbours = (roomName:string):string[] => {
   if (!Memory.cartography) {
     Memory.cartography = {}
   }
 
-  const exits = Game.map.describeExits(roomName)
+  const claimable:string[] = []
+  const neighbours = Cartography.findNeighbours(roomName)
 
-  return Array.isArray(exits)
-    ? Object.values(exits)
-    : []
+  for (const neighbour of neighbours) {
+    const obs = Memory.cartography[neighbour]
+
+    if (!obs) {
+      continue
+    }
+
+    const hasController = obs.tenant.hasController
+    const hasHostiles = obs.tenant.hostileCreepCount > 0
+    const isOurs = (obs.tenant.isMine || !obs.tenant.hasOwner)
+
+    if (isOurs && hasController && !hasHostiles) {
+      claimable.push(neighbour)
+    }
+  }
+
+  return claimable
 }
 
 Cartography.findUnchartedNeighbours = (roomName:string):string[] => {
@@ -57,6 +81,10 @@ Cartography.classify = (roomName:string):object => {
   }
 
   const observations = Memory.cartography[roomName]
+
+  if (!observations) {
+    return {}
+  }
 
   const summary = {
     roomName,

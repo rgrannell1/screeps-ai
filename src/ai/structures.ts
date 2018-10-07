@@ -196,6 +196,24 @@ const isEnergySource = item => {
   })
 }
 
+structures.findTombstone = (roomName:string):Tombstone => {
+  const graves = Game.rooms[roomName].find(FIND_TOMBSTONES, {
+    filter (item) {
+      return item.store.energy > 0
+    }
+  })
+
+  if (!graves || graves.length === 0) {
+    return
+  }
+
+  return graves.reduce((max, current) => {
+    return max.store.energy > current.store.energy
+      ? max
+      : current
+  })
+}
+
 structures.findEnergyDrop = (roomName:string) => {
   const drops = Game.rooms[roomName].find(FIND_DROPPED_RESOURCES, {
     filter (item) {
@@ -282,7 +300,7 @@ const isDamaged = item => {
       return item.hits < (0.9 * item.hitsMax)
     },
     [STRUCTURE_RAMPART] () {
-      return item.hits < 10000
+      return item.hits !== item.hitsMax
     },
     [STRUCTURE_WALL] () {
       return item.hits < 10000

@@ -6,6 +6,7 @@ import constants from '../constants'
 import telemetry from '../telemetry'
 import blessed from '../blessed'
 import Cartography from '../modules/cartography'
+import * as Architecture from '../modules/architecture'
 import {RoleLabel, SpawnOrder} from '../types'
 
 const creepRequired = {} as {[str: string]:Function}
@@ -16,13 +17,13 @@ creepRequired.exporter = (roomName:string):SpawnOrder => {
     source: terrain.findSources(roomName).length
   }
 
-  const expected = 5
+  const expected = 0
 
   return {
     role: 'exporter',
     expected,
     youngCount: counts.young,
-    sufficientCount: 2,
+    sufficientCount: 0,
     isRequired: counts.young < counts.source
   }
 }
@@ -160,7 +161,9 @@ creepRequired.builder = (roomName:string):SpawnOrder => {
   const SITE_TO_BUILDER_RATIO = 15
   const ENERGY_TO_BUILDER_RATIO = 50000
 
-  const sites = room.find(FIND_CONSTRUCTION_SITES)
+  const sites = room.find(FIND_CONSTRUCTION_SITES).filter(item => {
+    return Architecture.isTunnel(item)
+  })
   const siteCount = sites.length
   const totalRequiredEnergy = sites
     .reduce((sum, site) => sum + (site.progressTotal - site.progress), 0) || 0
