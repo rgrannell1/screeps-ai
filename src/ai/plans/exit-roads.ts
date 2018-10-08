@@ -2,7 +2,7 @@
 import constants from '../constants'
 import terrain from '../terrain'
 import structures from '../structures'
-import Cartography from '../modules/cartography'
+import * as Cartography from '../modules/cartography'
 
 const exitRoads = (roomName:string):void => {
   const room = Game.rooms[roomName]

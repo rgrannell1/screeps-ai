@@ -5,8 +5,7 @@ import creeps from '../creeps'
 import structures from '../structures'
 import shared from './shared'
 import {Role, Priority} from '../types'
-import Cartography from '../modules/cartography'
-
+import * as Cartography from '../modules/cartography'
 
 const sinkPriorities = [
   {
@@ -26,8 +25,7 @@ const run = (creep:Creep):void => {
      creep.memory.initialRoom = creep.room.name
   }
   if (!creep.memory.externalRoom) {
-    // -- todo
-    creep.memory.externalRoom = 'W41N31'
+    creep.memory.externalRoom = creep.room.name
   }
 
   if (!creep.memory.isActive) {

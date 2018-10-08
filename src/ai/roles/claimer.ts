@@ -5,7 +5,7 @@ import creeps from '../creeps'
 import terrain from '../terrain'
 import structures from '../structures'
 import shared from './shared'
-import Cartography from '../modules/cartography'
+import * as Cartography from '../modules/cartography'
 import {Role, Priority} from '../types'
 
 const run = (creep:Creep):void => {

@@ -4,12 +4,16 @@ import blessed from '../blessed'
 import creeps from '../creeps'
 import structures from '../structures'
 import constants from '../constants'
-import Cartography from '../modules/cartography'
+import * as Cartography from '../modules/cartography'
 import shared from './shared'
 import {Role} from '../types'
 
 const run = (creep:Creep):void => {
   Cartography.recordRoom(creep.room.name)
+
+  if (!creep.memory.initialRoom) {
+     creep.memory.initialRoom = creep.room.name
+  }
 
   const priorities = [STRUCTURE_STORAGE, STRUCTURE_CONTAINER]
   const hasSource = !!structures.findEnergySource(creep.room.name, priorities)

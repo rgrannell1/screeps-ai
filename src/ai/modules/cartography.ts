@@ -3,9 +3,7 @@ import {} from '../types'
 import terrain from '../terrain'
 import constants from '../constants'
 
-const Cartography = {} as any
-
-Cartography.recordRoom = (roomName:string):void => {
+export const recordRoom = (roomName:string):void => {
   if (!Memory.cartography) {
     Memory.cartography = {}
   }
@@ -30,7 +28,7 @@ Cartography.recordRoom = (roomName:string):void => {
   }
 }
 
-Cartography.findNeighbours = (roomName:string):string[] => {
+export const findNeighbours = (roomName:string):string[] => {
   const exits = Game.map.describeExits(roomName)
 
   return !!exits
@@ -38,13 +36,13 @@ Cartography.findNeighbours = (roomName:string):string[] => {
     : []
 }
 
-Cartography.findBuildeableNeighbours = (roomName:string):string[] => {
+export const findBuildeableNeighbours = (roomName:string):string[] => {
   if (!Memory.cartography) {
     Memory.cartography = {}
   }
 
   const claimable:string[] = []
-  const neighbours = Cartography.findNeighbours(roomName)
+  const neighbours = findNeighbours(roomName)
 
   for (const neighbour of neighbours) {
     const obs = Memory.cartography[neighbour]
@@ -65,17 +63,17 @@ Cartography.findBuildeableNeighbours = (roomName:string):string[] => {
   return claimable
 }
 
-Cartography.findUnchartedNeighbours = (roomName:string):string[] => {
+export const findUnchartedNeighbours = (roomName:string):string[] => {
   if (!Memory.cartography) {
     Memory.cartography = {}
   }
 
-  return Cartography.findNeighbours(roomName).filter(name => {
+  return findNeighbours(roomName).filter(name => {
     return !Memory.cartography.hasOwnProperty(name)
   })
 }
 
-Cartography.classify = (roomName:string):object => {
+export const classify = (roomName:string):object => {
   if (!Memory.cartography) {
     throw new Error('no sites present')
   }
@@ -112,8 +110,6 @@ Cartography.classify = (roomName:string):object => {
   return summary
 }
 
-Cartography.isSafe = (roomName:string):boolean => {
-  return Cartography.classify(roomName).safety !== 'hostile'
+export const isSafe = (roomName:string):boolean => {
+  return classify(roomName).safety !== 'hostile'
 }
-
-export default Cartography

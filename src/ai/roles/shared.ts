@@ -1,5 +1,6 @@
 
 import * as Architecture from '../modules/architecture'
+import * as Cartography from '../modules/cartography'
 import terrain from '../terrain'
 import structures from '../structures'
 import telemetry from '../telemetry'
@@ -14,8 +15,11 @@ shared.renewCreep = (creep:Creep):void => {
   const [spawn] = terrain.findSpawns(creep.room.name)
 
   // -- TODO wrap these commands in telemetry functions that write to creeps memory.
-  const moveCode = creep.moveTo(spawn.pos)
   const renewCode = spawn.renewCreep(creep)
+
+  if (renewCode === ERR_NOT_IN_RANGE) {
+    const moveCode = creep.moveTo(spawn.pos)
+  }
 }
 
 shared.chargeCreep = (sinks:string[], creep:Creep):void => {
@@ -46,8 +50,6 @@ shared.chargeCreep = (sinks:string[], creep:Creep):void => {
   }
 
   // todo change sink priority
-
-
   // -- withdraw from a structure
   const source = structures.findEnergySource(creep.room.name, sinks)
 
@@ -137,7 +139,18 @@ shared.buildSite = (creep:Creep) => {
   const site = Architecture.findBuildingSite(creep.room.name, constants.buildPriorities)
 
   if (!site) {
-    return
+    const [neighbour] = Cartography.findBuildeableNeighbours(creep.room.name)
+
+    if (!neighbour) {
+      return
+    }
+
+    const neighbourSite = Architecture.findBuildingSite(neighbour, constants.buildPriorities)
+
+    if (creep.room.name !== neighbour) {
+      creep.moveTo(creep.pos.findClosestByRange(creep.room.findExitTo(neighbour)))
+      return
+    }
   }
 
   const buildCode = creep.build(site)

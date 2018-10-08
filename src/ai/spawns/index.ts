@@ -5,7 +5,7 @@ import structures from '../structures'
 import constants from '../constants'
 import telemetry from '../telemetry'
 import blessed from '../blessed'
-import Cartography from '../modules/cartography'
+import * as Cartography from '../modules/cartography'
 import * as Architecture from '../modules/architecture'
 import {RoleLabel, SpawnOrder} from '../types'
 

@@ -6,8 +6,7 @@ import structures from '../structures'
 import constants from '../constants'
 import shared from './shared'
 import {Role, Priority} from '../types'
-import Cartography from '../modules/cartography'
-
+import * as Cartography from '../modules/cartography'
 
 const sinkPriorities = [
   {

@@ -127,7 +127,7 @@ export const findBuildingSite = (roomName:string, siteTypes:BuildableStructureCo
   const sites = Game.rooms[roomName].find(FIND_CONSTRUCTION_SITES)
 
   for (const siteType of siteTypes) {
-    let candidate = sites.find(site => {
+    const candidate = sites.find(site => {
       return site.structureType === siteType && !isTunnel(site)
     })
 
@@ -135,6 +135,4 @@ export const findBuildingSite = (roomName:string, siteTypes:BuildableStructureCo
       return candidate
     }
   }
-
-  return sites[0]
 }
