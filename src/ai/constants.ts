@@ -73,6 +73,7 @@ constants.limits = {
 }
 
 constants.buildPriorities = [
+  STRUCTURE_SPAWN,
   STRUCTURE_CONTAINER,
   STRUCTURE_LAB,
   STRUCTURE_LINK,
