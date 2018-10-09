@@ -11,7 +11,7 @@ import logger from './logger'
 import tower from './tower'
 import roles from './roles/index'
 import market from './market/index'
-import * as Architecture from '../modules/architecture'
+import * as Architecture from './modules/architecture'
 import * as Cartography from './modules/cartography'
 import * as profiler from 'screeps-profiler'
 
@@ -76,7 +76,7 @@ const loop = () => {
 
     misc.timer(() => {
       telemetry.logGameState(roomName)
-    }, 50
+    }, 50)
 
     misc.timer(() => {
       planner.run(roomName)
