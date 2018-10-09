@@ -13,7 +13,7 @@ const creepRequired = {} as {[str: string]:Function}
 
 creepRequired.exporter = (roomName:string):SpawnOrder => {
   const counts = {
-    young: creeps.countYoungCreeps('exporter'),
+    young: creeps.countYoungCreeps('exporter', roomName),
     source: terrain.findSources(roomName).length
   }
 
@@ -30,7 +30,7 @@ creepRequired.exporter = (roomName:string):SpawnOrder => {
 
 creepRequired.scout = (roomName:string):SpawnOrder => {
   const counts = {
-    young: creeps.countYoungCreeps('scout')
+    young: creeps.countYoungCreeps('scout', roomName)
   }
 
   const expected = Cartography.findUnchartedNeighbours(roomName).length === 0
@@ -48,7 +48,7 @@ creepRequired.scout = (roomName:string):SpawnOrder => {
 
 creepRequired.claimer = (roomName:string):SpawnOrder => {
   const counts = {
-    young: creeps.countYoungCreeps('claimer')
+    young: creeps.countYoungCreeps('claimer', roomName)
   }
 
   const expected = !Game.rooms.hasOwnProperty('W41N31') || !Game.rooms.W41N31.controller.owner
@@ -66,7 +66,7 @@ creepRequired.claimer = (roomName:string):SpawnOrder => {
 
 creepRequired.harvester = (roomName:string):SpawnOrder => {
   const counts = {
-    young: creeps.countYoungCreeps('harvester'),
+    young: creeps.countYoungCreeps('harvester', roomName),
     source: terrain.findSources(roomName).length
   }
 
@@ -81,7 +81,7 @@ creepRequired.harvester = (roomName:string):SpawnOrder => {
 
 creepRequired.miner = (roomName:string):SpawnOrder => {
   const counts = {
-    young: creeps.countYoungCreeps('miner'),
+    young: creeps.countYoungCreeps('miner', roomName),
     minerals: terrain.findMinerals(roomName).length
   }
 
@@ -105,7 +105,7 @@ creepRequired.miner = (roomName:string):SpawnOrder => {
 
 creepRequired.upgrader = (roomName:string):SpawnOrder => {
   const counts = {
-    young: creeps.countYoungCreeps('upgrader')
+    young: creeps.countYoungCreeps('upgrader', roomName)
   }
 
   const expected = 2
@@ -121,7 +121,7 @@ creepRequired.upgrader = (roomName:string):SpawnOrder => {
 
 creepRequired.repairer = (roomName:string):SpawnOrder => {
   const counts = {
-    young: creeps.countYoungCreeps('repairer')
+    young: creeps.countYoungCreeps('repairer', roomName)
   }
 
   const expected = 1
@@ -137,7 +137,7 @@ creepRequired.repairer = (roomName:string):SpawnOrder => {
 
 creepRequired.transferer = (roomName:string):SpawnOrder => {
   const counts = {
-    young: creeps.countYoungCreeps('transferer'),
+    young: creeps.countYoungCreeps('transferer', roomName),
     containers: structures.container.findAll(roomName),
     towers: structures.tower.findAll(roomName)
   }
@@ -155,7 +155,7 @@ creepRequired.transferer = (roomName:string):SpawnOrder => {
 creepRequired.builder = (roomName:string):SpawnOrder => {
   const room = Game.rooms[roomName]
   const counts = {
-    young: creeps.countYoungCreeps('builder')
+    young: creeps.countYoungCreeps('builder', roomName)
   }
 
   const SITE_TO_BUILDER_RATIO = 15
@@ -191,7 +191,7 @@ creepRequired.builder = (roomName:string):SpawnOrder => {
 creepRequired.scribe = (roomName:string):SpawnOrder => {
   const room = Game.rooms[roomName]
   const counts = {
-    young: creeps.countYoungCreeps('scribe')
+    young: creeps.countYoungCreeps('scribe', roomName)
   }
 
   const isRequired = counts.young === 0 && room.controller && room.controller.sign.text !== constants.sign
@@ -233,7 +233,8 @@ const createCreep = (roomName:string, spawn:StructureSpawn, spawnOrder:SpawnOrde
     return
   }
 
-  const creepCode = spawn.createCreep(parts, creeps.pickCreepName(spawnOrder.role), {
+  const creepName = creeps.pickCreepName(spawnOrder.role)
+  const creepCode = spawn.createCreep(parts, creepName, {
     role: spawnOrder.role,
     spawnRoom: spawn.room.name
   })

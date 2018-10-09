@@ -172,8 +172,12 @@ shared.signController = (creep:Creep, controller:StructureController, sign:strin
 shared.upgradeController = (creep:Creep) => {
   creep.memory.state = 'upgrade_controller'
 
-  const controller = terrain.findController(creep.room.name)
+  const noHarvesters = creeps.countYoungCreeps('upgrader', creep.room.name) === 0
+  if (true) {
+    // -- findBuildeableNeighbours
+  }
 
+  const controller = terrain.findController(creep.room.name)
   const upgradeCode = creep.upgradeController(controller)
 
   if (upgradeCode === ERR_NOT_IN_RANGE) {
@@ -189,12 +193,15 @@ shared.harvestSource = (creep:Creep):void => {
     return
   }
 
-  const [source] = terrain.findSources(creep.room.name)
+  const sources = terrain.findSources(creep.room.name)
 
-  const chargeCode = creep.harvest(source)
+  if (sources && sources.length > 0) {
+    const source = sources[creeps.id(creep) % sources.length]
+    const chargeCode = creep.harvest(source)
 
-  if (chargeCode === ERR_NOT_IN_RANGE) {
-    const moveCode = creep.moveTo(source.pos)
+    if (chargeCode === ERR_NOT_IN_RANGE) {
+      const moveCode = creep.moveTo(source.pos)
+    }
   }
 }
 

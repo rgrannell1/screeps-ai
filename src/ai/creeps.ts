@@ -25,13 +25,15 @@ creeps.estimateRequiredMoveParts = (parts:string[]):number => {
   return Math.ceil(parts.length / 2)
 }
 
-creeps.countYoungCreeps = (role:RoleLabel) => {
+creeps.countYoungCreeps = (role:RoleLabel, roomName:string) => {
   return Object.values(Game.creeps).filter(creep => {
     const isRole = creep.memory && creep.memory.role === role
-    const isYoung = creep.ticksToLive 
+    const isYoung = creep.ticksToLive
       ? creep.ticksToLive > constants.limits.endOfYouth
       : false
-    return isRole && isYoung 
+    const inRoom = creep.room.name === roomName
+
+    return isRole && isYoung && inRoom
   }).length
 }
 
@@ -157,7 +159,7 @@ creeps.chooseEnergySink = (creep:Creep, priorityLists:Priority[]):Priority => {
     throw new Error('priority lists must be provided')
   }
 
-  let priorities 
+  let priorities
   if (creep.memory.sinkPriority) {
     priorities = priorityLists.find(list => list.label === creep.memory.sinkPriority)
   } else {
@@ -195,6 +197,10 @@ creeps.findExitPath = (creep:Creep, roomName:string):any => {
 creeps.carrying = (creep:Creep):number => {
   const stored = Object.values(creep.carry) as number[]
   return stored.reduce((acc, current) => acc + current, 0)
+}
+
+creeps.id = (creep:Creep):number => {
+  return Memory.roles[creep.memory.role].count
 }
 
 export default creeps
