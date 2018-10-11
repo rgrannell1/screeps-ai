@@ -18,6 +18,12 @@ type posBoundDistance = {
   readonly distance: number
 }
 
+/*
+## startEmptyZoneComputation
+
+Create a generator that computes the distance from each empty block of
+land to the controller.
+*/
 function startEmptyZoneComputation (roomName:string, ref:string, emptyAreas):void {
   const controller = terrain.findController(roomName)
 
@@ -33,6 +39,11 @@ function startEmptyZoneComputation (roomName:string, ref:string, emptyAreas):voi
   }
 }
 
+/*
+## placeExtensionBlock
+
+find the ideal block of land for the extensions. Place roads leading to this block and the extensions themselves
+*/
 function placeExtensionBlock (roomName:string, count:number, areasWithDistances:posBoundDistance[]):void {
    const controller = terrain.findController(roomName)
 

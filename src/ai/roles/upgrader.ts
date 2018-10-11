@@ -19,7 +19,7 @@ const run = (creep:Creep):void => {
   const priorities = [STRUCTURE_STORAGE, STRUCTURE_CONTAINER]
   const hasSource = !!structures.findEnergySource(creep.room.name, priorities)
 
-  const neighbour:string[] = Cartography.findBuildeableNeighbours(creep.room.name).find(neighbour => {
+  const neighbour:string = Cartography.findBuildeableNeighbours(creep.room.name).find(neighbour => {
     return creeps.countYoungCreeps('upgrader', neighbour) === 0
   })
 

@@ -97,7 +97,7 @@ creepRequired.miner = (roomName:string):SpawnOrder => {
     role: 'miner',
     expected: counts.minerals,
     youngCount: counts.young,
-    sufficientCount: 1,
+    sufficientCount: roomLevel >= 6 ? 1 : 0,
     isRequired: counts.young < counts.minerals
   }
 }
@@ -108,13 +108,13 @@ creepRequired.upgrader = (roomName:string):SpawnOrder => {
     young: creeps.countYoungCreeps('upgrader', roomName)
   }
 
-  const expected = 2
+  const expected = 2 * terrain.findSources(roomName).length
 
   return {
     role: 'upgrader',
     expected,
     youngCount: counts.young,
-    sufficientCount: 2,
+    sufficientCount: expected,
     isRequired: counts.young < expected
   }
 }
