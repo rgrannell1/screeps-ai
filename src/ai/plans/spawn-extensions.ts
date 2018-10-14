@@ -78,54 +78,68 @@ function placeExtensionBlock (roomName:string, count:number, areasWithDistances:
   }
 }
 
+/*
+## zoneExtensionBlock
+
+Compute
+*/
 const zoneExtensionBlock = (roomName:string, count:number):void => {
-  const areasRef = `area_result_acc_${count}`
-
-  // -- use a shared area yielder.
-  const areasRefCompute = `area_result_acc_compute`
-
-  if (!state[areasRef]) {
-    state[areasRef] = []
+  const refs = {
+    areas: `area_result_acc_${count}`,
+    areaCompute: `area_result_acc_compute`,
+    sortAcc: `sort_result_acc_${count}`,
+    emptyPlot: `empty_plot_${count}`
   }
 
-  const sortAccRef = `sort_result_acc_${count}`
-  const sortAccComputeRef = `sort_result_acc_compute_${count}`
-  if (!state[sortAccRef]) {
-    state[sortAccRef] = []
+  // -- results will be pushed to these references.
+  for (const ref of [refs.areas, refs.sortAcc]) {
+    state[ref] = []
   }
 
-  const emptyPlotRef = `empty_plot_${count}`
-
-  if (!state[emptyPlotRef]) {
-    state[emptyPlotRef] = Geometry.yieldEmptyZonedPlots(roomName, {x: 3, y: 3})
+  // -- yield 3 x 3 empty blocks to build on.
+  if (!state[refs.emptyPlot]) {
+    state[refs.emptyPlot] = Geometry.yieldEmptyZonedPlots(roomName, {x: 3, y: 3})
   }
 
-  const emptyAreas = Compute.evaluate(state[emptyPlotRef], state[areasRef], 50)
+  // -- slowly yield empty plots.
+  const emptyPlots = Compute.evaluate({
+    computation: state[refs.emptyPlot],
+    storage: state[refs.areas],
+    by: constants.BATCH_SIZE
+  })
 
-  if (emptyAreas) {
-    startEmptyZoneComputation(roomName, areasRefCompute, state[areasRef])
+  if (emptyPlots) {
+    // -- compute the distances between each block and the controller.
+    startEmptyZoneComputation(roomName, refs.areaCompute, state[refs.areas])
 
-    const areasWithDistances = Compute.evaluate(state[areasRefCompute], state[sortAccRef], 50)
+    // -- slowly yield empty plots.
+    const areasWithDistances = Compute.evaluate({
+      computation: state[refs.areaCompute],
+      storage: state[refs.sortAcc],
+      by: constants.BATCH_SIZE
+    })
+
     if (areasWithDistances && areasWithDistances.length > 0) {
       placeExtensionBlock(roomName, count, areasWithDistances)
     }
   }
 }
 
-const extensionsByLevel = [0, 5, 10, 20, 30, 40, 50, 60]
-const EXTENSION_COUNT_PER_BLOCK = 9
-
 const spawnExtensions = (roomName:string):void => {
   const room = Game.rooms[roomName]
 
-  if (!room.controller || roomName !== 'W42N31') {
+  if (!room.controller) {
+    return
+  }
+
+  if (roomName !== 'W42N31') {
     return
   }
 
   const level = room.controller.level
 
-  const extensionsAllowed = extensionsByLevel[Math.min(level, 8)]
-  const requiredBlocks = Math.floor(extensionsAllowed / EXTENSION_COUNT_PER_BLOCK)
+  const extensionsAllowed = constants.extensionsByLevel[Math.min(level, 8)]
+  const requiredBlocks = Math.floor(extensionsAllowed / constants.EXTENSION_COUNT_PER_BLOCK)
 
   for (let blockId = 0; blockId < requiredBlocks; blockId++) {
     zoneExtensionBlock(roomName, blockId)

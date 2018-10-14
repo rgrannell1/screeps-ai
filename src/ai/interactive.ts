@@ -22,32 +22,36 @@ interactive.clearDrawnPlans = (roomName:string) => {
   new RoomVisual(roomName).clear()
 }
 
-interactive.visualise = (roomName:string, structure:StructureConstant, pos:RoomPosition) => {
-  if (interactive.visualise[structure]) {
-    return interactive.visualise[structure](roomName, pos)
-  } else {
-    console.log(`no visualisation found for ${structure}`)
-  }
+const visualisers = {} as {
+  [key: string]: (string, RoomPosition):void
 }
 
-interactive.visualise[STRUCTURE_EXTENSION] = (roomName:string, pos:RoomPosition) => {
+visualisers[STRUCTURE_EXTENSION] = (roomName:string, pos:RoomPosition) => {
   new RoomVisual(roomName).circle(pos.x, pos.y, {
     fill: 'yellow',
     opacity: 0.1725
   })
 }
 
-interactive.visualise[STRUCTURE_ROAD] = (roomName:string, pos:RoomPosition) => {
+visualisers[STRUCTURE_ROAD] = (roomName:string, pos:RoomPosition) => {
   new RoomVisual(roomName).rect(pos.x - 0.5, pos.y - 0.5, 0.75, 0.75, {
     fill: 'white',
     opacity: 0.1725
   })
 }
 
-interactive.visualise[STRUCTURE_CONTAINER] = (roomName:string, pos:RoomPosition) => {
+visualisers[STRUCTURE_CONTAINER] = (roomName:string, pos:RoomPosition) => {
   new RoomVisual(roomName).circle(pos.x, pos.y, {
     fill: 'red'
   })
+}
+
+interactive.visualise = (roomName:string, structure:StructureConstant, pos:RoomPosition) => {
+  if (visualisers[structure]) {
+    return visualisers[structure](roomName, pos)
+  } else {
+    console.log(`no visualisation found for ${structure}`)
+  }
 }
 
 export default interactive

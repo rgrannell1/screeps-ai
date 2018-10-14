@@ -56,7 +56,9 @@ shared.chargeCreep = (sinks:string[], creep:Creep):void => {
   if (!source) {
     // -- navigate to the previous charge source, to speed up next cycle's charging.
     if (creep.memory.previousChargeSource) {
-      const oldSource = Game.getObjectById(creep.memory.previousChargeSource)
+      const oldSource = Game.getObjectById(creep.memory.previousChargeSource) as {
+        pos: RoomPosition
+      }
 
       if (oldSource) {
         creep.moveTo(oldSource.pos)

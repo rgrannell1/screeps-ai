@@ -7,14 +7,25 @@ const Compute = {} as any
 ## Compute.evaluate
 
 */
-Compute.evaluate = <T>(comp:Computation<T>, storeRef, by:number):T[] | undefined => {
+
+interface EvaluateConfig<T> {
+  computation: Computation<T>,
+  storage: any[],
+  by: number
+}
+
+Compute.evaluate = <T>(args):T[] | undefined => {
+  const computation:Computation<T> = args.computation
+  const storage:any[] = args.storage
+  const by:number = args.by
+
   for (let ith = 0; ith < by; ith++) {
-    let yielded = comp.next()
+    let yielded = computation.next()
 
     if (yielded.done) {
-      return storeRef
+      return storage
     } else {
-      storeRef.push(yielded.value)
+      storage.push(yielded.value)
     }
   }
 }

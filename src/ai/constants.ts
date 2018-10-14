@@ -10,6 +10,8 @@ constants.labels = {
 }
 
 constants.sign = 'League of Automated Roombas'
+constants.EXTENSION_COUNT_PER_BLOCK = 9
+constants.BATCH_SIZE = 50
 
 constants.costs = {
   move: 50,
@@ -21,6 +23,8 @@ constants.costs = {
   tough: 10,
   claim: 600
 }
+
+constants.extensionsByLevel = [0, 5, 10, 20, 30, 40, 50, 60]
 
 constants.roles = {
   scout: {

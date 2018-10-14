@@ -73,7 +73,14 @@ export const findUnchartedNeighbours = (roomName:string):string[] => {
   })
 }
 
-export const classify = (roomName:string):object => {
+export interface RoomClassification {
+  readonly safety: string
+  readonly roomName: string
+  readonly sourceCount: number
+  readonly mineralCount: number
+}
+
+export const classify = (roomName:string):RoomClassification => {
   if (!Memory.cartography) {
     throw new Error('no sites present')
   }
@@ -81,7 +88,12 @@ export const classify = (roomName:string):object => {
   const observations = Memory.cartography[roomName]
 
   if (!observations) {
-    return {}
+    return {
+      safety: 'unknown',
+      roomName,
+      sourceCount: 0,
+      mineralCount: 0,
+    }
   }
 
   const summary = {
@@ -91,7 +103,6 @@ export const classify = (roomName:string):object => {
   } as any
 
   if (!observations) {
-    summary.type = 'unknown'
     return summary
   }
 
