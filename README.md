@@ -8,6 +8,13 @@ Just another Screeps AI
 
 ![Example](readme/example.png)
 
+## Description
+
+![Example](readme/map.png)
+
+![Example](readme/room-2.png)
+
+
 ## Usage
 
 ```bash
