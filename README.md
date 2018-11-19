@@ -1,7 +1,7 @@
 
 ## Screeps AI
 
-Just another Screeps AI
+The League of Automated Roombas.
 
 [![js-standard-style](https://cdn.rawgit.com/standard/standard/master/badge.svg)](http://standardjs.com)
 [![volkswagen status](https://auchenberg.github.io/volkswagen/volkswargen_ci.svg?v=1)](https://github.com/auchenberg/volkswagen)
@@ -10,10 +10,31 @@ Just another Screeps AI
 
 ## Description
 
+Screeps is hard, but this AI can tackle some of the basic tasks:
+
+- Maintaining a population of creeps to perform colony tasks like resource harvesting, construction, repair, and transport.
+- Exploration of nearby territory
+- Inter-room resource transport and establishing new colonies
+- Room-defense
+- An attempt at optimal automatic site-planning and construction
+- Simple colony data-analysis via Kibana
+
 ![Example](readme/map.png)
 
 ![Example](readme/room-2.png)
 
+## Extensions
+
+There's a lot of room for improvement. Some interesting areas include:
+
+- Memory-efficient collection of key data like energy collection rates on each transport route
+- Migrate from deterministic creep-management to linear-programming based task allocation and construction
+- Market-trading of any kind
+- Improve generator-based building-plans from a simple computation-smearing hack to something more easily applied to other plans and rooms
+- Minimum-graph cut based wall-placement
+- Sentience
+
+Apart from the AI itself, the external analytics could be improved beyond "Yet another Kibana Dashboard" too.
 
 ## Usage
 
